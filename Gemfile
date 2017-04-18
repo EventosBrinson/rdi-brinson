@@ -6,7 +6,6 @@ gem 'rake'
 gem 'pg'
 gem 'puma'
 gem 'rack-cors'
-#gem 'redis', '~> 3.0'
 
 gem 'jbuilder'
 gem 'bcrypt'
