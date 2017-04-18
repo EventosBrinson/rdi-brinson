@@ -21,14 +21,14 @@ group :development, :test do
   gem 'capistrano-rbenv'
 end
 
-group :test do
-  gem 'rails-controller-testing'
-end
-
 group :development do
   gem 'listen'
   gem 'spring'
   gem 'spring-watcher-listen'
-  gem 'shoulda-matchers'
+end
+
+group :test do
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end
