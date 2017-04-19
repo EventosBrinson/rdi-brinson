@@ -10,9 +10,12 @@ class User < ApplicationRecord
   validates :firstname, presence: true
   validates :lastname, presence: true
   validates :role, presence: true
-  validates :role, inclusion: { in: ROLES }
   validates :password, length: { in: 8..256 }, allow_nil: true
 
   has_secure_password
   enum role: ROLES
+
+  def fullname
+    [firstname, lastname].join(" ")
+  end
 end
