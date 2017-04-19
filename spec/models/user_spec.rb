@@ -24,8 +24,11 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :username }
   it { should validate_uniqueness_of(:username) }
   it { should allow_value('omarandstuff').for(:username) }
+  it { should_not allow_value('?omarandstuff').for(:username) }
   it { should validate_presence_of :email }
   it { should validate_uniqueness_of(:email) }
+  it { should allow_value('omarandstuff@gmail.com').for(:email) }
+  it { should_not allow_value('sometext').for(:email) }
   it { should validate_presence_of :firstname }
   it { should validate_presence_of :lastname }
   it { should validate_presence_of :role }
