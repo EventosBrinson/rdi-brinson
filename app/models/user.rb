@@ -15,6 +15,10 @@ class User < ApplicationRecord
   has_secure_password
   enum role: ROLES
 
+  def self.find_by_credential(credential)
+    where('"users"."email" = :credential OR "users"."username" = :credential', credential: credential).first
+  end
+
   def fullname
     [firstname, lastname].join(" ")
   end
