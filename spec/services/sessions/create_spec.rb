@@ -10,14 +10,14 @@ describe Sessions::Create do
         expect(service.process).to be_a_kind_of(String)
       end
 
-      it 'return a token that when deserialized contains the user id' do
+      it 'returns a token that when deserialized contains the user id' do
         user = FactoryGirl.create :user
         service = Sessions::Create.new credential: user.email, password: user.password
         token = service.process
 
-        token_deserialized = JWT.decode token, Rails.application.secrets.secret_key_base, true, { :algorithm => 'HS256' }
+        token_deserialized = Utils::DeserializeToken.for token: token
 
-        expect(token_deserialized[0]).to include('user_id' => user.id)
+        expect(token_deserialized).to include('user_id' => user.id)
       end
     end
 
