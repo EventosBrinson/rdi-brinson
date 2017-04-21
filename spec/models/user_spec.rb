@@ -34,6 +34,7 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :role }
   it { should have_secure_password }
   it { should validate_length_of(:password).is_at_least(8).is_at_most(256) }
+  it { should allow_value(nil).for(:password) }
 
   it { should define_enum_for(:role).with(User::ROLES) }
 end
