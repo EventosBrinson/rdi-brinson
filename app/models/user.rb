@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates :role, presence: true
   validates :password, length: { in: 8..256 }, allow_nil: true
 
-  has_secure_password
+  has_secure_password validations: false
   enum role: ROLES
 
   def self.find_by_credential(credential)
@@ -20,6 +20,6 @@ class User < ApplicationRecord
   end
 
   def fullname
-    [firstname, lastname].join(" ")
+    [firstname, lastname].join(' ')
   end
 end
