@@ -3,7 +3,7 @@ module Sessions
     attr_accessor :session_token_time_alive
 
     def initialize
-      @session_token_remember_time = 10.days
+      @session_token_time_alive = 10.days
     end
   end
 end
