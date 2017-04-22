@@ -3,7 +3,7 @@ class User < ApplicationRecord
 
   validates :username, presence: true
   validates :username, uniqueness: true
-  validates :username, format: { with: /\A[a-zA-Z0-9]+\z/i }
+  validates :username, format: { with: /\A[^@]+\z/i }
   validates :email, presence: true
   validates :email, uniqueness: true
   validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
@@ -17,6 +17,10 @@ class User < ApplicationRecord
 
   def self.find_by_credential(credential)
     where('"users"."email" = :credential OR "users"."username" = :credential', credential: credential).first
+  end
+
+  def confirmed?
+    !confirmed_at.nil?
   end
 
   def fullname

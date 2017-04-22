@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :username }
   it { should validate_uniqueness_of(:username) }
   it { should allow_value('omarandstuff').for(:username) }
-  it { should_not allow_value('?omarandstuff').for(:username) }
+  it { should_not allow_value('omarandstuff@something.com').for(:username) }
   it { should validate_presence_of :email }
   it { should validate_uniqueness_of(:email) }
   it { should allow_value('omarandstuff@gmail.com').for(:email) }
@@ -37,4 +37,30 @@ RSpec.describe User, type: :model do
   it { should allow_value(nil).for(:password) }
 
   it { should define_enum_for(:role).with(User::ROLES) }
+
+  describe '.find_by_credential' do
+    it 'returns the first record which username or password match the credential param' do
+      user = FactoryGirl.create :user
+
+      expect(User.find_by_credential(user.username)).to eq(user)
+      expect(User.find_by_credential(user.email)).to eq(user)
+    end
+  end
+
+  describe '#confirmed?' do
+    it 'returns true if the user confirmed_at attribute is set' do
+      user = FactoryGirl.create :user, confirmed_at: Time.now
+
+      expect(user.confirmed?).to eq true
+    end
+  end
+
+  describe '#fullname' do
+    it 'returns the user fullname (firstname lastname)' do
+      user = FactoryGirl.create :user
+
+      expect(user.fullname).to eq [user.firstname, user.lastname].join(' ')
+    end
+  end
+
 end
