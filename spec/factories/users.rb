@@ -6,5 +6,9 @@ FactoryGirl.define do
     firstname Faker::Name.first_name
     lastname Faker::Name.last_name
     role User::ROLES.sample
+
+    trait :confirmed do
+      confirmed_at Time.now
+    end
   end
 end
