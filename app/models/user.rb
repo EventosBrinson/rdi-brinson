@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  ROLES = [:admin, :staff]
+  ROLES = [:staff, :admin, :user]
 
   validates :username, presence: true
   validates :username, uniqueness: true
@@ -25,5 +25,9 @@ class User < ApplicationRecord
 
   def fullname
     [firstname, lastname].join(' ')
+  end
+
+  def pending?
+    confirmation_token and confirmation_sent_at
   end
 end

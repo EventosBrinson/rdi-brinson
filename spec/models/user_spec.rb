@@ -63,4 +63,11 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#pending' do
+    it 'returns true if the user confirmation_token and confirmation_sent_at attributes are set' do
+      user = FactoryGirl.create :user, :confirmation_open
+
+      expect(user).to be_pending
+    end
+  end
 end
