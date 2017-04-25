@@ -12,7 +12,7 @@ RSpec.describe ApplicationController do
   describe "#authenticate_request" do
     context 'when a vaild token is present' do
       it "allows controllers actions to continue and sets the current session" do
-        user = FactoryGirl.create :user
+        user = FactoryGirl.create :user, :confirmed
         token = Sessions::Create.for credential: user.username, password: user.password
 
         request.headers[:HTTP_AUTH_TOKEN] = token
