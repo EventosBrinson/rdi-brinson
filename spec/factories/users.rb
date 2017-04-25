@@ -17,5 +17,13 @@ FactoryGirl.define do
       password Faker::Internet.password(8, 256)
       confirmed_at Time.now
     end
+
+    trait :reset_password_requested do
+      confirmed
+      after(:create) do |user, evaluator|
+        user.update reset_password_token: Utils::GenerateToken.for(data: { user_id: user.id, created_at: 1.second.ago.to_i }),
+                    reset_password_sent_at: 1.second.ago
+      end
+    end
   end
 end

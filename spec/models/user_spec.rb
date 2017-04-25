@@ -70,4 +70,12 @@ RSpec.describe User, type: :model do
       expect(user).to be_pending
     end
   end
+
+  describe '#reset_password_requested?' do
+    it 'returns true if the user reset_password_token and reset_password_sent_at attributes are set' do
+      user = FactoryGirl.create :user, :reset_password_requested
+
+      expect(user).to be_reset_password_requested
+    end
+  end
 end
