@@ -8,7 +8,8 @@ FactoryGirl.define do
 
     trait :confirmation_open do
       after(:create) do |user, evaluator|
-        Users::OpenConfirmation.for user: user
+        user.update confirmation_token: Utils::GenerateToken.for(data: { user_id: user.id, created_at: 1.second.ago.to_i }),
+                    confirmation_sent_at: 1.second.ago
       end
     end
 

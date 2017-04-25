@@ -10,9 +10,8 @@ module Utils
 
     def process
       begin
-       JWT.decode(token, secret, true, { :algorithm => 'HS256' })[0]
+        JWT.decode(token, secret, true, { :algorithm => 'HS256' })[0]
       rescue JWT::DecodeError
-        nil
       end
     end
 
