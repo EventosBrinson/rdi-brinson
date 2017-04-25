@@ -28,6 +28,10 @@ class User < ApplicationRecord
   end
 
   def pending?
-    confirmation_token and confirmation_sent_at
+    !confirmation_token.nil? and !confirmation_sent_at.nil?
+  end
+
+  def reset_password_requested?
+    !reset_password_token.nil? and !reset_password_sent_at.nil?
   end
 end
