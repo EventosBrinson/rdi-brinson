@@ -3,19 +3,19 @@ require 'rails_helper'
 describe Sessions::Create do
   describe '#process' do
     context 'when the right credentials are present' do
-      it 'returs a new :user, :token hash' do
+      it 'returs a new string session token' do
         user = FactoryGirl.create :user, :confirmed
         service = Sessions::Create.new credential: user.email, password: user.password
 
-        expect(service.process).to include(:user, :token)
+        expect(service.process).to be_kind_of(String)
       end
 
       it 'returns a token that, when deserialized contains the user id' do
         user = FactoryGirl.create :user, :confirmed
         service = Sessions::Create.new credential: user.email, password: user.password
-        user_and_token = service.process
+        token = service.process
 
-        token_deserialized = Utils::DeserializeToken.for token: user_and_token[:token]
+        token_deserialized = Utils::DeserializeToken.for token: token
 
         expect(token_deserialized).to include('user_id' => user.id)
       end

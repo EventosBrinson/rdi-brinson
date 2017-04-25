@@ -12,9 +12,7 @@ module Sessions
       user = User.find_by_credential credential
 
       if user and user.confirmed? and user.authenticate(password)
-        token = Utils::GenerateToken.for data: { user_id: user.id, created_at: Time.now.to_i }
-
-        return { user: user, token: token }
+        Utils::GenerateToken.for data: { user_id: user.id, created_at: Time.now.to_i }
       end
     end
   end
