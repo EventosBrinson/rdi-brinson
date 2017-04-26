@@ -12,9 +12,11 @@ describe Users::Confirmation do
         user.reload
 
         expect(result).to eq(user)
-        expect(user.confirmation_token).to be_nil
-        expect(user.confirmation_sent_at).to be_nil
-        expect(user.confirmed_at).to_not be_nil
+        expect(result.confirmation_token).to be_nil
+        expect(result.confirmation_sent_at).to be_nil
+        expect(result.confirmed_at).to_not be_nil
+        expect(result).to be_confirmed
+        expect(result.password).to eq 'supersecret'
       end
     end
 
@@ -26,6 +28,8 @@ describe Users::Confirmation do
 
         service = Users::Confirmation.new token: passed_confirmation_token, password: 'irelevant_password'
 
+        user.reload
+
         expect(service.process).to be_nil
         expect(user).to be_pending
       end
@@ -36,6 +40,8 @@ describe Users::Confirmation do
         user = FactoryGirl.create :user, :confirmation_open
 
         service = Users::Confirmation.new token: 'erratic token', password: 'irelevant_password'
+
+        user.reload
 
         expect(service.process).to be_nil
         expect(user).to be_pending
