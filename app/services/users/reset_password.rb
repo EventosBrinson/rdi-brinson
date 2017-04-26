@@ -9,10 +9,14 @@ module Users
     end
 
     def process
-      user if user and user.update(reset_password_token: nil, reset_password_sent_at: nil, password: password)
+      user if user and user.update(reset_password_token: nil, reset_password_sent_at: nil, password: filtered_password)
     end
 
     private
+
+    def filtered_password
+      password == '' ? 'NaN' : password
+    end
 
     def user
       @user ||= user_from_token
