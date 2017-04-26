@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe UserMailer, type: :mailer do
   describe "invitation mail" do
-
     it "should render the headers" do
       user = FactoryGirl.create :user
       mail = UserMailer.invitation_mail(user)
@@ -21,7 +20,6 @@ RSpec.describe UserMailer, type: :mailer do
   end
 
   describe "reset password email" do
-
     it "should render the headers" do
       user = FactoryGirl.create :user
       mail = UserMailer.reset_password_mail(user)
@@ -34,6 +32,24 @@ RSpec.describe UserMailer, type: :mailer do
     it "should render the body" do
       user = FactoryGirl.create :user
       mail =  UserMailer.invitation_mail(user)
+
+      expect(mail.body.encoded).to match('Hola ' + user.fullname)
+    end
+  end
+
+  describe "welcome mail" do
+    it "should render the headers" do
+      user = FactoryGirl.create :user
+      mail = UserMailer.welcome_mail(user)
+
+      expect(mail.subject).to eq("Bienvenido a RDIBrinson")
+      expect(mail.to).to eq([user.email])
+      expect(mail.from).to eq(["staff@eventosbrinson.com"])
+    end
+
+    it "should render the body" do
+      user = FactoryGirl.create :user
+      mail =  UserMailer.welcome_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
     end

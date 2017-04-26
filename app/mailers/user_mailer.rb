@@ -8,4 +8,9 @@ class UserMailer < ApplicationMailer
     @user = user
     mail(to: @user.email, subject: 'Petición de cambio de contraseña')
   end
+
+  def welcome_mail(user)
+    @user = user
+    mail(to: @user.email, subject: 'Bienvenido a RDIBrinson')
+  end
 end
