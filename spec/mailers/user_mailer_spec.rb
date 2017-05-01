@@ -48,8 +48,8 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "should render the body" do
-      user = FactoryGirl.create :user
-      mail =  UserMailer.invitation_mail(user)
+      user = FactoryGirl.create :user, :reset_password_requested
+      mail =  UserMailer.reset_password_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
     end
