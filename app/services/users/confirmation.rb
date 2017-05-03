@@ -9,7 +9,7 @@ module Users
     end
 
     def process
-      user if user and user.update(confirmation_token: nil, confirmation_sent_at: nil, confirmed_at: Time.now, password: password)
+      user if !(password.nil? or password.blank?) and user and user.update(confirmation_token: nil, confirmation_sent_at: nil, confirmed_at: Time.now, password: password)
     end
 
     private

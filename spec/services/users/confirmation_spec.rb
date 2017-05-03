@@ -47,5 +47,15 @@ describe Users::Confirmation do
         expect(user).to be_pending
       end
     end
+
+    context 'when the password is nil' do
+      it 'returns nil' do
+        user = FactoryGirl.create :user, :confirmation_open
+        service = Users::Confirmation.new token: user.confirmation_token, password: nil
+
+        expect(service.process).to be_nil
+        expect(user).to be_pending
+      end
+    end
   end
 end
