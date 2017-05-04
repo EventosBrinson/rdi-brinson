@@ -9,6 +9,7 @@ RSpec.describe User, type: :model do
   it { should have_db_column(:firstname).of_type(:string).with_options(null: false) }
   it { should have_db_column(:lastname).of_type(:string).with_options(null: false) }
   it { should have_db_column(:role).of_type(:integer).with_options(null: false) }
+  it { should have_db_column(:main).of_type(:boolean).with_options(null: false, default: false) }
   it { should have_db_column(:reset_password_token).of_type(:string) }
   it { should have_db_column(:reset_password_sent_at).of_type(:datetime) }
   it { should have_db_column(:confirmation_token).of_type(:string) }
