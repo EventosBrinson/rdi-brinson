@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  post   '/register',       to: 'sessions#register'
   post   '/sign_in',        to: 'sessions#sign_in'
   delete '/sign_out',       to: 'sessions#sign_out'
   patch  '/confirm',        to: 'sessions#confirm'

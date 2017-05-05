@@ -3,55 +3,6 @@ require 'rails_helper'
 RSpec.describe SessionsController, type: :controller do
   before { ActionMailer::Base.deliveries = [] }
 
-  describe 'POST #register' do
-    context 'when the right credentials are present' do
-      it 'register a new user into the system and send the invitation email' do
-        user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: user.username, password: user.password
-
-        request.headers[:HTTP_AUTH_TOKEN] = token
-
-        expect{ post :register, params: { user: { email: 'omarandstuff@gmail.com', username: 'omarandstuff', firstname: 'David', lastname: 'De Anda', role: 'admin' }}}.to change{ User.count }.by(1)
-        expect(response).to be_success
-        expect(assigns(:user)).to_not be_confirmed
-        expect(ActionMailer::Base.deliveries).to_not be_empty
-      end
-
-      it 'returns a json object with the new user' do
-        user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: user.username, password: user.password
-
-        request.headers[:HTTP_AUTH_TOKEN] = token
-        post :register, params: { user: { email: 'omarandstuff@gmail.com', username: 'omarandstuff', firstname: 'David', lastname: 'De Anda', role: 'admin' }}
-
-        expect(response).to be_success
-        expect(response).to render_template('users/show.json')
-      end
-    end
-
-    context 'when the credentials are erratic' do
-      it 'does not create a new user' do
-        user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: user.username, password: user.password
-
-        request.headers[:HTTP_AUTH_TOKEN] = token
-
-        expect{ post :register, params: { user: { email: 'erratic_email', username: '', password: '' }}}.to_not change{ User.count }
-        expect(response).to_not be_success
-      end
-
-      it 'returns empty and unsuccessfull' do
-        user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: user.username, password: user.password
-
-        request.headers[:HTTP_AUTH_TOKEN] = token
-        post :register, params: { user: { email: 'erratic_email', username: '', password: '' }}
-
-        expect(response).to_not be_success
-      end
-    end
-  end
-
   describe 'POST #sign_in' do
     context 'when a session token is present' do
       context 'and is a well formated token' do

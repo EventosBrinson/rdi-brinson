@@ -14,19 +14,6 @@ class SessionsController < ApplicationController
     end
   end
 
-  def register
-    @user = User.new user_params
-
-    if @user.save
-      Users::OpenConfirmation.for user: @user
-      UserMailer.invitation_mail(@user).deliver_now
-
-      render template: 'users/show.json'
-    else
-      render json: @user.errors, status: :bad_request
-    end
-  end
-
   def request_reset_password
     @user = Users::RequestResetPassword.for credential: params[:credential]
 
