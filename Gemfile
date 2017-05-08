@@ -11,6 +11,8 @@ gem 'jbuilder'
 gem 'bcrypt'
 gem 'jwt'
 
+gem 'cancancan', '~> 1.10'
+
 group :development, :test do
   gem 'byebug', platform: :mri
   gem "factory_girl_rails"
