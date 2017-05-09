@@ -39,6 +39,30 @@ RSpec.describe User, type: :model do
 
   it { should define_enum_for(:role).with(User::ROLES) }
 
+  describe '.search' do
+    it 'returns all user that match the query' do
+      user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
+      user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
+
+      expect(User.search('david').size).to eq(2)
+    end
+  end
+
+  describe '.filter' do
+    it 'returns all the users filtered by params as messages and param value as message param' do
+      user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
+      user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
+
+      users_filtered = User.filter({ search: 'david', order: { lastname: :desc } })
+
+      expect(users_filtered.size).to eq(2)
+      expect(users_filtered.first).to eq(user_match2)
+      expect(users_filtered.last).to eq(user_match1)
+    end
+  end
+
   describe '.find_by_credential' do
     it 'returns the first record which username or password match the credential param' do
       user = FactoryGirl.create :user
