@@ -12,9 +12,13 @@ RSpec.describe Ability do
 
   context 'when the user is an admin or staff' do
     let(:user) { FactoryGirl.create(:user, :admin) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    let(:other_user_role_changed) { other_user.role = :admin; other_user }
 
     it{ should be_able_to(:manage, User) }
     it{ should be_able_to(:manage, user) }
+    it{ should be_able_to(:manage, other_user) }
+    it{ should be_able_to(:update, other_user_role_changed) }
     it{ should_not be_able_to(:update, user_role_changed) }
     it{ should_not be_able_to(:update, admin) }
     it{ should_not be_able_to(:update, staff) }
