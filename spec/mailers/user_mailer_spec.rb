@@ -19,7 +19,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
   end
 
-  describe "password changed email" do
+  describe "password changed mail" do
     it "should render the headers" do
       user = FactoryGirl.create :user
       mail = UserMailer.password_changed_mail(user)
@@ -37,7 +37,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
   end
 
-  describe "reset password email" do
+  describe "reset password mail" do
     it "should render the headers" do
       user = FactoryGirl.create :user
       mail = UserMailer.reset_password_mail(user)
@@ -50,6 +50,24 @@ RSpec.describe UserMailer, type: :mailer do
     it "should render the body" do
       user = FactoryGirl.create :user, :reset_password_requested
       mail =  UserMailer.reset_password_mail(user)
+
+      expect(mail.body.encoded).to match('Hola ' + user.fullname)
+    end
+  end
+
+  describe "confirmation mail" do
+    it "should render the headers" do
+      user = FactoryGirl.create :user, :confirmation_open
+      mail = UserMailer.confirmation_mail(user)
+
+      expect(mail.subject).to eq("Confirmación de correo")
+      expect(mail.to).to eq([user.email])
+      expect(mail.from).to eq(["staff@eventosbrinson.com"])
+    end
+
+    it "should render the body" do
+      user = FactoryGirl.create :user, :confirmation_open
+      mail =  UserMailer.confirmation_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
     end
