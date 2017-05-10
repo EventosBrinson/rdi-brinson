@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Filterable
+  include Orderable
   ROLES = [:staff, :admin, :user]
 
   validates :username, presence: true
@@ -16,7 +17,7 @@ class User < ApplicationRecord
   has_secure_password validations: false
   enum role: ROLES
 
-  scope :search, -> (query) { where('LOWER("users"."firstname") like :query OR LOWER("users"."lastname") like :query OR LOWER("users"."username") like :query OR LOWER("users"."email") like :query', query: "#{ query.to_s.downcase }%") }
+  scope :search, -> (query) { where('LOWER("users"."firstname") like :query OR LOWER("users"."lastname") like :query OR LOWER("users"."username") like :query OR LOWER("users"."email") like :query', query: "%#{ query.to_s.downcase }%") }
 
   def self.find_by_credential(credential)
     where('"users"."email" = :credential OR "users"."username" = :credential', credential: credential).first

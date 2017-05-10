@@ -63,6 +63,23 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.ordered' do
+    context 'order hash contains actual columns to order' do
+      it 'returns the users ordered by the specified columns and orders' do
+        user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'De anda'
+        user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
+        user_match3 = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'de anda'
+
+        users_filtered = User.ordered({ lastname: :desc, firstname: :asc })
+
+        expect(users_filtered.size).to eq(3)
+        expect(users_filtered.first).to eq(user_match2)
+        expect(users_filtered.second).to eq(user_match1)
+        expect(users_filtered.last).to eq(user_match3)
+      end
+    end
+  end
+
   describe '.find_by_credential' do
     it 'returns the first record which username or password match the credential param' do
       user = FactoryGirl.create :user
