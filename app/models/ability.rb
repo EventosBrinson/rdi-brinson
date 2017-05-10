@@ -7,7 +7,7 @@ class Ability
     if user.admin? || user.staff?
       can :manage, User
       cannot :update, User do |subject|
-        ((subject.id == user.id and subject.role_changed?) or (high_level_user?(subject) and subject.id != user.id)) and !user.main
+        ((subject.id == user.id and subject.role_changed?) or (high_level_user?(subject) and subject.id != user.id) or to_high_level_user?(subject)) and !user.main
       end
       cannot :create, User do |subject|
         high_level_user?(subject) and !user.main
@@ -31,8 +31,14 @@ class Ability
 
   def high_level_user?(user)
     if user.role_changed? and !user.new_record?
-      user.role_was == :admin || user.role_was == :staff
+      user.role_was == 'admin' || user.role_was == 'staff'
     else
+      user.admin? || user.staff?
+    end
+  end
+
+  def to_high_level_user?(user)
+    if user.role_changed?
       user.admin? || user.staff?
     end
   end
