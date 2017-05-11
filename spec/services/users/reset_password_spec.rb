@@ -34,8 +34,19 @@ describe Users::ResetPassword do
     context 'when an erratic token is present' do
       it 'returns nil' do
         user = FactoryGirl.create :user, :reset_password_requested
-
         service = Users::ResetPassword.new token: 'erratic token', password: 'irelevant_password'
+
+        user.reload
+
+        expect(service.process).to be_nil
+        expect(user).to be_reset_password_requested
+      end
+    end
+
+    context 'when an erratic password is present' do
+      it 'returns nil' do
+        user = FactoryGirl.create :user, :reset_password_requested
+        service = Users::ResetPassword.new token: user.reset_password_token, password: ''
 
         user.reload
 

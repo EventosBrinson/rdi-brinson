@@ -38,4 +38,14 @@ class User < ApplicationRecord
   def reset_password_requested?
     !reset_password_token.nil? and !reset_password_sent_at.nil?
   end
+
+  def password=(unencrypted_password)
+    if unencrypted_password.nil?
+      self.password_digest = nil
+    else
+      @password = unencrypted_password
+      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+      self.password_digest = BCrypt::Password.create(unencrypted_password, cost: cost)
+    end
+  end
 end
