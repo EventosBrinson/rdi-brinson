@@ -4,4 +4,8 @@ Rails.application.routes.draw do
   patch  '/confirm',        to: 'sessions#confirm'
   post   '/reset_password', to: 'sessions#request_reset_password'
   patch  '/reset_password', to: 'sessions#reset_password'
+
+  get    '/users',          to: 'users#index'
+  post   '/users',          to: 'users#create'
+  patch  '/users/:id',      to: 'users#update'
 end
