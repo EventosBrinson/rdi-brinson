@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_secure_password validations: false
   enum role: ROLES
 
+  default_scope { order(username: :asc) }
   scope :search, -> (query) { where('LOWER("users"."firstname") like :query OR LOWER("users"."lastname") like :query OR LOWER("users"."username") like :query OR LOWER("users"."email") like :query', query: "%#{ query.to_s.downcase }%") }
 
   def self.find_by_credential(credential)
