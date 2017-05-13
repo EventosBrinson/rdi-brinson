@@ -8,6 +8,13 @@ class UsersController < ApplicationController
     render template: 'users/index.json'
   end
 
+  def show
+    authorize! :show, User
+    @user = User.find(params[:id])
+
+    render template: 'users/show.json'
+  end
+
   def create
     @user = User.new user_params
     authorize! :create, @user

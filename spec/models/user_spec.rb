@@ -55,6 +55,8 @@ RSpec.describe User, type: :model do
       user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
       user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
 
+      p User.filter({ search: 'david', order: { lastname: :desc } }).to_sql
+
       users_filtered = User.filter({ search: 'david', order: { lastname: :desc } })
 
       expect(users_filtered.size).to eq(2)

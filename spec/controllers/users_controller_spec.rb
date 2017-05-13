@@ -95,6 +95,38 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
+  describe 'GET #show' do
+    context 'when the current user has admin rights' do
+      it 'returns the user data using the specified id' do
+        user = FactoryGirl.create :user, :confirmed, :admin
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        user_to_retreave = FactoryGirl.create(:user)
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        get :show, params: { id: user_to_retreave.id }
+
+        expect(response).to be_success
+        expect(assigns(:user)).to eq(user_to_retreave)
+        expect(response).to render_template('users/show.json')
+      end
+    end
+
+    context 'when the current user has not admin rights' do
+      it 'returns forbiden' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        user_to_retreave = FactoryGirl.create(:user)
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        get :show, params: { id: user_to_retreave.id }
+
+        expect(response).to be_forbidden
+      end
+    end
+  end
+
   describe 'POST #create' do
     context 'when current user has admin rights' do
       context 'and a role under admin/staff is present' do

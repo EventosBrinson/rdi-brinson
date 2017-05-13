@@ -56,5 +56,6 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:update, user_role_changed) }
     it{ should_not be_able_to(:manage, other_user) }
     it{ should_not be_able_to(:index, User) }
+    it{ should_not be_able_to(:show, User) }
   end
 end

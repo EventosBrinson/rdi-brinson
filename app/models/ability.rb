@@ -24,6 +24,7 @@ class Ability
       end
 
       cannot :index, User
+      cannot :show, User
     end
   end
 
