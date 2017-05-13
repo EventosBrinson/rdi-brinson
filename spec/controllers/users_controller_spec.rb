@@ -9,14 +9,14 @@ RSpec.describe UsersController, type: :controller do
         current_user = FactoryGirl.create :user, :confirmed, :admin
         token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
-        10.times { FactoryGirl.create :user }
+        5.times { FactoryGirl.create :user }
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index
 
         expect(response).to be_success
         expect(assigns(:users)).to_not be_nil
-        expect(assigns(:users).size).to eq(11)
+        expect(assigns(:users).size).to eq(6)
         expect(response).to render_template('users/index.json')
       end
 
@@ -85,7 +85,7 @@ RSpec.describe UsersController, type: :controller do
         current_user = FactoryGirl.create :user, :confirmed
         token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
-        10.times { FactoryGirl.create :user }
+        5.times { FactoryGirl.create :user }
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index
