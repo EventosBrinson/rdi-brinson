@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def index
     authorize! :index, User
-    @users = User.filter(params.slice(:search, :ordered))
+    @users = get_users
 
     render template: 'users/index.json'
   end
@@ -58,6 +58,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def get_users
+    params[:search] || params[:ordered] ? User.filter(params.slice(:search, :ordered)) : User.all
+  end
 
   def user_params
     params.require(:user).permit(:email, :username, :firstname, :lastname, :role)
