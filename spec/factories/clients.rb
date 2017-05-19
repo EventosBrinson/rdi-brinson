@@ -7,6 +7,6 @@ FactoryGirl.define do
     telephone_1 { Faker::PhoneNumber.cell_phone }
     telephone_2 { Faker::PhoneNumber.cell_phone }
     id_name { Client::ID_NAMES.sample }
-    trust_level { (1...10).to_a.sample }
+    trust_level { (1..10).to_a.sample }
   end
 end
