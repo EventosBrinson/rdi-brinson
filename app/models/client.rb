@@ -1,4 +1,5 @@
 class Client < ApplicationRecord
+  include Activable
   ID_NAMES = ['ine', 'licencia', 'cartilla', 'pasaporte', 'otra']
 
   validates :firstname, presence: true

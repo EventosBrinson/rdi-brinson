@@ -9,7 +9,8 @@ class CreateClients < ActiveRecord::Migration[5.0]
       t.string    :telephone_2
       t.string    :id_name,          null: false
       t.integer   :trust_level,      null: false, default: 10
-
+      t.boolean   :active,           null: false, default: true
+ 
       t.timestamps null: false
     end
   end
