@@ -10,9 +10,13 @@ class UsersController < ApplicationController
 
   def show
     authorize! :show, User
-    @user = User.find(params[:id])
+    @user = User.find_by id: params[:id]
 
-    render template: 'users/show.json'
+    if @user
+      render template: 'users/show.json'
+    else
+      head :not_found
+    end
   end
 
   def create
@@ -25,7 +29,7 @@ class UsersController < ApplicationController
 
       render template: 'users/show.json'
     else
-      render json: @user.errors, status: :bad_request
+      render json: @user.errors
     end
   end
 
@@ -50,7 +54,7 @@ class UsersController < ApplicationController
 
         render template: 'users/show.json'
       else
-        render json: @user.errors, status: :bad_request
+        render json: @user.errors
       end
     else
       head status: 404

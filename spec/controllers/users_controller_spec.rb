@@ -21,7 +21,7 @@ RSpec.describe UsersController, type: :controller do
       end
 
       context 'when the search param is present' do
-        it 'it returns a list of users that match the query' do
+        it 'returns a list of users that match the query' do
           current_user = FactoryGirl.create :user, :confirmed, :staff
           token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
@@ -40,7 +40,7 @@ RSpec.describe UsersController, type: :controller do
       end
 
       context 'when the order param is present' do
-        it 'it returns a list of users ordered by a field name' do
+        it 'returns a list of users ordered by a field name' do
           current_user = FactoryGirl.create :user, :confirmed, :staff
           token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
@@ -59,7 +59,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         context 'but is erratic' do
-          it 'it returns a list of users ordered by the default' do
+          it 'returns a list of users ordered by the default' do
             current_user = FactoryGirl.create :user, :confirmed, :staff
             token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
@@ -109,6 +109,18 @@ RSpec.describe UsersController, type: :controller do
         expect(response).to be_success
         expect(assigns(:user)).to eq(user_to_retreave)
         expect(response).to render_template('users/show.json')
+      end
+
+      context 'the id is not from an actual user' do
+        it 'returns 404' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: user.id + 1 }
+
+          expect(response).to be_not_found
+        end
       end
     end
 
@@ -163,7 +175,7 @@ RSpec.describe UsersController, type: :controller do
             request.headers[:HTTP_AUTH_TOKEN] = token
 
             expect{ post :create, params: { user: { email: 'erratic_email', username: '', password: '' }}}.to_not change{ User.count }
-            expect(response).to be_bad_request
+            expect(response).to be_success
           end
           it 'returns the user errors json object' do
             user = FactoryGirl.create :user, :confirmed, :admin
@@ -269,6 +281,7 @@ RSpec.describe UsersController, type: :controller do
           user.reload
 
           expect(user.firstname).to eq(previous_firstname)
+          expect(response).to be_success
         end
 
         it 'returns the user errors json object' do
@@ -647,6 +660,7 @@ RSpec.describe UsersController, type: :controller do
             request.headers[:HTTP_AUTH_TOKEN] = token
             patch :update, params: { id: user.id, user: { password: '' } }
 
+            expect(response).to be_success
             expect(response.body).to_not be_empty
             expect(assigns(:user).errors).to_not be_empty
             expect(ActionMailer::Base.deliveries).to be_empty
