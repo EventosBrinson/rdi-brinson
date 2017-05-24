@@ -5,6 +5,7 @@ RSpec.describe Ability do
   let(:admin) { FactoryGirl.create(:user, :admin) }
   let(:staff) { FactoryGirl.create(:user, :staff) }
   let(:main) { FactoryGirl.create(:user, :admin, :main) }
+  let(:average_user) { FactoryGirl.create(:user) }
 
   let(:user_role_changed) { user.role = :staff; user }
 
@@ -26,6 +27,17 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, admin) }
     it{ should be_able_to(:update, admin_role_changed) }
     it{ should be_able_to(:update, staff) }
+
+    let(:client) { FactoryGirl.create(:client, creator_id: user.id) }
+    let(:client_with_active_changed) { client.active = false; client }
+    let(:other_user_client) { FactoryGirl.create(:client, creator_id: other_user.id) }
+
+    it{ should be_able_to(:manage, Client) }
+    it{ should be_able_to(:index, Client) }
+    it{ should be_able_to(:create, Client) }
+    it{ should be_able_to(:update, client) }
+    it{ should be_able_to(:update, other_user_client) }
+    it{ should be_able_to(:update, client_with_active_changed) }
   end
 
   context 'when the user is an admin or staff' do
@@ -44,6 +56,17 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:update, admin) }
     it{ should_not be_able_to(:update, admin_degraded_to_user) }
     it{ should_not be_able_to(:update, staff) }
+
+    let(:client) { FactoryGirl.create(:client, creator_id: user.id) }
+    let(:client_with_active_changed) { client.active = false; client }
+    let(:other_user_client) { FactoryGirl.create(:client, creator_id: other_user.id) }
+
+    it{ should be_able_to(:manage, Client) }
+    it{ should be_able_to(:index, Client) }
+    it{ should be_able_to(:create, Client) }
+    it{ should be_able_to(:update, client) }
+    it{ should be_able_to(:update, other_user_client) }
+    it{ should be_able_to(:update, client_with_active_changed) }
   end
 
   context 'when the user is just an user' do
@@ -57,5 +80,15 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:manage, other_user) }
     it{ should_not be_able_to(:index, User) }
     it{ should_not be_able_to(:show, User) }
+
+    let(:client) { FactoryGirl.create(:client, creator_id: user.id) }
+    let(:client_with_active_changed) { client.active = false; client }
+    let(:other_user_client) { FactoryGirl.create(:client, creator_id: other_user.id) }
+
+    it{ should be_able_to(:index, Client) }
+    it{ should be_able_to(:create, Client) }
+    it{ should be_able_to(:update, client) }
+    it{ should_not be_able_to(:update, other_user_client) }
+    it{ should_not be_able_to(:update, client_with_active_changed) }
   end
 end

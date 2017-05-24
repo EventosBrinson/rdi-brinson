@@ -12,6 +12,7 @@ class Ability
       cannot :create, User do |subject|
         high_level_user?(subject) and !user.main
       end
+      can :manage, Client
     end
 
     if user.user?
@@ -25,6 +26,12 @@ class Ability
 
       cannot :index, User
       cannot :show, User
+
+      can :index, Client
+      can :create, Client
+      can :update, Client do |subject|
+        subject.creator_id == user.id and !subject.active_changed?
+      end
     end
   end
 
