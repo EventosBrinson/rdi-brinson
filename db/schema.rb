@@ -25,8 +25,10 @@ ActiveRecord::Schema.define(version: 20170519023528) do
     t.string   "id_name",                       null: false
     t.integer  "trust_level",    default: 10,   null: false
     t.boolean  "active",         default: true, null: false
+    t.integer  "creator_id"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.index ["creator_id"], name: "index_clients_on_creator_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -50,4 +52,5 @@ ActiveRecord::Schema.define(version: 20170519023528) do
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
+  add_foreign_key "clients", "users", column: "creator_id"
 end
