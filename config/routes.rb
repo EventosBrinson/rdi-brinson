@@ -9,4 +9,9 @@ Rails.application.routes.draw do
   post   '/users',          to: 'users#create'
   patch  '/users/:id',      to: 'users#update'
   get    '/users/:id',      to: 'users#show'
+
+  get    '/clients',        to: 'clients#index'
+  post   '/clients',        to: 'clients#create'
+  patch  '/clients/:id',    to: 'clients#update'
+  get    '/clients/:id',    to: 'clients#show'
 end
