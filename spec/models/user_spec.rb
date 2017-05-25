@@ -49,19 +49,30 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.paginated' do
+    it 'returns all the users between the offset and limit range' do
+      user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
+      user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_match3 = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
+      user_match4 = FactoryGirl.create :user, firstname: 'Enrique', lastname: 'Segoviano'
+
+      expect(User.paginated(offset: 1, limit: 2).size).to eq(2)
+    end
+  end
+
   describe '.filter' do
     it 'returns all the users filtered by params as messages and param value as message param' do
       user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
       user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_match3 = FactoryGirl.create :user, firstname: 'david', lastname: 'segoviano'
+      user_match4 = FactoryGirl.create :user, firstname: 'david', lastname: 'zan'
       user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
 
-      p User.filter({ search: 'david', order: { lastname: :desc } }).to_sql
-
-      users_filtered = User.filter({ search: 'david', order: { lastname: :desc } })
+      users_filtered = User.filter({ search: 'david', order: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
 
       expect(users_filtered.size).to eq(2)
-      expect(users_filtered.first).to eq(user_match2)
-      expect(users_filtered.last).to eq(user_match1)
+      expect(users_filtered.first).to eq(user_match4)
+      expect(users_filtered.last).to eq(user_match3)
     end
   end
 
@@ -72,12 +83,12 @@ RSpec.describe User, type: :model do
         user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
         user_match3 = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'de anda'
 
-        users_filtered = User.ordered({ lastname: :desc, firstname: :asc })
+        users_ordered = User.ordered({ lastname: :desc, firstname: :asc })
 
-        expect(users_filtered.size).to eq(3)
-        expect(users_filtered.first).to eq(user_match2)
-        expect(users_filtered.second).to eq(user_match1)
-        expect(users_filtered.last).to eq(user_match3)
+        expect(users_ordered.size).to eq(3)
+        expect(users_ordered.first).to eq(user_match2)
+        expect(users_ordered.second).to eq(user_match1)
+        expect(users_ordered.last).to eq(user_match3)
       end
     end
   end

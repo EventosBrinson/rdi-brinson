@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include Filterable
   include Orderable
+  include Paginatable
   ROLES = [:staff, :admin, :user]
 
   validates :username, presence: true

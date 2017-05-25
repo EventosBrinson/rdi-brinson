@@ -78,6 +78,45 @@ RSpec.describe UsersController, type: :controller do
           end
         end
       end
+      context 'when the paginated param is present' do
+        it 'returns a list of users with the offset and limit specified' do
+          current_user = FactoryGirl.create :user, :confirmed, :staff
+          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+          match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
+          match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
+          match_user3 = FactoryGirl.create :user, firstname: 'ZZA', lastname: 'XXF'
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :index, params: { paginated: { offset: 0, limit: 2 } }
+
+          expect(response).to be_success
+          expect(assigns(:users)).to_not be_nil
+          expect(assigns(:users).size).to eq(2)
+          expect(assigns(:users).first).to eq(current_user)
+          expect(response).to render_template('users/index.json')
+        end
+
+        context 'but the range is erratic' do
+          it 'returns empty' do
+            current_user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+            match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
+            match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
+            match_user3 = FactoryGirl.create :user, firstname: 'ZZA', lastname: 'XXF'
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            get :index, params: { paginated: { offset: 2, limit: 10 }}
+
+            expect(response).to be_success
+            expect(assigns(:users)).to_not be_nil
+            expect(assigns(:users).size).to eq(2)
+            expect(assigns(:users).first).to eq(match_user2)
+            expect(response).to render_template('users/index.json')
+          end
+        end
+      end
     end
 
     context 'when the current user does not has admin rights' do
