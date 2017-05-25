@@ -10,7 +10,7 @@ module Orderable
           orders += " LOWER(\"#{ self.name.downcase.pluralize }\".\"#{column.to_s.downcase}\") #{order.to_s.downcase}"
         end
       end
-      self.reorder(orders)
+      orders.empty? ? self.where(nil) : self.reorder(orders)
     end
   end
 end

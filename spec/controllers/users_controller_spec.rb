@@ -98,7 +98,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         context 'but the range is erratic' do
-          it 'returns empty' do
+          it 'returns what can be returned with that range' do
             current_user = FactoryGirl.create :user, :confirmed, :staff
             token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
