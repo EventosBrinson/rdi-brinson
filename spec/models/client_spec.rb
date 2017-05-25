@@ -65,4 +65,58 @@ RSpec.describe Client, type: :model do
       expect{ client.deactivate! }.to change(client, :active).from(true).to(false)
     end
   end
+
+  describe '.search' do
+    it 'returns all clients that match the query' do
+      client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
+      client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
+      client_not_match = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
+
+      expect(Client.search('david').size).to eq(2)
+    end
+  end
+
+  describe '.paginated' do
+    it 'returns all the users between the offset and limit range' do
+      client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
+      client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
+      client_match3 = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
+      client_match4 = FactoryGirl.create :client, firstname: 'Enrique', lastname: 'Segoviano'
+
+      expect(Client.paginated(offset: 1, limit: 2).size).to eq(2)
+    end
+  end
+
+  describe '.filter' do
+    it 'returns all the users filtered by params as messages and param value as message param' do
+      client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
+      client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
+      client_match3 = FactoryGirl.create :client, firstname: 'david', lastname: 'segoviano'
+      client_match4 = FactoryGirl.create :client, firstname: 'david', lastname: 'zan'
+      client_not_match = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
+
+      clients_filtered = Client.filter({ search: 'david', order: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
+
+      expect(clients_filtered.size).to eq(2)
+      expect(clients_filtered.first).to eq(client_match4)
+      expect(clients_filtered.last).to eq(client_match3)
+    end
+  end
+
+  describe '.ordered' do
+    context 'order hash contains actual columns to order' do
+      it 'returns the users ordered by the specified columns and orders' do
+        client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'De anda'
+        client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
+        client_match3 = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'de anda'
+
+        clients_ordered = Client.ordered({ lastname: :desc, firstname: :asc })
+
+        expect(clients_ordered.size).to eq(3)
+        expect(clients_ordered.first).to eq(client_match2)
+        expect(clients_ordered.second).to eq(client_match1)
+        expect(clients_ordered.last).to eq(client_match3)
+      end
+    end
+  end
 end
