@@ -787,5 +787,16 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
+    context 'when the id is not from an actual user' do
+      it 'returns 404' do
+        user = FactoryGirl.create :user, :confirmed, :admin
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        patch :update, params: { id: user.id + 1 }
+
+        expect(response).to be_not_found
+      end
+    end
   end
 end

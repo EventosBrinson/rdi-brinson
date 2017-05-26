@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[:id]
+    @user = User.find_by id: params[:id]
 
     if @user
       @user.assign_attributes user_updatabe_params
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
         render json: @user.errors
       end
     else
-      head status: 404
+      head :not_found
     end
   end
 
