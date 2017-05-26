@@ -8,6 +8,7 @@ FactoryGirl.define do
     telephone_2 { Faker::PhoneNumber.cell_phone }
     id_name { Client::ID_NAMES.sample }
     trust_level { (1..10).to_a.sample }
+    creator { FactoryGirl.create :user }
 
     trait :active do
       active true

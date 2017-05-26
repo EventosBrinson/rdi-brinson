@@ -16,6 +16,7 @@ class Client < ApplicationRecord
   validates :id_name, inclusion: { in: ID_NAMES }
   validates :trust_level, presence: true
   validates :trust_level, inclusion: { in: (1..10).to_a }
+  validates :creator, presence: true
 
   scope :search, -> (query) { where('LOWER("clients"."firstname") like :query OR LOWER("clients"."lastname") like :query OR LOWER("clients"."address_line_1") like :query OR LOWER("clients"."address_line_2") like :query', query: "%#{ query.to_s.downcase }%") }
 end

@@ -21,6 +21,7 @@ RSpec.describe Client, type: :model do
   it { should validate_inclusion_of(:id_name).in_array(Client::ID_NAMES) }
   it { should validate_presence_of :trust_level }
   it { should validate_inclusion_of(:trust_level).in_array((1..10).to_a) }
+  it { should validate_presence_of :creator }
 
   it { should belong_to(:creator).class_name('User') }
 
