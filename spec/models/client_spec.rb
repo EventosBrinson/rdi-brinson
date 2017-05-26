@@ -22,6 +22,8 @@ RSpec.describe Client, type: :model do
   it { should validate_presence_of :trust_level }
   it { should validate_inclusion_of(:trust_level).in_array((1..10).to_a) }
 
+  it { should belong_to(:creator).class_name('User') }
+
   describe '.active' do
     it 'returns all the active clients' do
       5.times { FactoryGirl.create :client }

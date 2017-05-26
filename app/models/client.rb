@@ -6,6 +6,8 @@ class Client < ApplicationRecord
 
   ID_NAMES = ['ine', 'licencia', 'cartilla', 'pasaporte', 'otra']
 
+  belongs_to :creator, class_name: 'User'
+
   validates :firstname, presence: true
   validates :lastname, presence: true
   validates :address_line_1, presence: true
