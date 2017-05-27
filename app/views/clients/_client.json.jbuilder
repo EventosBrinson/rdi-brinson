@@ -7,5 +7,6 @@ json.telephone_1 client.telephone_1
 json.telephone_2 client.telephone_2
 json.id_name client.id_name
 json.trust_level client.trust_level
+json.active client.active
 json.creator_id client.creator_id
-json.created_at client_created_at
+json.created_at client.created_at
