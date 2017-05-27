@@ -15,41 +15,41 @@ ActiveRecord::Schema.define(version: 20170519023528) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "clients", force: :cascade do |t|
-    t.string   "firstname",                     null: false
-    t.string   "lastname",                      null: false
-    t.string   "address_line_1",                null: false
-    t.string   "address_line_2"
-    t.string   "telephone_1",                   null: false
-    t.string   "telephone_2"
-    t.string   "id_name",                       null: false
-    t.integer  "trust_level",    default: 10,   null: false
-    t.boolean  "active",         default: true, null: false
-    t.integer  "creator_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.index ["creator_id"], name: "index_clients_on_creator_id", using: :btree
+  create_table "clients", id: :serial, force: :cascade do |t|
+    t.string "firstname", null: false
+    t.string "lastname", null: false
+    t.string "address_line_1", null: false
+    t.string "address_line_2"
+    t.string "telephone_1", null: false
+    t.string "telephone_2"
+    t.string "id_name", null: false
+    t.integer "trust_level", default: 10, null: false
+    t.boolean "active", default: true, null: false
+    t.integer "creator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_clients_on_creator_id"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string   "username",                               null: false
-    t.string   "email",                                  null: false
-    t.string   "password_digest"
-    t.string   "firstname",                              null: false
-    t.string   "lastname",                               null: false
-    t.integer  "role",                                   null: false
-    t.boolean  "main",                   default: false, null: false
-    t.string   "reset_password_token"
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "username", null: false
+    t.string "email", null: false
+    t.string "password_digest"
+    t.string "firstname", null: false
+    t.string "lastname", null: false
+    t.integer "role", null: false
+    t.boolean "main", default: false, null: false
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.string   "confirmation_token"
+    t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-    t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "clients", "users", column: "creator_id"
