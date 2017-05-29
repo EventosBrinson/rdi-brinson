@@ -13,6 +13,9 @@ RSpec.describe Client, type: :model do
   it { should have_db_column(:trust_level).of_type(:integer).with_options(null: false, default: 10) }
   it { should have_db_column(:active).of_type(:boolean).with_options(null: false, default: true) }
 
+  it { should belong_to(:creator).class_name('User') }
+  it { should have_many(:documents) }
+
   it { should validate_presence_of :firstname }
   it { should validate_presence_of :lastname }
   it { should validate_presence_of :address_line_1 }
@@ -22,8 +25,6 @@ RSpec.describe Client, type: :model do
   it { should validate_presence_of :trust_level }
   it { should validate_inclusion_of(:trust_level).in_array((1..10).to_a) }
   it { should validate_presence_of :creator }
-
-  it { should belong_to(:creator).class_name('User') }
 
   describe '.active' do
     it 'returns all the active clients' do
