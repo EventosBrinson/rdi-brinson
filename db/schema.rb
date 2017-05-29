@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170519023528) do
+ActiveRecord::Schema.define(version: 20170529034245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "clients", id: :serial, force: :cascade do |t|
+  create_table "clients", force: :cascade do |t|
     t.string "firstname", null: false
     t.string "lastname", null: false
     t.string "address_line_1", null: false
@@ -25,13 +25,25 @@ ActiveRecord::Schema.define(version: 20170519023528) do
     t.string "id_name", null: false
     t.integer "trust_level", default: 10, null: false
     t.boolean "active", default: true, null: false
-    t.integer "creator_id"
+    t.bigint "creator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_clients_on_creator_id"
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "documents", force: :cascade do |t|
+    t.string "title", null: false
+    t.bigint "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "file_file_name"
+    t.string "file_content_type"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at"
+    t.index ["client_id"], name: "index_documents_on_client_id"
+  end
+
+  create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "email", null: false
     t.string "password_digest"
@@ -53,4 +65,5 @@ ActiveRecord::Schema.define(version: 20170519023528) do
   end
 
   add_foreign_key "clients", "users", column: "creator_id"
+  add_foreign_key "documents", "clients"
 end
