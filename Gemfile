@@ -6,6 +6,7 @@ gem 'rake'
 gem 'pg'
 gem 'puma'
 gem 'rack-cors'
+gem "paperclip"
 
 gem 'jbuilder'
 gem 'bcrypt'
