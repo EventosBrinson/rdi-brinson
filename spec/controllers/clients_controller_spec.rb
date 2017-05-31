@@ -125,13 +125,13 @@ RSpec.describe ClientsController, type: :controller do
       user = FactoryGirl.create :user, :confirmed, :admin
       token = Sessions::Create.for credential: user.username, password: user.password
 
-      client_to_retreave = FactoryGirl.create :client
+      client_to_retrieve = FactoryGirl.create :client
 
       request.headers[:HTTP_AUTH_TOKEN] = token
-      get :show, params: { id: client_to_retreave.id }
+      get :show, params: { id: client_to_retrieve.id }
 
       expect(response).to be_success
-      expect(assigns(:client)).to eq(client_to_retreave)
+      expect(assigns(:client)).to eq(client_to_retrieve)
       expect(response).to render_template('clients/show.json')
     end
 
