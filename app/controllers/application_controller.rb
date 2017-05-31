@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_request
-    @current_user = Sessions::Retrieve.for token: request.headers[:HTTP_AUTH_TOKEN]
+    @current_user = Sessions::Retrieve.for token: request.headers[:HTTP_AUTH_TOKEN] || request.cookies['ssid']
     head :forbidden unless @current_user
   end
 
