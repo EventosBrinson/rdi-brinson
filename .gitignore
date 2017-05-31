@@ -18,3 +18,5 @@
 
 # MACOS
 .DS_Store*
+
+/storage
