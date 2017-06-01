@@ -1,3 +1,5 @@
+require 'constants/images'
+
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 
@@ -5,7 +7,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 require 'paperclip/matchers'
-require 'constants/images'
 
 ActiveRecord::Migration.maintain_test_schema!
 
