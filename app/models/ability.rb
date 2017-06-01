@@ -13,6 +13,7 @@ class Ability
         high_level_user?(subject) and !user.main
       end
       can :manage, Client
+      can :manage, Document
     end
 
     if user.user?
@@ -31,6 +32,11 @@ class Ability
       can :create, Client
       can :update, Client do |subject|
         subject.creator_id == user.id and !subject.active_changed?
+      end
+
+      can :show, Document
+      can [:create, :update], Document do |subject|
+        subject.client.creator_id == user.id
       end
     end
   end

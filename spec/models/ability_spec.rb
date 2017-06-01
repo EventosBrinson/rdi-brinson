@@ -38,6 +38,16 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, client) }
     it{ should be_able_to(:update, other_user_client) }
     it{ should be_able_to(:update, client_with_active_changed) }
+
+    let(:document_for_own_client) { FactoryGirl.create :document, client: client }
+    let(:document_for_other_user_client) { FactoryGirl.create :document, client: other_user_client }
+
+    it{ should be_able_to(:manage, Document) }
+    it{ should be_able_to(:show, Document) }
+    it{ should be_able_to(:create, document_for_own_client) }
+    it{ should be_able_to(:create, document_for_other_user_client) }
+    it{ should be_able_to(:update, document_for_own_client) }
+    it{ should be_able_to(:update, document_for_other_user_client) }
   end
 
   context 'when the user is an admin or staff' do
@@ -67,6 +77,16 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, client) }
     it{ should be_able_to(:update, other_user_client) }
     it{ should be_able_to(:update, client_with_active_changed) }
+
+    let(:document_for_own_client) { FactoryGirl.create :document, client: client }
+    let(:document_for_other_user_client) { FactoryGirl.create :document, client: other_user_client }
+
+    it{ should be_able_to(:manage, Document) }
+    it{ should be_able_to(:show, Document) }
+    it{ should be_able_to(:create, document_for_own_client) }
+    it{ should be_able_to(:create, document_for_other_user_client) }
+    it{ should be_able_to(:update, document_for_own_client) }
+    it{ should be_able_to(:update, document_for_other_user_client) }
   end
 
   context 'when the user is just an user' do
@@ -90,5 +110,14 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, client) }
     it{ should_not be_able_to(:update, other_user_client) }
     it{ should_not be_able_to(:update, client_with_active_changed) }
+
+    let(:document_for_own_client) { FactoryGirl.create :document, client: client }
+    let(:document_for_other_user_client) { FactoryGirl.create :document, client: other_user_client }
+
+    it{ should be_able_to(:show, Document) }
+    it{ should be_able_to(:create, document_for_own_client) }
+    it{ should_not be_able_to(:create, document_for_other_user_client) }
+    it{ should be_able_to(:update, document_for_own_client) }
+    it{ should_not be_able_to(:update, document_for_other_user_client) }
   end
 end
