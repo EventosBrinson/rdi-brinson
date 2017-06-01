@@ -15,4 +15,15 @@ RSpec.describe Document, type: :model do
   it { should validate_attachment_content_type(:file)
               .allowing('image/jpeg', 'application/pdf')
               .rejecting('text/plain', 'text/xml') }
+
+  describe '#set_file_from' do
+    it 'sets the filename and data form a hash' do
+      document = Document.new
+
+      document.set_file_from params: { filename: 'tiger.jpg', data: Constants::Images::BASE64_2x2 }
+
+      expect(document.file_file_name).to eq 'tiger.jpg'
+      expect(document.file_content_type).to eq 'image/jpeg'
+    end
+  end
 end
