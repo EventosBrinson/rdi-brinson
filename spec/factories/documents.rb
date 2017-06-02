@@ -1,3 +1,5 @@
+require_relative '../constants/images'
+
 FactoryGirl.define do
   factory :document do
     title { Faker::Superhero.power }
