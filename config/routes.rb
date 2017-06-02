@@ -17,5 +17,6 @@ Rails.application.routes.draw do
 
   post   '/documents',      to: 'documents#create'
   patch  '/documents/:id',  to: 'documents#update'
+  delete '/documents/:id',  to: 'documents#destroy'
   get    '/documents/:id',  to: 'documents#show'
 end
