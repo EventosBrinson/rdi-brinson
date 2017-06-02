@@ -48,6 +48,8 @@ RSpec.describe Ability do
     it{ should be_able_to(:create, document_for_other_user_client) }
     it{ should be_able_to(:update, document_for_own_client) }
     it{ should be_able_to(:update, document_for_other_user_client) }
+    it{ should be_able_to(:delete, document_for_own_client) }
+    it{ should be_able_to(:delete, document_for_other_user_client) }
   end
 
   context 'when the user is an admin or staff' do
@@ -87,6 +89,8 @@ RSpec.describe Ability do
     it{ should be_able_to(:create, document_for_other_user_client) }
     it{ should be_able_to(:update, document_for_own_client) }
     it{ should be_able_to(:update, document_for_other_user_client) }
+    it{ should be_able_to(:delete, document_for_own_client) }
+    it{ should be_able_to(:delete, document_for_other_user_client) }
   end
 
   context 'when the user is just an user' do
@@ -119,5 +123,7 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:create, document_for_other_user_client) }
     it{ should be_able_to(:update, document_for_own_client) }
     it{ should_not be_able_to(:update, document_for_other_user_client) }
+    it{ should be_able_to(:delete, document_for_own_client) }
+    it{ should_not be_able_to(:delete, document_for_other_user_client) }
   end
 end

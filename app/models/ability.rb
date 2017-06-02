@@ -35,7 +35,7 @@ class Ability
       end
 
       can :show, Document
-      can [:create, :update], Document do |subject|
+      can [:create, :update, :delete], Document do |subject|
         subject.client.creator_id == user.id
       end
     end
