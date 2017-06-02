@@ -25,10 +25,36 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def update
+    @document = Document.find_by_id params[:id]
+    authorize! :update, @document
+
+    if @document and @document.update document_updatable_params
+      render template: 'documents/show.json'
+    else
+      render json: @document.errors
+    end
+  end
+
+  def destroy
+    @document = Document.find_by_id params[:id]
+    authorize! :delete, @document
+
+    if @document and @document.destroy
+      head :ok
+    else
+      render json: @document.errors
+    end
+  end
+
   private
 
   def document_params
     params.require(:document).permit(:title, :client_id)
+  end
+
+  def document_updatable_params
+    params.require(:document).permit(:title)
   end
 
   def file_params
