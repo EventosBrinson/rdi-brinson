@@ -10,3 +10,6 @@ json.trust_level client.trust_level
 json.active client.active
 json.creator_id client.creator_id
 json.created_at client.created_at
+json.documents do
+  json.array! client.documents, partial: 'documents/document', as: :document
+end
