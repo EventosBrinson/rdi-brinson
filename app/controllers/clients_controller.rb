@@ -51,7 +51,19 @@ class ClientsController < ApplicationController
   private
 
   def get_clients
-    params[:search] || params[:ordered] || params[:paginated] ? Client.filter(params.slice(:search, :ordered, :paginated)) : Client.all
+    if params[:search] || params[:ordered] || params[:paginated]
+      if current_user.admin? || current_user.staff? and params[:all]
+        Client.filter(params.slice(:search, :ordered, :paginated))
+      else
+        current_user.clients.filter(params.slice(:search, :ordered, :paginated))
+      end
+    else
+      if current_user.admin? || current_user.staff? and params[:all]
+        Client.all
+      else
+        current_user.clients
+      end
+    end
   end
 
   def client_params

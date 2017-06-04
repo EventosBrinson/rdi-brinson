@@ -2,63 +2,181 @@ require 'rails_helper'
 
 RSpec.describe ClientsController, type: :controller do
   describe 'GET #index' do
-    context 'when the current user is loged in' do
-      it 'returns the list of clients' do
-        current_user = FactoryGirl.create :user, :confirmed, :admin
+    it 'returns the list of clients the user has created' do
+      current_user = FactoryGirl.create :user, :confirmed
+      token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+      5.times { FactoryGirl.create :client, creator: current_user }
+      5.times { FactoryGirl.create :client }
+
+      request.headers[:HTTP_AUTH_TOKEN] = token
+      get :index
+
+      expect(response).to be_success
+      expect(assigns(:clients)).to_not be_nil
+      expect(assigns(:clients).size).to eq(5)
+      expect(response).to render_template('clients/index.json')
+    end
+
+    context 'when the search param is present' do
+      it 'returns a list of clients that match the query' do
+        current_user = FactoryGirl.create :user, :confirmed
         token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
-        5.times { FactoryGirl.create :client }
+        FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+        FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+        FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+        not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
 
         request.headers[:HTTP_AUTH_TOKEN] = token
-        get :index
+        get :index, params: { search: 'AAB' }
 
         expect(response).to be_success
         expect(assigns(:clients)).to_not be_nil
-        expect(assigns(:clients).size).to eq(5)
+        expect(assigns(:clients).size).to eq(2)
+        expect(response).to render_template('clients/index.json')
+      end
+    end
+
+    context 'when the order param is present' do
+      it 'returns a list of clients ordered by a field name' do
+        current_user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+        FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+        FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+        FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+        match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        get :index, params: { ordered: { lastname: :desc }}
+
+        expect(response).to be_success
+        expect(assigns(:clients)).to_not be_nil
+        expect(assigns(:clients).size).to eq(3)
+        expect(assigns(:clients).first).to eq(match_client3)
         expect(response).to render_template('clients/index.json')
       end
 
-      context 'when the search param is present' do
-        it 'returns a list of clients that match the query' do
-          current_user = FactoryGirl.create :user, :confirmed, :staff
+
+      context 'but is erratic' do
+        it 'returns a list of clients ordered by the default' do
+          current_user = FactoryGirl.create :user, :confirmed
           token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
-          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
-          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
-          not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+          FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+          FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+          FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          get :index, params: { search: 'AAB' }
-
-          expect(response).to be_success
-          expect(assigns(:clients)).to_not be_nil
-          expect(assigns(:clients).size).to eq(2)
-          expect(response).to render_template('clients/index.json')
-        end
-      end
-
-      context 'when the order param is present' do
-        it 'returns a list of clients ordered by a field name' do
-          current_user = FactoryGirl.create :user, :confirmed, :staff
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
-
-          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
-          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
-          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
-
-          request.headers[:HTTP_AUTH_TOKEN] = token
-          get :index, params: { ordered: { lastname: :desc }}
+          get :index, params: { ordered: { not_a_column: :desc }}
 
           expect(response).to be_success
           expect(assigns(:clients)).to_not be_nil
           expect(assigns(:clients).size).to eq(3)
+          expect(assigns(:clients).first).to eq(match_client1)
+          expect(response).to render_template('clients/index.json')
+        end
+      end
+    end
+
+    context 'when the paginated param is present' do
+      it 'returns a list of clients with the offset and limit specified' do
+        current_user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+        FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+        FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+        FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+        match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        get :index, params: { paginated: { offset: 0, limit: 2 } }
+
+        expect(response).to be_success
+        expect(assigns(:clients)).to_not be_nil
+        expect(assigns(:clients).size).to eq(2)
+        expect(assigns(:clients).first).to eq(match_client1)
+        expect(response).to render_template('clients/index.json')
+      end
+
+      context 'but the range is erratic' do
+        it 'returns what can be returned with that range' do
+          current_user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+          FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+          FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+          FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :index, params: { paginated: { offset: 2, limit: 10 }}
+
+          expect(response).to be_success
+          expect(assigns(:clients)).to_not be_nil
+          expect(assigns(:clients).size).to eq(1)
           expect(assigns(:clients).first).to eq(match_client3)
           expect(response).to render_template('clients/index.json')
         end
+      end
+    end
 
+    context 'and the "all" param is present' do
+      context ' and the current user has admin rights' do
+        it 'returns the list of all clients' do
+          current_user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
-        context 'but is erratic' do
-          it 'returns a list of clients ordered by the default' do
+          5.times { FactoryGirl.create :client, creator: current_user }
+          5.times { FactoryGirl.create :client }
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :index, params: { all: true }
+
+          expect(response).to be_success
+          expect(assigns(:clients)).to_not be_nil
+          expect(assigns(:clients).size).to eq(10)
+          expect(response).to render_template('clients/index.json')
+        end
+
+        context 'when the search param is present' do
+          it 'returns a list of clients that match the query' do
+            current_user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+            not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            get :index, params: { all: true, search: 'AAB' }
+
+            expect(response).to be_success
+            expect(assigns(:clients)).to_not be_nil
+            expect(assigns(:clients).size).to eq(2)
+            expect(response).to render_template('clients/index.json')
+          end
+        end
+
+        context 'when the order param is present' do
+          it 'returns a list of clients ordered by a field name' do
             current_user = FactoryGirl.create :user, :confirmed, :staff
             token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
@@ -67,53 +185,211 @@ RSpec.describe ClientsController, type: :controller do
             match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
             request.headers[:HTTP_AUTH_TOKEN] = token
-            get :index, params: { ordered: { not_a_column: :desc }}
+            get :index, params: { all: true, ordered: { lastname: :desc }}
 
             expect(response).to be_success
             expect(assigns(:clients)).to_not be_nil
             expect(assigns(:clients).size).to eq(3)
-            expect(assigns(:clients).first).to eq(match_client1)
+            expect(assigns(:clients).first).to eq(match_client3)
             expect(response).to render_template('clients/index.json')
           end
+
+
+          context 'but is erratic' do
+            it 'returns a list of clients ordered by the default' do
+              current_user = FactoryGirl.create :user, :confirmed, :staff
+              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+              request.headers[:HTTP_AUTH_TOKEN] = token
+              get :index, params: { all: true, ordered: { not_a_column: :desc }}
+
+              expect(response).to be_success
+              expect(assigns(:clients)).to_not be_nil
+              expect(assigns(:clients).size).to eq(3)
+              expect(assigns(:clients).first).to eq(match_client1)
+              expect(response).to render_template('clients/index.json')
+            end
+          end
         end
-      end
 
-      context 'when the paginated param is present' do
-        it 'returns a list of clients with the offset and limit specified' do
-          current_user = FactoryGirl.create :user, :confirmed, :staff
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
-
-          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
-          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
-          match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
-
-          request.headers[:HTTP_AUTH_TOKEN] = token
-          get :index, params: { paginated: { offset: 0, limit: 2 } }
-
-          expect(response).to be_success
-          expect(assigns(:clients)).to_not be_nil
-          expect(assigns(:clients).size).to eq(2)
-          expect(assigns(:clients).first).to eq(match_client1)
-          expect(response).to render_template('clients/index.json')
-        end
-
-        context 'but the range is erratic' do
-          it 'returns what can be returned with that range' do
+        context 'when the paginated param is present' do
+          it 'returns a list of clients with the offset and limit specified' do
             current_user = FactoryGirl.create :user, :confirmed, :staff
             token = Sessions::Create.for credential: current_user.username, password: current_user.password
 
             match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
-            match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+            match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
             request.headers[:HTTP_AUTH_TOKEN] = token
-            get :index, params: { paginated: { offset: 2, limit: 10 }}
+            get :index, params: { all: true, paginated: { offset: 0, limit: 2 } }
 
             expect(response).to be_success
             expect(assigns(:clients)).to_not be_nil
-            expect(assigns(:clients).size).to eq(1)
+            expect(assigns(:clients).size).to eq(2)
+            expect(assigns(:clients).first).to eq(match_client1)
+            expect(response).to render_template('clients/index.json')
+          end
+
+          context 'but the range is erratic' do
+            it 'returns what can be returned with that range' do
+              current_user = FactoryGirl.create :user, :confirmed, :staff
+              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+              request.headers[:HTTP_AUTH_TOKEN] = token
+              get :index, params: { all: true, paginated: { offset: 2, limit: 10 }}
+
+              expect(response).to be_success
+              expect(assigns(:clients)).to_not be_nil
+              expect(assigns(:clients).size).to eq(1)
+              expect(assigns(:clients).first).to eq(match_client3)
+              expect(response).to render_template('clients/index.json')
+            end
+          end
+        end
+      end
+      context ' and the current user is an average user' do
+        it 'returns the list of clients the user has created' do
+          current_user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+          5.times { FactoryGirl.create :client, creator: current_user }
+          5.times { FactoryGirl.create :client }
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :index, params: { all: true }
+
+          expect(response).to be_success
+          expect(assigns(:clients)).to_not be_nil
+          expect(assigns(:clients).size).to eq(5)
+          expect(response).to render_template('clients/index.json')
+        end
+
+        context 'when the search param is present' do
+          it 'returns a list of clients that match the query' do
+            current_user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+            FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+            FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+            FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+            not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            get :index, params: { all: true, search: 'AAB' }
+
+            expect(response).to be_success
+            expect(assigns(:clients)).to_not be_nil
+            expect(assigns(:clients).size).to eq(2)
+            expect(response).to render_template('clients/index.json')
+          end
+        end
+
+        context 'when the order param is present' do
+          it 'returns a list of clients ordered by a field name' do
+            current_user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+            FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+            FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+            FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+            match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            get :index, params: { all: true, ordered: { lastname: :desc }}
+
+            expect(response).to be_success
+            expect(assigns(:clients)).to_not be_nil
+            expect(assigns(:clients).size).to eq(3)
             expect(assigns(:clients).first).to eq(match_client3)
             expect(response).to render_template('clients/index.json')
+          end
+
+
+          context 'but is erratic' do
+            it 'returns a list of clients ordered by the default' do
+              current_user = FactoryGirl.create :user, :confirmed
+              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+              FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+              FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+              FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+              request.headers[:HTTP_AUTH_TOKEN] = token
+              get :index, params: { all: true, ordered: { not_a_column: :desc }}
+
+              expect(response).to be_success
+              expect(assigns(:clients)).to_not be_nil
+              expect(assigns(:clients).size).to eq(3)
+              expect(assigns(:clients).first).to eq(match_client1)
+              expect(response).to render_template('clients/index.json')
+            end
+          end
+        end
+
+        context 'when the paginated param is present' do
+          it 'returns a list of clients with the offset and limit specified' do
+            current_user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+            FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+            FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+            FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+            match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            get :index, params: { all: true, paginated: { offset: 0, limit: 2 } }
+
+            expect(response).to be_success
+            expect(assigns(:clients)).to_not be_nil
+            expect(assigns(:clients).size).to eq(2)
+            expect(assigns(:clients).first).to eq(match_client1)
+            expect(response).to render_template('clients/index.json')
+          end
+
+          context 'but the range is erratic' do
+            it 'returns what can be returned with that range' do
+              current_user = FactoryGirl.create :user, :confirmed
+              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+
+              FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
+              FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
+              FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
+
+              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
+              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
+              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+
+              request.headers[:HTTP_AUTH_TOKEN] = token
+              get :index, params: { all: true, paginated: { offset: 2, limit: 10 }}
+
+              expect(response).to be_success
+              expect(assigns(:clients)).to_not be_nil
+              expect(assigns(:clients).size).to eq(1)
+              expect(assigns(:clients).first).to eq(match_client3)
+              expect(response).to render_template('clients/index.json')
+            end
           end
         end
       end
