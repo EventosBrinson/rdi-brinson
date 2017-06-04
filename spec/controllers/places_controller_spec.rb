@@ -625,4 +625,343 @@ RSpec.describe PlacesController, type: :controller do
       end
     end
   end
+
+  describe 'GET #show' do
+    context 'when the current user has admin rights' do
+      context 'and the id is from other user place' do
+        it 'returns the place data using the specified id' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          place_to_retrieve = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: place_to_retrieve.id }
+
+          expect(response).to be_success
+          expect(assigns(:place)).to eq(place_to_retrieve)
+          expect(response).to render_template('places/show.json')
+        end
+      end
+      context 'the id is not from an actual place' do
+        it 'returns 404' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: 969 }
+
+          expect(response).to be_not_found
+        end
+      end
+    end
+    context 'when the current user is an average user' do
+      context 'and the id is from a place the current user does own' do
+        it 'returns the place data using the specified id' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          user_client = FactoryGirl.create :client, creator: user
+          place_to_retrieve = FactoryGirl.create :place, client: user_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: place_to_retrieve.id }
+
+          expect(response).to be_success
+          expect(assigns(:place)).to eq(place_to_retrieve)
+          expect(response).to render_template('places/show.json')
+        end
+      end
+      context 'and the id is from other user place' do
+        it 'returns forbidden' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          place_to_retrieve = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: place_to_retrieve.id }
+
+          expect(response).to be_forbidden
+        end
+      end
+    end
+  end
+
+  describe 'POST #create' do
+    context 'when the right place information is present' do
+      it 'creates a new place' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        target_client = FactoryGirl.create :client, creator: user
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        expect{ post :create, params: { place: FactoryGirl.attributes_for(:place).merge({ client_id: target_client.id }) }}.to change{ Place.count }.by(1)
+        expect(response).to be_success
+      end
+
+      it 'returns a json object with the new place' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        target_client = FactoryGirl.create :client, creator: user
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        post :create, params: { place: FactoryGirl.attributes_for(:place).merge({ client_id: target_client.id }) }
+        
+        expect(response).to be_success
+        expect(response).to render_template('places/show.json')
+      end
+    end
+
+    context 'when the place information is erratic' do
+      it 'does not create a new place' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+
+        expect{ post :create, params: { place: { name: '', address_line_1: '' }}}.to_not change{ Place.count }
+        expect(response).to be_success
+      end
+      it 'returns the place errors json object' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        post :create, params: { place: { name: '', address_line_1: '' }}
+
+        expect(response.body).to_not be_empty
+        expect(assigns(:place).errors).to_not be_empty
+      end
+    end
+
+    context 'when the current user has admin rights' do
+      context 'and the client id is from a client the user does not own' do
+        it 'creates a new place' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          expect{ post :create, params: { place: FactoryGirl.attributes_for(:place).merge({ client_id: target_client.id }) }}.to change{ Place.count }.by(1)
+          expect(response).to be_success
+          expect(response).to render_template('places/show.json')
+        end
+      end
+    end
+
+    context 'when the current user is an average user' do
+      context 'and the client id is from a client the user does not own' do
+        it 'returns forbidden' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          expect{ post :create, params: { place: FactoryGirl.attributes_for(:place).merge({ client_id: target_client.id }) }}.to_not change{ Place }
+          expect(response).to be_forbidden
+        end
+      end
+    end
+  end
+
+  describe 'PATCH #Update' do
+    context 'when the current user has admin rights' do
+      context 'and the right place information is present' do
+        it 'updates the place' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          place_to_update.reload
+
+          expect(place_to_update.name).to eq('Bombar')
+          expect(place_to_update.address_line_1).to eq('De Anda') 
+          expect(response).to be_success
+        end
+
+        it 'returns the updated place' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          expect(response).to render_template('places/show.json')
+        end
+      end
+
+      context 'and the place information is erratic' do
+        it 'does not updates the place' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: '', address_line_1: '' } }
+
+          previous_name = place_to_update.name
+          place_to_update.reload
+
+          expect(place_to_update.name).to eq(previous_name)
+          expect(response).to be_success
+        end
+
+        it 'returns the places errors json object' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: '', address_line_1: '' } }
+
+          expect(response.body).to_not be_empty
+          expect(assigns(:place).errors).to_not be_empty
+        end
+      end
+
+      context 'and is changing a place created by other user' do
+        it 'updates the place' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          place_to_update = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          place_to_update.reload
+
+          expect(place_to_update.name).to eq('Bombar')
+          expect(place_to_update.address_line_1).to eq('De Anda') 
+          expect(response).to be_success
+        end
+
+        it 'returns the updated place' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          place_to_update = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          expect(response).to render_template('places/show.json')
+        end
+      end
+    end
+    context 'when the current user is an average user' do
+      context 'and is changing a place created by the current user (self)' do
+        it 'updates the place' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          place_to_update.reload
+
+          expect(place_to_update.name).to eq('Bombar')
+          expect(place_to_update.address_line_1).to eq('De Anda') 
+          expect(response).to be_success
+        end
+
+        it 'returns the updated place' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          expect(response).to render_template('places/show.json')
+        end
+      end
+
+      context 'and is changing a place created by other user' do
+        it 'returns forbiden and nothing else happens' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          place_to_update = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+
+          previous_name = place_to_update.name
+          place_to_update.reload
+
+          expect(place_to_update.name).to eq(previous_name)
+          expect(response).to be_forbidden
+        end
+      end
+    end
+    context 'when the active param is present' do
+      context 'and the current user is admin/staff user' do
+        it 'changes the place active state' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          place_to_update = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { active: false } }
+
+          place_to_update.reload
+
+          expect(place_to_update).to_not be_active
+          expect(response).to be_success
+        end
+      end
+      context 'and the current user is an average user' do
+        it 'returns forbiden and nothing else happens' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          place_to_update = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: place_to_update.id, place: { active: false } }
+
+          place_to_update.reload
+
+          expect(place_to_update).to be_active
+          expect(response).to be_forbidden
+        end
+      end
+    end
+    context 'the id is not from an actual place' do
+      it 'returns 404' do
+        user = FactoryGirl.create :user, :confirmed, :admin
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        patch :update, params: { id: 969 }
+
+        expect(response).to be_not_found
+      end
+    end
+  end
 end
