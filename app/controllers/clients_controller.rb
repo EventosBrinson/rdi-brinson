@@ -9,10 +9,11 @@ class ClientsController < ApplicationController
   end
 
   def show
-    authorize! :show, Client
     @client = Client.find_by id: params[:id]
 
     if @client
+      authorize! :show, @client
+
       render template: 'clients/show.json'
     else
       head :not_found

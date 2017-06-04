@@ -397,29 +397,62 @@ RSpec.describe ClientsController, type: :controller do
   end
 
   describe 'GET #show' do
-    it 'returns the client data using the specified id' do
-      user = FactoryGirl.create :user, :confirmed, :admin
-      token = Sessions::Create.for credential: user.username, password: user.password
+    context 'when the current user has admin rights' do
+      context 'and the id is from other user client' do
+        it 'returns the client data using the specified id' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
 
-      client_to_retrieve = FactoryGirl.create :client
+          client_to_retrieve = FactoryGirl.create :client
 
-      request.headers[:HTTP_AUTH_TOKEN] = token
-      get :show, params: { id: client_to_retrieve.id }
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: client_to_retrieve.id }
 
-      expect(response).to be_success
-      expect(assigns(:client)).to eq(client_to_retrieve)
-      expect(response).to render_template('clients/show.json')
+          expect(response).to be_success
+          expect(assigns(:client)).to eq(client_to_retrieve)
+          expect(response).to render_template('clients/show.json')
+        end
+      end
+      context 'the id is not from an actual client' do
+        it 'returns 404' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: 969 }
+
+          expect(response).to be_not_found
+        end
+      end
     end
+    context 'when the current user is an average user' do
+      context 'and the id is from a client the current user does own' do
+        it 'returns the client data using the specified id' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
 
-    context 'the id is not from an actual client' do
-      it 'returns 404' do
-        user = FactoryGirl.create :user, :confirmed, :admin
-        token = Sessions::Create.for credential: user.username, password: user.password
+          client_to_retrieve = FactoryGirl.create :client, creator: user
 
-        request.headers[:HTTP_AUTH_TOKEN] = token
-        get :show, params: { id: 969 }
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: client_to_retrieve.id }
 
-        expect(response).to be_not_found
+          expect(response).to be_success
+          expect(assigns(:client)).to eq(client_to_retrieve)
+          expect(response).to render_template('clients/show.json')
+        end
+      end
+      context 'and the id is from other user client' do
+        it 'returns forbidden' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          client_to_retrieve = FactoryGirl.create :client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: client_to_retrieve.id }
+
+          expect(response).to be_forbidden
+        end
       end
     end
   end
