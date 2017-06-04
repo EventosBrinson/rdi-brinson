@@ -19,4 +19,9 @@ Rails.application.routes.draw do
   patch  '/documents/:id',  to: 'documents#update'
   delete '/documents/:id',  to: 'documents#destroy'
   get    '/documents/:id',  to: 'documents#show'
+
+  get    '/places',         to: 'places#index'
+  post   '/places',         to: 'places#create'
+  patch  '/places/:id',     to: 'places#update'
+  get    '/places/:id',     to: 'places#show'
 end
