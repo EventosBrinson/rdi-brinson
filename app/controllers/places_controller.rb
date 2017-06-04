@@ -21,6 +21,49 @@ class PlacesController < ApplicationController
     end
   end
 
+  def show
+    @place = Place.find_by id: params[:id]
+
+    if @place
+      authorize! :show, @place
+
+      render template: 'places/show.json'
+    else
+      head :not_found
+    end
+  end
+
+  def create
+    @place = Place.new place_params
+
+    if @place.validate
+      authorize! :create, @place
+
+      @place.save
+
+      render template: 'places/show.json'
+    else
+      render json: @place.errors
+    end
+  end
+
+  def update
+    @place = Place.find_by id: params[:id]
+
+    if @place
+      @place.assign_attributes place_updatabe_params
+      authorize! :update, @place
+
+      if @place.save
+        render template: 'places/show.json'
+      else
+        render json: @place.errors
+      end
+    else
+      head :not_found
+    end
+  end
+
   private
 
   def get_places
@@ -41,5 +84,13 @@ class PlacesController < ApplicationController
         current_user.places
       end
     end
+  end
+
+  def place_params
+    params.require(:place).permit(:name, :address_line_1, :address_line_2, :client_id)
+  end
+
+  def place_updatabe_params
+    params.require(:place).permit(:name, :address_line_1, :address_line_2, :active)
   end
 end
