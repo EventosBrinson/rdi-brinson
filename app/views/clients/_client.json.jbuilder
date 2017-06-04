@@ -13,3 +13,6 @@ json.created_at client.created_at
 json.documents do
   json.array! client.documents, partial: 'documents/document', as: :document
 end
+json.places do
+  json.array! client.places, partial: 'places/place', as: :place
+end
