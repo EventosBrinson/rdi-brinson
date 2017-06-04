@@ -3,9 +3,22 @@ class PlacesController < ApplicationController
 
   def index
     authorize! :index, Place
-    @places = get_places
 
-    render template: 'places/index.json'
+    if params[:client_id]
+      @client = Client.find_by id: params[:client_id]
+
+      if @client
+        authorize! :show, @client
+        @places = get_places
+
+        render template: 'places/index.json'
+      else
+        head :not_found
+      end
+    else
+      @places = get_places
+      render template: 'places/index.json'
+    end
   end
 
   private
