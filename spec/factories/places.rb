@@ -5,6 +5,7 @@ FactoryGirl.define do
     address_line_2 { Faker::Address.city + ', CP ' + Faker::Address.zip_code }
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
+    client
 
     trait :active do
       active true
