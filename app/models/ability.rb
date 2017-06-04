@@ -14,6 +14,7 @@ class Ability
       end
       can :manage, Client
       can :manage, Document
+      can :manage, Place
     end
 
     if user.user?
@@ -37,6 +38,14 @@ class Ability
       can :show, Document
       can [:create, :update, :delete], Document do |subject|
         subject.client.creator_id == user.id
+      end
+
+      can :index, Place
+      can :create, Place do |subject|
+        subject.client.creator_id == user.id
+      end
+      can :update, Place do |subject|
+        subject.client.creator_id == user.id and !subject.active_changed?
       end
     end
   end

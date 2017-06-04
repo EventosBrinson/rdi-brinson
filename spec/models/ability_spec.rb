@@ -28,9 +28,9 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, admin_role_changed) }
     it{ should be_able_to(:update, staff) }
 
-    let(:client) { FactoryGirl.create(:client, creator_id: user.id) }
+    let(:client) { FactoryGirl.create(:client, creator: user) }
     let(:client_with_active_changed) { client.active = false; client }
-    let(:other_user_client) { FactoryGirl.create(:client, creator_id: other_user.id) }
+    let(:other_user_client) { FactoryGirl.create(:client, creator: other_user) }
 
     it{ should be_able_to(:manage, Client) }
     it{ should be_able_to(:index, Client) }
@@ -50,6 +50,18 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, document_for_other_user_client) }
     it{ should be_able_to(:delete, document_for_own_client) }
     it{ should be_able_to(:delete, document_for_other_user_client) }
+
+    let(:place) { FactoryGirl.create(:place, client: client) }
+    let(:place_with_active_changed) { place.active = false; place }
+    let(:other_user_place) { FactoryGirl.create(:place, client: other_user_client) }
+
+    it{ should be_able_to(:manage, Place) }
+    it{ should be_able_to(:index, Place) }
+    it{ should be_able_to(:create, place) }
+    it{ should be_able_to(:update, place) }
+    it{ should be_able_to(:create, other_user_place) }
+    it{ should be_able_to(:update, other_user_place) }
+    it{ should be_able_to(:update, place_with_active_changed) }
   end
 
   context 'when the user is an admin or staff' do
@@ -69,9 +81,9 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:update, admin_degraded_to_user) }
     it{ should_not be_able_to(:update, staff) }
 
-    let(:client) { FactoryGirl.create(:client, creator_id: user.id) }
+    let(:client) { FactoryGirl.create(:client, creator: user) }
     let(:client_with_active_changed) { client.active = false; client }
-    let(:other_user_client) { FactoryGirl.create(:client, creator_id: other_user.id) }
+    let(:other_user_client) { FactoryGirl.create(:client, creator: other_user) }
 
     it{ should be_able_to(:manage, Client) }
     it{ should be_able_to(:index, Client) }
@@ -91,6 +103,18 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, document_for_other_user_client) }
     it{ should be_able_to(:delete, document_for_own_client) }
     it{ should be_able_to(:delete, document_for_other_user_client) }
+
+    let(:place) { FactoryGirl.create(:place, client: client) }
+    let(:place_with_active_changed) { place.active = false; place }
+    let(:other_user_place) { FactoryGirl.create(:place, client: other_user_client) }
+
+    it{ should be_able_to(:manage, Place) }
+    it{ should be_able_to(:index, Place) }
+    it{ should be_able_to(:create, place) }
+    it{ should be_able_to(:update, place) }
+    it{ should be_able_to(:create, other_user_place) }
+    it{ should be_able_to(:update, other_user_place) }
+    it{ should be_able_to(:update, place_with_active_changed) }
   end
 
   context 'when the user is just an user' do
@@ -105,9 +129,9 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:index, User) }
     it{ should_not be_able_to(:show, User) }
 
-    let(:client) { FactoryGirl.create(:client, creator_id: user.id) }
+    let(:client) { FactoryGirl.create(:client, creator: user) }
     let(:client_with_active_changed) { client.active = false; client }
-    let(:other_user_client) { FactoryGirl.create(:client, creator_id: other_user.id) }
+    let(:other_user_client) { FactoryGirl.create(:client, creator: other_user) }
 
     it{ should be_able_to(:index, Client) }
     it{ should be_able_to(:create, Client) }
@@ -125,5 +149,16 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:update, document_for_other_user_client) }
     it{ should be_able_to(:delete, document_for_own_client) }
     it{ should_not be_able_to(:delete, document_for_other_user_client) }
+
+    let(:place) { FactoryGirl.create(:place, client: client) }
+    let(:place_with_active_changed) { place.active = false; place }
+    let(:other_user_place) { FactoryGirl.create(:place, client: other_user_client) }
+
+    it{ should be_able_to(:index, Place) }
+    it{ should be_able_to(:create, place) }
+    it{ should be_able_to(:update, place) }
+    it{ should_not be_able_to(:create, other_user_place) }
+    it{ should_not be_able_to(:update, other_user_place) }
+    it{ should_not be_able_to(:update, place_with_active_changed) }
   end
 end
