@@ -9,7 +9,6 @@ RSpec.describe Document, type: :model do
   it { should have_attached_file(:file) }
 
   it { should validate_presence_of :title }
-  it { should validate_presence_of :title }
   it { should validate_presence_of :client }
   it { should validate_attachment_presence(:file) }
   it { should validate_attachment_content_type(:file)
