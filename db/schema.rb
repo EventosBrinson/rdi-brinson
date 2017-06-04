@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170529034245) do
+ActiveRecord::Schema.define(version: 20170604010119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,19 @@ ActiveRecord::Schema.define(version: 20170529034245) do
     t.index ["client_id"], name: "index_documents_on_client_id"
   end
 
+  create_table "places", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "address_line_1", null: false
+    t.string "address_line_2"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.boolean "active", default: true, null: false
+    t.bigint "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_places_on_client_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "email", null: false
@@ -66,4 +79,5 @@ ActiveRecord::Schema.define(version: 20170529034245) do
 
   add_foreign_key "clients", "users", column: "creator_id"
   add_foreign_key "documents", "clients"
+  add_foreign_key "places", "clients"
 end
