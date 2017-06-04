@@ -34,6 +34,8 @@ RSpec.describe Ability do
 
     it{ should be_able_to(:manage, Client) }
     it{ should be_able_to(:index, Client) }
+    it{ should be_able_to(:show, client) }
+    it{ should be_able_to(:show, other_user_client) }
     it{ should be_able_to(:create, Client) }
     it{ should be_able_to(:update, client) }
     it{ should be_able_to(:update, other_user_client) }
@@ -43,7 +45,8 @@ RSpec.describe Ability do
     let(:document_for_other_user_client) { FactoryGirl.create :document, client: other_user_client }
 
     it{ should be_able_to(:manage, Document) }
-    it{ should be_able_to(:show, Document) }
+    it{ should be_able_to(:show, document_for_own_client) }
+    it{ should be_able_to(:show, document_for_other_user_client) }
     it{ should be_able_to(:create, document_for_own_client) }
     it{ should be_able_to(:create, document_for_other_user_client) }
     it{ should be_able_to(:update, document_for_own_client) }
@@ -57,9 +60,11 @@ RSpec.describe Ability do
 
     it{ should be_able_to(:manage, Place) }
     it{ should be_able_to(:index, Place) }
+    it{ should be_able_to(:show, place) }
+    it{ should be_able_to(:show, other_user_place) }
     it{ should be_able_to(:create, place) }
-    it{ should be_able_to(:update, place) }
     it{ should be_able_to(:create, other_user_place) }
+    it{ should be_able_to(:update, place) }
     it{ should be_able_to(:update, other_user_place) }
     it{ should be_able_to(:update, place_with_active_changed) }
   end
@@ -87,6 +92,8 @@ RSpec.describe Ability do
 
     it{ should be_able_to(:manage, Client) }
     it{ should be_able_to(:index, Client) }
+    it{ should be_able_to(:show, client) }
+    it{ should be_able_to(:show, other_user_client) }
     it{ should be_able_to(:create, Client) }
     it{ should be_able_to(:update, client) }
     it{ should be_able_to(:update, other_user_client) }
@@ -96,7 +103,8 @@ RSpec.describe Ability do
     let(:document_for_other_user_client) { FactoryGirl.create :document, client: other_user_client }
 
     it{ should be_able_to(:manage, Document) }
-    it{ should be_able_to(:show, Document) }
+    it{ should be_able_to(:show, document_for_own_client) }
+    it{ should be_able_to(:show, document_for_other_user_client) }
     it{ should be_able_to(:create, document_for_own_client) }
     it{ should be_able_to(:create, document_for_other_user_client) }
     it{ should be_able_to(:update, document_for_own_client) }
@@ -110,9 +118,11 @@ RSpec.describe Ability do
 
     it{ should be_able_to(:manage, Place) }
     it{ should be_able_to(:index, Place) }
+    it{ should be_able_to(:show, place) }
+    it{ should be_able_to(:show, other_user_place) }
     it{ should be_able_to(:create, place) }
-    it{ should be_able_to(:update, place) }
     it{ should be_able_to(:create, other_user_place) }
+    it{ should be_able_to(:update, place) }
     it{ should be_able_to(:update, other_user_place) }
     it{ should be_able_to(:update, place_with_active_changed) }
   end
@@ -134,20 +144,23 @@ RSpec.describe Ability do
     let(:other_user_client) { FactoryGirl.create(:client, creator: other_user) }
 
     it{ should be_able_to(:index, Client) }
+    it{ should be_able_to(:show, client) }
     it{ should be_able_to(:create, Client) }
     it{ should be_able_to(:update, client) }
+    it{ should_not be_able_to(:show, other_user_client) }
     it{ should_not be_able_to(:update, other_user_client) }
     it{ should_not be_able_to(:update, client_with_active_changed) }
 
     let(:document_for_own_client) { FactoryGirl.create :document, client: client }
     let(:document_for_other_user_client) { FactoryGirl.create :document, client: other_user_client }
 
-    it{ should be_able_to(:show, Document) }
+    it{ should be_able_to(:show, document_for_own_client) }
     it{ should be_able_to(:create, document_for_own_client) }
-    it{ should_not be_able_to(:create, document_for_other_user_client) }
     it{ should be_able_to(:update, document_for_own_client) }
-    it{ should_not be_able_to(:update, document_for_other_user_client) }
     it{ should be_able_to(:delete, document_for_own_client) }
+    it{ should_not be_able_to(:show, document_for_other_user_client) }
+    it{ should_not be_able_to(:create, document_for_other_user_client) }
+    it{ should_not be_able_to(:update, document_for_other_user_client) }
     it{ should_not be_able_to(:delete, document_for_other_user_client) }
 
     let(:place) { FactoryGirl.create(:place, client: client) }
@@ -155,8 +168,10 @@ RSpec.describe Ability do
     let(:other_user_place) { FactoryGirl.create(:place, client: other_user_client) }
 
     it{ should be_able_to(:index, Place) }
+    it{ should be_able_to(:show, place) }
     it{ should be_able_to(:create, place) }
     it{ should be_able_to(:update, place) }
+    it{ should_not be_able_to(:show, other_user_place) }
     it{ should_not be_able_to(:create, other_user_place) }
     it{ should_not be_able_to(:update, other_user_place) }
     it{ should_not be_able_to(:update, place_with_active_changed) }
