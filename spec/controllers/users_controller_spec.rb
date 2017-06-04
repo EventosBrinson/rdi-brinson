@@ -6,8 +6,8 @@ RSpec.describe UsersController, type: :controller do
   describe 'GET #Index' do
     context 'when current user has admin rights' do
       it 'returns the lists of users' do
-        current_user = FactoryGirl.create :user, :confirmed, :admin
-        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+        user = FactoryGirl.create :user, :confirmed, :admin
+        token = Sessions::Create.for credential: user.username, password: user.password
 
         5.times { FactoryGirl.create :user }
 
@@ -22,8 +22,8 @@ RSpec.describe UsersController, type: :controller do
 
       context 'when the search param is present' do
         it 'returns a list of users that match the query' do
-          current_user = FactoryGirl.create :user, :confirmed, :staff
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed, :staff
+          token = Sessions::Create.for credential: user.username, password: user.password
 
           match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
           match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
@@ -41,8 +41,8 @@ RSpec.describe UsersController, type: :controller do
 
       context 'when the order param is present' do
         it 'returns a list of users ordered by a field name' do
-          current_user = FactoryGirl.create :user, :confirmed, :staff
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed, :staff
+          token = Sessions::Create.for credential: user.username, password: user.password
 
           match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
           match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
@@ -60,8 +60,8 @@ RSpec.describe UsersController, type: :controller do
 
         context 'but is erratic' do
           it 'returns a list of users ordered by the default' do
-            current_user = FactoryGirl.create :user, :confirmed, :staff
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
             match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
@@ -73,15 +73,15 @@ RSpec.describe UsersController, type: :controller do
             expect(response).to be_success
             expect(assigns(:users)).to_not be_nil
             expect(assigns(:users).size).to eq(4)
-            expect(assigns(:users).first).to eq(current_user)
+            expect(assigns(:users).first).to eq(user)
             expect(response).to render_template('users/index.json')
           end
         end
       end
       context 'when the paginated param is present' do
         it 'returns a list of users with the offset and limit specified' do
-          current_user = FactoryGirl.create :user, :confirmed, :staff
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed, :staff
+          token = Sessions::Create.for credential: user.username, password: user.password
 
           match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
           match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
@@ -93,14 +93,14 @@ RSpec.describe UsersController, type: :controller do
           expect(response).to be_success
           expect(assigns(:users)).to_not be_nil
           expect(assigns(:users).size).to eq(2)
-          expect(assigns(:users).first).to eq(current_user)
+          expect(assigns(:users).first).to eq(user)
           expect(response).to render_template('users/index.json')
         end
 
         context 'but the range is erratic' do
           it 'returns what can be returned with that range' do
-            current_user = FactoryGirl.create :user, :confirmed, :staff
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             match_user1 = FactoryGirl.create :user, firstname: 'AAB', lastname: 'BBC'
             match_user2 = FactoryGirl.create :user, firstname: 'BAA', lastname: 'AAB'
@@ -121,8 +121,8 @@ RSpec.describe UsersController, type: :controller do
 
     context 'when the current user does not has admin rights' do
       it 'returns forbidden' do
-        current_user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
 
         5.times { FactoryGirl.create :user }
 

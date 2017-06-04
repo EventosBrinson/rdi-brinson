@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe ClientsController, type: :controller do
   describe 'GET #index' do
     it 'returns the list of clients the user has created' do
-      current_user = FactoryGirl.create :user, :confirmed
-      token = Sessions::Create.for credential: current_user.username, password: current_user.password
+      user = FactoryGirl.create :user, :confirmed
+      token = Sessions::Create.for credential: user.username, password: user.password
 
-      5.times { FactoryGirl.create :client, creator: current_user }
+      5.times { FactoryGirl.create :client, creator: user }
       5.times { FactoryGirl.create :client }
 
       request.headers[:HTTP_AUTH_TOKEN] = token
@@ -20,16 +20,16 @@ RSpec.describe ClientsController, type: :controller do
 
     context 'when the search param is present' do
       it 'returns a list of clients that match the query' do
-        current_user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
 
         FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
         FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
         FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-        not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+        not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index, params: { search: 'AAB' }
@@ -43,16 +43,16 @@ RSpec.describe ClientsController, type: :controller do
 
     context 'when the order param is present' do
       it 'returns a list of clients ordered by a field name' do
-        current_user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
 
         FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
         FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
         FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-        match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+        match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index, params: { ordered: { lastname: :desc }}
@@ -67,16 +67,16 @@ RSpec.describe ClientsController, type: :controller do
 
       context 'but is erratic' do
         it 'returns a list of clients ordered by the default' do
-          current_user = FactoryGirl.create :user, :confirmed
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
 
           FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
           FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
           FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
           request.headers[:HTTP_AUTH_TOKEN] = token
           get :index, params: { ordered: { not_a_column: :desc }}
@@ -92,16 +92,16 @@ RSpec.describe ClientsController, type: :controller do
 
     context 'when the paginated param is present' do
       it 'returns a list of clients with the offset and limit specified' do
-        current_user = FactoryGirl.create :user, :confirmed
-        token = Sessions::Create.for credential: current_user.username, password: current_user.password
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
 
         FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
         FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
         FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-        match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+        match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+        match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+        match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index, params: { paginated: { offset: 0, limit: 2 } }
@@ -115,16 +115,16 @@ RSpec.describe ClientsController, type: :controller do
 
       context 'but the range is erratic' do
         it 'returns what can be returned with that range' do
-          current_user = FactoryGirl.create :user, :confirmed
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
 
           FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
           FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
           FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+          match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+          match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+          match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
           request.headers[:HTTP_AUTH_TOKEN] = token
           get :index, params: { paginated: { offset: 2, limit: 10 }}
@@ -141,10 +141,10 @@ RSpec.describe ClientsController, type: :controller do
     context 'and the "all" param is present' do
       context ' and the current user has admin rights' do
         it 'returns the list of all clients' do
-          current_user = FactoryGirl.create :user, :confirmed, :admin
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
 
-          5.times { FactoryGirl.create :client, creator: current_user }
+          5.times { FactoryGirl.create :client, creator: user }
           5.times { FactoryGirl.create :client }
 
           request.headers[:HTTP_AUTH_TOKEN] = token
@@ -158,8 +158,8 @@ RSpec.describe ClientsController, type: :controller do
 
         context 'when the search param is present' do
           it 'returns a list of clients that match the query' do
-            current_user = FactoryGirl.create :user, :confirmed, :staff
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
@@ -177,8 +177,8 @@ RSpec.describe ClientsController, type: :controller do
 
         context 'when the order param is present' do
           it 'returns a list of clients ordered by a field name' do
-            current_user = FactoryGirl.create :user, :confirmed, :staff
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
@@ -197,8 +197,8 @@ RSpec.describe ClientsController, type: :controller do
 
           context 'but is erratic' do
             it 'returns a list of clients ordered by the default' do
-              current_user = FactoryGirl.create :user, :confirmed, :staff
-              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+              user = FactoryGirl.create :user, :confirmed, :staff
+              token = Sessions::Create.for credential: user.username, password: user.password
 
               match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
               match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
@@ -218,8 +218,8 @@ RSpec.describe ClientsController, type: :controller do
 
         context 'when the paginated param is present' do
           it 'returns a list of clients with the offset and limit specified' do
-            current_user = FactoryGirl.create :user, :confirmed, :staff
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed, :staff
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
@@ -237,8 +237,8 @@ RSpec.describe ClientsController, type: :controller do
 
           context 'but the range is erratic' do
             it 'returns what can be returned with that range' do
-              current_user = FactoryGirl.create :user, :confirmed, :staff
-              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+              user = FactoryGirl.create :user, :confirmed, :staff
+              token = Sessions::Create.for credential: user.username, password: user.password
 
               match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
               match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
@@ -258,10 +258,10 @@ RSpec.describe ClientsController, type: :controller do
       end
       context ' and the current user is an average user' do
         it 'returns the list of clients the user has created' do
-          current_user = FactoryGirl.create :user, :confirmed
-          token = Sessions::Create.for credential: current_user.username, password: current_user.password
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
 
-          5.times { FactoryGirl.create :client, creator: current_user }
+          5.times { FactoryGirl.create :client, creator: user }
           5.times { FactoryGirl.create :client }
 
           request.headers[:HTTP_AUTH_TOKEN] = token
@@ -275,16 +275,16 @@ RSpec.describe ClientsController, type: :controller do
 
         context 'when the search param is present' do
           it 'returns a list of clients that match the query' do
-            current_user = FactoryGirl.create :user, :confirmed
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
             FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-            not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+            not_match_client = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
             request.headers[:HTTP_AUTH_TOKEN] = token
             get :index, params: { all: true, search: 'AAB' }
@@ -298,16 +298,16 @@ RSpec.describe ClientsController, type: :controller do
 
         context 'when the order param is present' do
           it 'returns a list of clients ordered by a field name' do
-            current_user = FactoryGirl.create :user, :confirmed
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
             FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-            match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+            match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
             request.headers[:HTTP_AUTH_TOKEN] = token
             get :index, params: { all: true, ordered: { lastname: :desc }}
@@ -322,16 +322,16 @@ RSpec.describe ClientsController, type: :controller do
 
           context 'but is erratic' do
             it 'returns a list of clients ordered by the default' do
-              current_user = FactoryGirl.create :user, :confirmed
-              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+              user = FactoryGirl.create :user, :confirmed
+              token = Sessions::Create.for credential: user.username, password: user.password
 
               FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
               FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
               FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { all: true, ordered: { not_a_column: :desc }}
@@ -347,16 +347,16 @@ RSpec.describe ClientsController, type: :controller do
 
         context 'when the paginated param is present' do
           it 'returns a list of clients with the offset and limit specified' do
-            current_user = FactoryGirl.create :user, :confirmed
-            token = Sessions::Create.for credential: current_user.username, password: current_user.password
+            user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: user.username, password: user.password
 
             FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
             FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
             FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-            match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+            match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+            match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+            match_client4 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
             request.headers[:HTTP_AUTH_TOKEN] = token
             get :index, params: { all: true, paginated: { offset: 0, limit: 2 } }
@@ -370,16 +370,16 @@ RSpec.describe ClientsController, type: :controller do
 
           context 'but the range is erratic' do
             it 'returns what can be returned with that range' do
-              current_user = FactoryGirl.create :user, :confirmed
-              token = Sessions::Create.for credential: current_user.username, password: current_user.password
+              user = FactoryGirl.create :user, :confirmed
+              token = Sessions::Create.for credential: user.username, password: user.password
 
               FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC'
               FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB'
               FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF'
 
-              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: current_user
-              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: current_user
-              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: current_user
+              match_client1 = FactoryGirl.create :client, firstname: 'AAB', lastname: 'BBC', creator: user
+              match_client2 = FactoryGirl.create :client, firstname: 'BAA', lastname: 'AAB', creator: user
+              match_client3 = FactoryGirl.create :client, firstname: 'ZZA', lastname: 'XXF', creator: user
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { all: true, paginated: { offset: 2, limit: 10 }}
