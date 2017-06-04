@@ -5,6 +5,7 @@ class User < ApplicationRecord
   ROLES = [:staff, :admin, :user]
 
   has_many :clients, foreign_key: 'creator_id'
+  has_many :places, through: :clients
 
   validates :username, presence: true
   validates :username, uniqueness: true
