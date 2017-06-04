@@ -81,7 +81,7 @@ RSpec.describe Client, type: :model do
   end
 
   describe '.paginated' do
-    it 'returns all the users between the offset and limit range' do
+    it 'returns all the clients between the offset and limit range' do
       client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
       client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
       client_match3 = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
@@ -92,7 +92,7 @@ RSpec.describe Client, type: :model do
   end
 
   describe '.filter' do
-    it 'returns all the users filtered by params as messages and param value as message param' do
+    it 'returns all the clients filtered by params as messages and param value as message param' do
       client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
       client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
       client_match3 = FactoryGirl.create :client, firstname: 'david', lastname: 'segoviano'
@@ -109,7 +109,7 @@ RSpec.describe Client, type: :model do
 
   describe '.ordered' do
     context 'order hash contains actual columns to order' do
-      it 'returns the users ordered by the specified columns and orders' do
+      it 'returns the clients ordered by the specified columns and orders' do
         client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'De anda'
         client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
         client_match3 = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'de anda'
