@@ -8,6 +8,7 @@ class Client < ApplicationRecord
 
   belongs_to :creator, class_name: 'User'
   has_many :documents
+  has_many :places
 
   validates :firstname, presence: true
   validates :lastname, presence: true
