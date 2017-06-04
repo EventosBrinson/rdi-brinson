@@ -22,6 +22,8 @@ RSpec.describe User, type: :model do
   it { should have_db_index(:reset_password_token).unique }
   it { should have_db_index(:confirmation_token).unique }
 
+  it { should have_many(:clients).with_foreign_key('creator_id') }
+
   it { should validate_presence_of :username }
   it { should validate_uniqueness_of(:username) }
   it { should allow_value('omarandstuff').for(:username) }

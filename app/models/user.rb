@@ -4,6 +4,8 @@ class User < ApplicationRecord
   include Paginatable
   ROLES = [:staff, :admin, :user]
 
+  has_many :clients, foreign_key: 'creator_id'
+
   validates :username, presence: true
   validates :username, uniqueness: true
   validates :username, format: { with: /\A[^@]+\z/i }
