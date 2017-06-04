@@ -440,7 +440,7 @@ RSpec.describe PlacesController, type: :controller do
             7.times { FactoryGirl.create :place, client: user_client.call }
             5.times { FactoryGirl.create :place, client: specified_client }
 
-            safe_id = Client.pluck(:id).inject(0){ |sum, x| sum + x }
+            safe_id = Client.pluck(:id).reduce(0){ |sum, x| sum + x }
 
             request.headers[:HTTP_AUTH_TOKEN] = token
             get :index, params: { client_id: safe_id }
