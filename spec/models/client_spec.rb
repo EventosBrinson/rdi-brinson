@@ -5,10 +5,14 @@ RSpec.describe Client, type: :model do
 
   it { should have_db_column(:firstname).of_type(:string).with_options(null: false) }
   it { should have_db_column(:lastname).of_type(:string).with_options(null: false) }
-  it { should have_db_column(:address_line_1).of_type(:string).with_options(null: false) }
-  it { should have_db_column(:address_line_2).of_type(:string) }
+  it { should have_db_column(:street).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:inner_number).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:outer_number).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:neighborhood).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:postal_code).of_type(:string).with_options(null: false) }
   it { should have_db_column(:telephone_1).of_type(:string).with_options(null: false) }
   it { should have_db_column(:telephone_2).of_type(:string) }
+  it { should have_db_column(:email).of_type(:string).with_options(null: false) }
   it { should have_db_column(:id_name).of_type(:string).with_options(null: false) }
   it { should have_db_column(:trust_level).of_type(:integer).with_options(null: false, default: 10) }
   it { should have_db_column(:active).of_type(:boolean).with_options(null: false, default: true) }
@@ -19,8 +23,15 @@ RSpec.describe Client, type: :model do
 
   it { should validate_presence_of :firstname }
   it { should validate_presence_of :lastname }
-  it { should validate_presence_of :address_line_1 }
+  it { should validate_presence_of :street }
+  it { should validate_presence_of :inner_number }
+  it { should validate_presence_of :outer_number }
+  it { should validate_presence_of :neighborhood }
+  it { should validate_presence_of :postal_code }
   it { should validate_presence_of :telephone_1 }
+  it { should validate_presence_of :email }
+  it { should allow_value('omarandstuff@gmail.com').for(:email) }
+  it { should_not allow_value('sometext').for(:email) }
   it { should validate_presence_of :id_name }
   it { should validate_inclusion_of(:id_name).in_array(Client::ID_NAMES) }
   it { should validate_presence_of :trust_level }
