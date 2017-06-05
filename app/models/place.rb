@@ -7,8 +7,12 @@ class Place < ApplicationRecord
   belongs_to :client
 
   validates :name, presence: true
-  validates :address_line_1, presence: true
+  validates :street, presence: true
+  validates :inner_number, presence: true
+  validates :outer_number, presence: true
+  validates :neighborhood, presence: true
+  validates :postal_code, presence: true
   validates :client, presence: true
 
-  scope :search, -> (query) { where('LOWER("places"."name") like :query OR LOWER("places"."address_line_1") like :query OR LOWER("places"."address_line_2") like :query', query: "%#{ query.to_s.downcase }%") }
+  scope :search, -> (query) { where('LOWER("places"."name") like :query OR LOWER("places"."street") like :query OR LOWER("places"."neighborhood") like :query', query: "%#{ query.to_s.downcase }%") }
 end

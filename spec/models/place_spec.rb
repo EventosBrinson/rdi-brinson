@@ -4,8 +4,11 @@ RSpec.describe Place, type: :model do
   subject { FactoryGirl.build :place }
 
   it { should have_db_column(:name).of_type(:string).with_options(null: false) }
-  it { should have_db_column(:address_line_1).of_type(:string).with_options(null: false) }
-  it { should have_db_column(:address_line_2).of_type(:string) }
+  it { should have_db_column(:street).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:inner_number).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:outer_number).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:neighborhood).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:postal_code).of_type(:string).with_options(null: false) }
   it { should have_db_column(:latitude).of_type(:decimal).with_options(precision: 10, scale: 6) }
   it { should have_db_column(:longitude).of_type(:decimal).with_options(precision: 10, scale: 6) }
   it { should have_db_column(:active).of_type(:boolean).with_options(null: false, default: true) }
@@ -13,7 +16,11 @@ RSpec.describe Place, type: :model do
   it { should belong_to(:client) }
 
   it { should validate_presence_of :name }
-  it { should validate_presence_of :address_line_1 }
+  it { should validate_presence_of :street }
+  it { should validate_presence_of :inner_number }
+  it { should validate_presence_of :outer_number }
+  it { should validate_presence_of :neighborhood }
+  it { should validate_presence_of :postal_code }
   it { should validate_presence_of :client }
 
   describe '.active' do
@@ -62,9 +69,9 @@ RSpec.describe Place, type: :model do
 
   describe '.search' do
     it 'returns all places that match the query' do
-      place_match1 = FactoryGirl.create :place, name: 'david', address_line_1: 'de anda'
-      place_match2 = FactoryGirl.create :place, name: 'DAVID', address_line_1: 'gomez'
-      place_not_match = FactoryGirl.create :place, name: 'Roberto', address_line_1: 'Bolaños'
+      place_match1 = FactoryGirl.create :place, name: 'david', street: 'de anda'
+      place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
+      place_not_match = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
 
       expect(Place.search('david').size).to eq(2)
     end
@@ -72,10 +79,10 @@ RSpec.describe Place, type: :model do
 
   describe '.paginated' do
     it 'returns all the places between the offset and limit range' do
-      place_match1 = FactoryGirl.create :place, name: 'david', address_line_1: 'de anda'
-      place_match2 = FactoryGirl.create :place, name: 'DAVID', address_line_1: 'gomez'
-      place_match3 = FactoryGirl.create :place, name: 'Roberto', address_line_1: 'Bolaños'
-      place_match4 = FactoryGirl.create :place, name: 'Enrique', address_line_1: 'Segoviano'
+      place_match1 = FactoryGirl.create :place, name: 'david', street: 'de anda'
+      place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
+      place_match3 = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
+      place_match4 = FactoryGirl.create :place, name: 'Enrique', street: 'Segoviano'
 
       expect(Place.paginated(offset: 1, limit: 2).size).to eq(2)
     end
@@ -83,13 +90,13 @@ RSpec.describe Place, type: :model do
 
   describe '.filter' do
     it 'returns all the places filtered by params as messages and param value as message param' do
-      place_match1 = FactoryGirl.create :place, name: 'david', address_line_1: 'de anda'
-      place_match2 = FactoryGirl.create :place, name: 'DAVID', address_line_1: 'gomez'
-      place_match3 = FactoryGirl.create :place, name: 'david', address_line_1: 'segoviano'
-      place_match4 = FactoryGirl.create :place, name: 'david', address_line_1: 'zan'
-      place_not_match = FactoryGirl.create :place, name: 'Roberto', address_line_1: 'Bolaños'
+      place_match1 = FactoryGirl.create :place, name: 'david', street: 'de anda'
+      place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
+      place_match3 = FactoryGirl.create :place, name: 'david', street: 'segoviano'
+      place_match4 = FactoryGirl.create :place, name: 'david', street: 'zan'
+      place_not_match = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
 
-      places_filtered = Place.filter({ search: 'david', order: { address_line_1: :desc }, paginated: { offset: 0, limit: 2 } })
+      places_filtered = Place.filter({ search: 'david', order: { street: :desc }, paginated: { offset: 0, limit: 2 } })
 
       expect(places_filtered.size).to eq(2)
       expect(places_filtered.first).to eq(place_match4)
@@ -100,11 +107,11 @@ RSpec.describe Place, type: :model do
   describe '.ordered' do
     context 'order hash contains actual columns to order' do
       it 'returns the places ordered by the specified columns and orders' do
-        place_match1 = FactoryGirl.create :place, name: 'david', address_line_1: 'De anda'
-        place_match2 = FactoryGirl.create :place, name: 'DAVID', address_line_1: 'gomez'
-        place_match3 = FactoryGirl.create :place, name: 'Roberto', address_line_1: 'de anda'
+        place_match1 = FactoryGirl.create :place, name: 'david', street: 'De anda'
+        place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
+        place_match3 = FactoryGirl.create :place, name: 'Roberto', street: 'de anda'
 
-        places_ordered = Place.ordered({ address_line_1: :desc, name: :asc })
+        places_ordered = Place.ordered({ street: :desc, name: :asc })
 
         expect(places_ordered.size).to eq(3)
         expect(places_ordered.first).to eq(place_match2)
