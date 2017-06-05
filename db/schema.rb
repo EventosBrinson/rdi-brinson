@@ -18,10 +18,14 @@ ActiveRecord::Schema.define(version: 20170604010119) do
   create_table "clients", force: :cascade do |t|
     t.string "firstname", null: false
     t.string "lastname", null: false
-    t.string "address_line_1", null: false
-    t.string "address_line_2"
+    t.string "street", null: false
+    t.string "inner_number", null: false
+    t.string "outer_number", null: false
+    t.string "neighborhood", null: false
+    t.string "postal_code", null: false
     t.string "telephone_1", null: false
     t.string "telephone_2"
+    t.string "email", null: false
     t.string "id_name", null: false
     t.integer "trust_level", default: 10, null: false
     t.boolean "active", default: true, null: false
@@ -45,8 +49,11 @@ ActiveRecord::Schema.define(version: 20170604010119) do
 
   create_table "places", force: :cascade do |t|
     t.string "name", null: false
-    t.string "address_line_1", null: false
-    t.string "address_line_2"
+    t.string "street", null: false
+    t.string "inner_number", null: false
+    t.string "outer_number", null: false
+    t.string "neighborhood", null: false
+    t.string "postal_code", null: false
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
     t.boolean "active", default: true, null: false
