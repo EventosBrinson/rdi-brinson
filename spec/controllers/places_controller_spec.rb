@@ -27,13 +27,13 @@ RSpec.describe PlacesController, type: :controller do
 
         user_client = ->() { FactoryGirl.create :client, creator: user }
 
-        FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-        FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-        FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+        FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+        FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+        FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
-        match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-        match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-        not_match_place = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+        match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+        match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+        not_match_place = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index, params: { search: 'AAB' }
@@ -52,16 +52,16 @@ RSpec.describe PlacesController, type: :controller do
 
         user_client = ->() { FactoryGirl.create :client, creator: user }
 
-        FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-        FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-        FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+        FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+        FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+        FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
-        match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-        match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-        match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+        match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+        match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+        match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
         request.headers[:HTTP_AUTH_TOKEN] = token
-        get :index, params: { ordered: { address_line_1: :desc }}
+        get :index, params: { ordered: { street: :desc }}
 
         expect(response).to be_success
         expect(assigns(:places)).to_not be_nil
@@ -78,13 +78,13 @@ RSpec.describe PlacesController, type: :controller do
 
           user_client = ->() { FactoryGirl.create :client, creator: user }
 
-          FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-          FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-          FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+          FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+          FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+          FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
-          match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-          match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-          match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+          match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+          match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+          match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
           request.headers[:HTTP_AUTH_TOKEN] = token
           get :index, params: { ordered: { not_a_column: :desc }}
@@ -105,13 +105,13 @@ RSpec.describe PlacesController, type: :controller do
 
         user_client = ->() { FactoryGirl.create :client, creator: user }
 
-        FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-        FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-        FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+        FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+        FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+        FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
-        match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-        match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-        match_place4 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+        match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+        match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+        match_place4 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index, params: { paginated: { offset: 0, limit: 2 } }
@@ -130,13 +130,13 @@ RSpec.describe PlacesController, type: :controller do
 
           user_client = ->() { FactoryGirl.create :client, creator: user }
 
-          FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-          FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-          FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+          FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+          FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+          FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
-          match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-          match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-          match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+          match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+          match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+          match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
           request.headers[:HTTP_AUTH_TOKEN] = token
           get :index, params: { paginated: { offset: 2, limit: 10 }}
@@ -175,9 +175,9 @@ RSpec.describe PlacesController, type: :controller do
             user = FactoryGirl.create :user, :confirmed, :admin
             token = Sessions::Create.for credential: user.username, password: user.password
 
-            match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-            match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-            not_match_place = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+            match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+            match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+            not_match_place = FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
             request.headers[:HTTP_AUTH_TOKEN] = token
             get :index, params: { all: true, search: 'AAB' }
@@ -194,12 +194,12 @@ RSpec.describe PlacesController, type: :controller do
             user = FactoryGirl.create :user, :confirmed, :admin
             token = Sessions::Create.for credential: user.username, password: user.password
 
-            match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-            match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-            match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+            match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+            match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+            match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
             request.headers[:HTTP_AUTH_TOKEN] = token
-            get :index, params: { all: true, ordered: { address_line_1: :desc }}
+            get :index, params: { all: true, ordered: { street: :desc }}
 
             expect(response).to be_success
             expect(assigns(:places)).to_not be_nil
@@ -214,9 +214,9 @@ RSpec.describe PlacesController, type: :controller do
               user = FactoryGirl.create :user, :confirmed, :admin
               token = Sessions::Create.for credential: user.username, password: user.password
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-              match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+              match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { all: true, ordered: { not_a_column: :desc }}
@@ -235,9 +235,9 @@ RSpec.describe PlacesController, type: :controller do
             user = FactoryGirl.create :user, :confirmed, :admin
             token = Sessions::Create.for credential: user.username, password: user.password
 
-            match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-            match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-            match_place4 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+            match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+            match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+            match_place4 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
             request.headers[:HTTP_AUTH_TOKEN] = token
             get :index, params: { all: true, paginated: { offset: 0, limit: 2 } }
@@ -254,9 +254,9 @@ RSpec.describe PlacesController, type: :controller do
               user = FactoryGirl.create :user, :confirmed, :admin
               token = Sessions::Create.for credential: user.username, password: user.password
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC'
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB'
-              match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF'
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC'
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB'
+              match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF'
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { all: true, paginated: { offset: 2, limit: 10 }}
@@ -302,13 +302,13 @@ RSpec.describe PlacesController, type: :controller do
               user_client = ->() { FactoryGirl.create :client, creator: user }
               specified_client = FactoryGirl.create :client
 
-              FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-              FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-              FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+              FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+              FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+              FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-              not_match_place = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+              not_match_place = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { client_id: specified_client.id, search: 'AAB' }
@@ -328,16 +328,16 @@ RSpec.describe PlacesController, type: :controller do
               user_client = ->() { FactoryGirl.create :client, creator: user }
               specified_client = FactoryGirl.create :client
 
-              FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-              FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-              FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+              FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+              FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+              FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-              match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+              match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
               request.headers[:HTTP_AUTH_TOKEN] = token
-              get :index, params: { client_id: specified_client.id, ordered: { address_line_1: :desc }}
+              get :index, params: { client_id: specified_client.id, ordered: { street: :desc }}
 
               expect(response).to be_success
               expect(assigns(:places)).to_not be_nil
@@ -355,13 +355,13 @@ RSpec.describe PlacesController, type: :controller do
                 user_client = ->() { FactoryGirl.create :client, creator: user }
                 specified_client = FactoryGirl.create :client
 
-                FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-                FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-                FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+                FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+                FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+                FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-                match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-                match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-                match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+                match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+                match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+                match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
                 request.headers[:HTTP_AUTH_TOKEN] = token
                 get :index, params: { client_id: specified_client.id, ordered: { not_a_column: :desc }}
@@ -383,13 +383,13 @@ RSpec.describe PlacesController, type: :controller do
               user_client = ->() { FactoryGirl.create :client, creator: user }
               specified_client = FactoryGirl.create :client
 
-              FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-              FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-              FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+              FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+              FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+              FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-              match_place4 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+              match_place4 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { client_id: specified_client.id, paginated: { offset: 0, limit: 2 } }
@@ -409,13 +409,13 @@ RSpec.describe PlacesController, type: :controller do
                 user_client = ->() { FactoryGirl.create :client, creator: user }
                 specified_client = FactoryGirl.create :client
 
-                FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-                FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-                FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+                FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+                FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+                FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-                match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-                match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-                match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+                match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+                match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+                match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
                 request.headers[:HTTP_AUTH_TOKEN] = token
                 get :index, params: { client_id: specified_client.id, paginated: { offset: 2, limit: 10 }}
@@ -478,13 +478,13 @@ RSpec.describe PlacesController, type: :controller do
               user_client = ->() { FactoryGirl.create :client, creator: user }
               specified_client = FactoryGirl.create :client, creator: user
 
-              FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-              FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-              FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+              FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+              FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+              FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-              not_match_place = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+              not_match_place = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { client_id: specified_client.id, search: 'AAB' }
@@ -504,16 +504,16 @@ RSpec.describe PlacesController, type: :controller do
               user_client = ->() { FactoryGirl.create :client, creator: user }
               specified_client = FactoryGirl.create :client, creator: user
 
-              FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-              FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-              FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+              FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+              FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+              FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-              match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+              match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
               request.headers[:HTTP_AUTH_TOKEN] = token
-              get :index, params: { client_id: specified_client.id, ordered: { address_line_1: :desc }}
+              get :index, params: { client_id: specified_client.id, ordered: { street: :desc }}
 
               expect(response).to be_success
               expect(assigns(:places)).to_not be_nil
@@ -531,13 +531,13 @@ RSpec.describe PlacesController, type: :controller do
                 user_client = ->() { FactoryGirl.create :client, creator: user }
                 specified_client = FactoryGirl.create :client, creator: user
 
-                FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-                FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-                FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+                FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+                FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+                FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-                match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-                match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-                match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+                match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+                match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+                match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
                 request.headers[:HTTP_AUTH_TOKEN] = token
                 get :index, params: { client_id: specified_client.id, ordered: { not_a_column: :desc }}
@@ -559,13 +559,13 @@ RSpec.describe PlacesController, type: :controller do
               user_client = ->() { FactoryGirl.create :client, creator: user }
               specified_client = FactoryGirl.create :client, creator: user
 
-              FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-              FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-              FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+              FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+              FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+              FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-              match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-              match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-              match_place4 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+              match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+              match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+              match_place4 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
               request.headers[:HTTP_AUTH_TOKEN] = token
               get :index, params: { client_id: specified_client.id, paginated: { offset: 0, limit: 2 } }
@@ -585,13 +585,13 @@ RSpec.describe PlacesController, type: :controller do
                 user_client = ->() { FactoryGirl.create :client, creator: user }
                 specified_client = FactoryGirl.create :client, creator: user
 
-                FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: user_client.call
-                FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: user_client.call
-                FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: user_client.call
+                FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: user_client.call
+                FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: user_client.call
+                FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: user_client.call
 
-                match_place1 = FactoryGirl.create :place, name: 'AAB', address_line_1: 'BBC', client: specified_client
-                match_place2 = FactoryGirl.create :place, name: 'BAA', address_line_1: 'AAB', client: specified_client
-                match_place3 = FactoryGirl.create :place, name: 'ZZA', address_line_1: 'XXF', client: specified_client
+                match_place1 = FactoryGirl.create :place, name: 'AAB', street: 'BBC', client: specified_client
+                match_place2 = FactoryGirl.create :place, name: 'BAA', street: 'AAB', client: specified_client
+                match_place3 = FactoryGirl.create :place, name: 'ZZA', street: 'XXF', client: specified_client
 
                 request.headers[:HTTP_AUTH_TOKEN] = token
                 get :index, params: { client_id: specified_client.id, paginated: { offset: 2, limit: 10 }}
@@ -722,7 +722,7 @@ RSpec.describe PlacesController, type: :controller do
 
         request.headers[:HTTP_AUTH_TOKEN] = token
 
-        expect{ post :create, params: { place: { name: '', address_line_1: '' }}}.to_not change{ Place.count }
+        expect{ post :create, params: { place: { name: '', street: '' }}}.to_not change{ Place.count }
         expect(response).to be_success
       end
       it 'returns the place errors json object' do
@@ -730,7 +730,7 @@ RSpec.describe PlacesController, type: :controller do
         token = Sessions::Create.for credential: user.username, password: user.password
 
         request.headers[:HTTP_AUTH_TOKEN] = token
-        post :create, params: { place: { name: '', address_line_1: '' }}
+        post :create, params: { place: { name: '', street: '' }}
 
         expect(response.body).to_not be_empty
         expect(assigns(:place).errors).to_not be_empty
@@ -780,12 +780,12 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place, client: target_client
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           place_to_update.reload
 
           expect(place_to_update.name).to eq('Bombar')
-          expect(place_to_update.address_line_1).to eq('De Anda') 
+          expect(place_to_update.street).to eq('De Anda') 
           expect(response).to be_success
         end
 
@@ -797,7 +797,7 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place, client: target_client
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           expect(response).to render_template('places/show.json')
         end
@@ -812,7 +812,7 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place, client: target_client
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: '', address_line_1: '' } }
+          patch :update, params: { id: place_to_update.id, place: { name: '', street: '' } }
 
           previous_name = place_to_update.name
           place_to_update.reload
@@ -829,7 +829,7 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place, client: target_client
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: '', address_line_1: '' } }
+          patch :update, params: { id: place_to_update.id, place: { name: '', street: '' } }
 
           expect(response.body).to_not be_empty
           expect(assigns(:place).errors).to_not be_empty
@@ -844,12 +844,12 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           place_to_update.reload
 
           expect(place_to_update.name).to eq('Bombar')
-          expect(place_to_update.address_line_1).to eq('De Anda') 
+          expect(place_to_update.street).to eq('De Anda') 
           expect(response).to be_success
         end
 
@@ -860,7 +860,7 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           expect(response).to render_template('places/show.json')
         end
@@ -876,12 +876,12 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place, client: target_client
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           place_to_update.reload
 
           expect(place_to_update.name).to eq('Bombar')
-          expect(place_to_update.address_line_1).to eq('De Anda') 
+          expect(place_to_update.street).to eq('De Anda') 
           expect(response).to be_success
         end
 
@@ -893,7 +893,7 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place, client: target_client
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           expect(response).to render_template('places/show.json')
         end
@@ -907,7 +907,7 @@ RSpec.describe PlacesController, type: :controller do
           place_to_update = FactoryGirl.create :place
 
           request.headers[:HTTP_AUTH_TOKEN] = token
-          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', address_line_1: 'De Anda' } }
+          patch :update, params: { id: place_to_update.id, place: { name: 'Bombar', street: 'De Anda' } }
 
           previous_name = place_to_update.name
           place_to_update.reload

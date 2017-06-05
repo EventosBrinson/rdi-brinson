@@ -68,11 +68,11 @@ class ClientsController < ApplicationController
   end
 
   def client_params
-    params.require(:client).permit(:firstname, :lastname, :address_line_1, :address_line_2, :telephone_1, :telephone_2, :id_name, :trust_level)
+    params.require(:client).permit(:firstname, :lastname, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :telephone_1, :telephone_2, :email, :id_name, :trust_level)
   end
 
   def client_updatabe_params
-    params.require(:client).permit(:firstname, :lastname, :address_line_1, :address_line_2, :telephone_1, :telephone_2, :id_name, :trust_level, :active)
+    params.require(:client).permit(:firstname, :lastname, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :telephone_1, :telephone_2, :email, :id_name, :trust_level, :active)
   end
 
 end

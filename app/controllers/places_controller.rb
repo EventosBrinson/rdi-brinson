@@ -87,10 +87,10 @@ class PlacesController < ApplicationController
   end
 
   def place_params
-    params.require(:place).permit(:name, :address_line_1, :address_line_2, :client_id)
+    params.require(:place).permit(:name, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :client_id)
   end
 
   def place_updatabe_params
-    params.require(:place).permit(:name, :address_line_1, :address_line_2, :active)
+    params.require(:place).permit(:name, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :active)
   end
 end
