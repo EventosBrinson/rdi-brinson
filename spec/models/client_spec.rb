@@ -15,6 +15,7 @@ RSpec.describe Client, type: :model do
   it { should have_db_column(:email).of_type(:string).with_options(null: false) }
   it { should have_db_column(:id_name).of_type(:string).with_options(null: false) }
   it { should have_db_column(:trust_level).of_type(:integer).with_options(null: false, default: 10) }
+  it { should have_db_column(:rent_type).of_type(:integer).with_options(null: false) }
   it { should have_db_column(:active).of_type(:boolean).with_options(null: false, default: true) }
 
   it { should belong_to(:creator).class_name('User') }
@@ -36,7 +37,10 @@ RSpec.describe Client, type: :model do
   it { should validate_inclusion_of(:id_name).in_array(Client::ID_NAMES) }
   it { should validate_presence_of :trust_level }
   it { should validate_inclusion_of(:trust_level).in_array((1..10).to_a) }
+  it { should validate_presence_of :rent_type }
   it { should validate_presence_of :creator }
+
+  it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
 
   describe '.active' do
     it 'returns all the active clients' do
