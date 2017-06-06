@@ -12,6 +12,7 @@ FactoryGirl.define do
     email { Faker::Internet.unique.free_email }
     id_name { Client::ID_NAMES.sample }
     trust_level { (1..10).to_a.sample }
+    rent_type { Client::RENT_TYPES.sample }
     creator { FactoryGirl.create :user }
 
     trait :active do
