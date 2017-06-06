@@ -5,6 +5,7 @@ class Client < ApplicationRecord
   include Paginatable
 
   ID_NAMES = ['ine', 'licencia', 'cartilla', 'pasaporte', 'otra']
+  RENT_TYPES = [:primera_renta, :frecuente, :empresa]
 
   belongs_to :creator, class_name: 'User'
   has_many :documents
@@ -24,7 +25,10 @@ class Client < ApplicationRecord
   validates :id_name, inclusion: { in: ID_NAMES }
   validates :trust_level, presence: true
   validates :trust_level, inclusion: { in: (1..10).to_a }
+  validates :rent_type, presence: true
   validates :creator, presence: true
+
+  enum rent_type: RENT_TYPES
 
   scope :search, -> (query) { where('LOWER("clients"."firstname") like :query OR LOWER("clients"."lastname") like :query OR LOWER("clients"."street") like :query OR LOWER("clients"."neighborhood") like :query', query: "%#{ query.to_s.downcase }%") }
 end
