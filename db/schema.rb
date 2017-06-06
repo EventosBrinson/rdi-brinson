@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20170604010119) do
     t.string "email", null: false
     t.string "id_name", null: false
     t.integer "trust_level", default: 10, null: false
+    t.integer "rent_type", null: false
     t.boolean "active", default: true, null: false
     t.bigint "creator_id"
     t.datetime "created_at", null: false

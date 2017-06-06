@@ -13,6 +13,7 @@ class CreateClients < ActiveRecord::Migration[5.1]
       t.string    :email,             null: false
       t.string    :id_name,           null: false
       t.integer   :trust_level,       null: false, default: 10
+      t.integer   :rent_type,         null: false
       t.boolean   :active,            null: false, default: true
 
       t.references :creator, references: :users, index: true
