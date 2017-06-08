@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170604010119) do
+ActiveRecord::Schema.define(version: 20170608024222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,24 @@ ActiveRecord::Schema.define(version: 20170604010119) do
     t.index ["client_id"], name: "index_places_on_client_id"
   end
 
+  create_table "rents", force: :cascade do |t|
+    t.datetime "delivery_time", null: false
+    t.datetime "pick_up_time", null: false
+    t.text "product", null: false
+    t.decimal "price", null: false
+    t.decimal "discount"
+    t.decimal "additional_charges"
+    t.text "additional_charges_notes"
+    t.integer "rent_type", null: false
+    t.integer "status", null: false
+    t.bigint "client_id"
+    t.bigint "place_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_rents_on_client_id"
+    t.index ["place_id"], name: "index_rents_on_place_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "email", null: false
@@ -88,4 +106,6 @@ ActiveRecord::Schema.define(version: 20170604010119) do
   add_foreign_key "clients", "users", column: "creator_id"
   add_foreign_key "documents", "clients"
   add_foreign_key "places", "clients"
+  add_foreign_key "rents", "clients"
+  add_foreign_key "rents", "places"
 end
