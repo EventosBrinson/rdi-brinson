@@ -5,7 +5,7 @@ class Client < ApplicationRecord
   include Paginatable
 
   ID_NAMES = ['ine', 'licencia', 'cartilla', 'pasaporte', 'otra']
-  RENT_TYPES = [:primera_renta, :frecuente, :empresa]
+  RENT_TYPES = [:first_rent, :frecuent, :business]
 
   belongs_to :creator, class_name: 'User'
   has_many :documents
