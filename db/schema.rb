@@ -76,9 +76,11 @@ ActiveRecord::Schema.define(version: 20170608024222) do
     t.integer "status", null: false
     t.bigint "client_id"
     t.bigint "place_id"
+    t.bigint "creator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_rents_on_client_id"
+    t.index ["creator_id"], name: "index_rents_on_creator_id"
     t.index ["place_id"], name: "index_rents_on_place_id"
   end
 
@@ -108,4 +110,5 @@ ActiveRecord::Schema.define(version: 20170608024222) do
   add_foreign_key "places", "clients"
   add_foreign_key "rents", "clients"
   add_foreign_key "rents", "places"
+  add_foreign_key "rents", "users", column: "creator_id"
 end

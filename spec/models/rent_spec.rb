@@ -15,6 +15,7 @@ RSpec.describe Rent, type: :model do
 
   it { should belong_to(:client) }
   it { should belong_to(:place) }
+  it { should belong_to(:creator).class_name('User') }
 
   it { should validate_presence_of :delivery_time }
   it { should validate_presence_of :pick_up_time }
@@ -25,6 +26,9 @@ RSpec.describe Rent, type: :model do
   it { should validate_numericality_of(:additional_charges).is_greater_than_or_equal_to(0) }
   it { should validate_presence_of :rent_type }
   it { should validate_presence_of :status }
+  it { should validate_presence_of :client }
+  it { should validate_presence_of :place }
+  it { should validate_presence_of :creator }
 
   it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
   it { should define_enum_for(:status).with(Rent::STATUSES) }

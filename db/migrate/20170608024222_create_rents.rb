@@ -13,8 +13,11 @@ class CreateRents < ActiveRecord::Migration[5.1]
 
       t.references :client, foreign_key: true, index: true
       t.references :place, foreign_key: true, index: true
+      t.references :creator, references: :users, index: true
 
       t.timestamps
     end
+
+    add_foreign_key :rents, :users, column: :creator_id
   end
 end
