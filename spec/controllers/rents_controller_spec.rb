@@ -1282,5 +1282,64 @@ RSpec.describe RentsController, type: :controller do
     end
   end
 
+  describe 'GET #show' do
+    context 'when the current user has admin rights' do
+      context 'and the id is from other user rent' do
+        it 'returns the rent data using the specified id' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
 
+          rent_to_retrieve = FactoryGirl.create :rent
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: rent_to_retrieve.id }
+
+          expect(response).to be_success
+          expect(assigns(:rent)).to eq(rent_to_retrieve)
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+      context 'the id is not from an actual rent' do
+        it 'returns 404' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: 969 }
+
+          expect(response).to be_not_found
+        end
+      end
+    end
+    context 'when the current user is an average user' do
+      context 'and the id is from a rent the current user does own' do
+        it 'returns the rent data using the specified id' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_retrieve = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: rent_to_retrieve.id }
+
+          expect(response).to be_success
+          expect(assigns(:rent)).to eq(rent_to_retrieve)
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+      context 'and the id is from other user rent' do
+        it 'returns forbidden' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_retrieve = FactoryGirl.create :rent
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          get :show, params: { id: rent_to_retrieve.id }
+
+          expect(response).to be_forbidden
+        end
+      end
+    end
+  end
 end

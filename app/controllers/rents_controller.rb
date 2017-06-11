@@ -43,6 +43,18 @@ class RentsController < ApplicationController
     end
   end
 
+  def show
+    @rent = Rent.find_by id: params[:id]
+
+    if @rent
+      authorize! :show, @rent
+
+      render template: 'rents/show.json'
+    else
+      head :not_found
+    end
+  end
+
   private
 
   def get_rents
