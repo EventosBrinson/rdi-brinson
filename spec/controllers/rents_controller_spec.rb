@@ -1342,4 +1342,118 @@ RSpec.describe RentsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #create' do
+    context 'when the right rent information is present' do
+      it 'creates a new rent' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        target_client = FactoryGirl.create :client, creator: user
+        targte_place = FactoryGirl.create :place, client: target_client
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        expect{ post :create, params: { rent: FactoryGirl.attributes_for(:rent).merge({ client_id: target_client.id, place_id: targte_place.id }) }}.to change{ Rent.count }.by(1)
+        expect(response).to be_success
+      end
+
+      it 'returns a json object with the new rent' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        target_client = FactoryGirl.create :client, creator: user
+        targte_place = FactoryGirl.create :place, client: target_client
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        post :create, params: { rent: FactoryGirl.attributes_for(:rent).merge({ client_id: target_client.id, place_id: targte_place.id }) }
+        
+        expect(response).to be_success
+        expect(response).to render_template('rents/show.json')
+      end
+    end
+
+    context 'when the rent information is erratic' do
+      it 'does not create a new rent' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+
+        expect{ post :create, params: { rent: { product: '', price: '' }}}.to_not change{ Rent.count }
+        expect(response).to be_success
+      end
+      it 'returns the rent errors json object' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        post :create, params: { rent: { product: '', price: '' }}
+
+        expect(response.body).to_not be_empty
+        expect(assigns(:rent).errors).to_not be_empty
+      end
+    end
+
+    context 'when the current user has admin rights' do
+      context 'and the client id is from a client the user does not own' do
+        it 'creates a new rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client
+          targte_place = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          expect{ post :create, params: { rent: FactoryGirl.attributes_for(:rent).merge({ client_id: target_client.id, place_id: targte_place.id }) }}.to change{ Rent.count }.by(1)
+          expect(response).to be_success
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+      context 'and the place is from a client the user does not own' do
+        it 'creates a new rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          targte_place = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          expect{ post :create, params: { rent: FactoryGirl.attributes_for(:rent).merge({ client_id: target_client.id, place_id: targte_place.id }) }}.to change{ Rent.count }.by(1)
+          expect(response).to be_success
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+    end
+
+    context 'when the current user is an average user' do
+      context 'and the client id is from a client the user does not own' do
+        it 'returns forbidden' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client
+          targte_place = FactoryGirl.create :place, client: target_client
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          expect{ post :create, params: { rent: FactoryGirl.attributes_for(:rent).merge({ client_id: target_client.id, place_id: targte_place.id }) }}.to_not change{ Place }
+          expect(response).to be_forbidden
+        end
+      end
+      context 'and the palce is from a client the user does not own' do
+        it 'returns forbidden' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          target_client = FactoryGirl.create :client, creator: user
+          targte_place = FactoryGirl.create :place
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          expect{ post :create, params: { rent: FactoryGirl.attributes_for(:rent).merge({ client_id: target_client.id, place_id: targte_place.id }) }}.to_not change{ Place }
+          expect(response).to be_forbidden
+        end
+      end
+    end
+  end
+
+
 end

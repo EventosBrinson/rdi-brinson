@@ -55,6 +55,21 @@ class RentsController < ApplicationController
     end
   end
 
+  def create
+    @rent = Rent.new rent_params
+    @rent.creator = current_user
+
+    if @rent.validate
+      authorize! :create, @rent
+
+      @rent.save
+
+      render template: 'rents/show.json'
+    else
+      render json: @rent.errors
+    end
+  end
+
   private
 
   def get_rents
@@ -83,5 +98,13 @@ class RentsController < ApplicationController
         current_user.rents
       end
     end
+  end
+
+  def rent_params
+    params.require(:rent).permit(:delivery_time, :pick_up_time, :product, :price, :discount, :additional_charges, :additional_charges_notes, :client_id, :place_id)
+  end
+
+  def rent_updateable_params
+    params.require(:rent).permit(:delivery_time, :pick_up_time, :product, :price, :discount, :additional_charges, :additional_charges_notes, :status)
   end
 end
