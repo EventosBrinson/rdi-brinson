@@ -9,10 +9,11 @@ class UsersController < ApplicationController
   end
 
   def show
-    authorize! :show, User
     @user = User.find_by id: params[:id]
 
     if @user
+      authorize! :show, @user
+
       render template: 'users/show.json'
     else
       head :not_found
