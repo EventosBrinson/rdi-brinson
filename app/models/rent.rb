@@ -26,6 +26,7 @@ class Rent < ApplicationRecord
   enum status: STATUSES
 
   before_validation :set_rent_type_from_client
+  before_validation :init_status, on: :create
 
   scope :search, -> (query) { where('LOWER("rents"."product") like :query OR LOWER("rents"."additional_charges_notes") like :query', query: "%#{ query.to_s.downcase }%") }
 
@@ -33,5 +34,9 @@ class Rent < ApplicationRecord
 
   def set_rent_type_from_client
     self.rent_type = client.rent_type if client
+  end
+
+  def init_status
+    self.status = :reserved
   end
 end

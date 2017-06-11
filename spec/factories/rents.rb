@@ -5,8 +5,6 @@ FactoryGirl.define do
     product { Faker::Beer.name }
     price { Faker::Number.positive }
     discount { Faker::Number.positive }
-    rent_type { Client::RENT_TYPES.sample }
-    status { Rent::STATUSES.sample }
 
     after :build do |rent|
       rent.client = FactoryGirl.create :client, creator: (rent.creator || FactoryGirl.create(:user)) unless rent.client
