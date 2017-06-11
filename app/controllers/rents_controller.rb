@@ -1,0 +1,75 @@
+class RentsController < ApplicationController
+  before_action :authenticate_request
+
+  def index
+    authorize! :index, Place
+
+    if params[:user_id]
+      @user = User.find_by id: params[:user_id]
+
+      if @user
+        authorize! :show, @user
+        @rents = get_rents
+
+        render template: 'rents/index.json'
+      else
+        head :not_found
+      end
+    elsif params[:client_id]
+      @client = Client.find_by id: params[:client_id]
+
+      if @client
+        authorize! :show, @client
+        @rents = get_rents
+
+        render template: 'rents/index.json'
+      else
+        head :not_found
+      end
+    elsif params[:place_id]
+      @place = Place.find_by id: params[:place_id]
+
+      if @place
+        authorize! :show, @place
+        @rents = get_rents
+
+        render template: 'rents/index.json'
+      else
+        head :not_found
+      end
+    else
+      @rents = get_rents
+      render template: 'rents/index.json'
+    end
+  end
+
+  private
+
+  def get_rents
+    if params[:search] || params[:ordered] || params[:paginated]
+      if params[:user_id]
+        @user.rents.filter(params.slice(:search, :ordered, :paginated))
+      elsif params[:client_id]
+        @client.rents.filter(params.slice(:search, :ordered, :paginated))
+      elsif params[:place_id]
+        @place.rents.filter(params.slice(:search, :ordered, :paginated))
+      elsif current_user.admin? || current_user.staff? and params[:all]
+        Rent.filter(params.slice(:search, :ordered, :paginated))
+      else
+        current_user.rents.filter(params.slice(:search, :ordered, :paginated))
+      end
+    else
+      if params[:user_id]
+        @user.rents
+      elsif params[:client_id]
+        @client.rents
+      elsif params[:place_id]
+        @place.rents
+      elsif current_user.admin? || current_user.staff? and params[:all]
+        Rent.all
+      else
+        current_user.rents
+      end
+    end
+  end
+end
