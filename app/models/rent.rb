@@ -4,6 +4,7 @@ class Rent < ApplicationRecord
   include Paginatable
 
   STATUSES = [:reserved, :on_route, :delivered, :on_pick_up, :pending, :finalized]
+  STATUSES_VALUES = { reserved: 0, on_route: 1, delivered: 2, on_pick_up: 3, pending: 4, finalized: 5 }
 
   belongs_to :client
   belongs_to :place
@@ -21,6 +22,7 @@ class Rent < ApplicationRecord
   validates :client, presence: true
   validates :place, presence: true
   validates :creator, presence: true
+  validate :status_transition, on: :update
 
   enum rent_type: Client::RENT_TYPES
   enum status: STATUSES
@@ -38,5 +40,15 @@ class Rent < ApplicationRecord
 
   def init_status
     self.status = :reserved
+  end
+
+  def status_transition
+    if status_changed?
+      if status_was == 'finalized'
+        errors.add(:status, "can't return to any status")
+      elsif STATUSES_VALUES[status.to_sym] < STATUSES_VALUES[status_was.to_sym] and status != 'on_pick_up'
+        errors.add(:status, "can't return to that status")
+      end
+    end
   end
 end

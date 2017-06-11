@@ -59,6 +59,108 @@ RSpec.describe Rent, type: :model do
     end
   end
 
+  describe '#status_transition' do
+    context 'changing from reserved to on_route' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+
+        rent.status = :on_route
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from on_route to delivered' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_route
+
+        rent.status = :delivered
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from delivered to on_pick_up' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :delivered
+
+        rent.status = :on_pick_up
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from on_pick_up to pending' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_pick_up
+
+        rent.status = :on_pick_up
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from pending to on_pick_up' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :pending
+
+        rent.status = :on_pick_up
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from on_pick_up to finalized' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_pick_up
+
+        rent.status = :finalized
+        expect(rent).to be_valid
+      end
+    end
+
+    context 'changing from on_route to reserved' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_route
+
+        rent.status = :reserved
+        expect(rent).to_not be_valid
+      end
+    end
+    context 'changing from delivered to on_route' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :delivered
+
+        rent.status = :on_route
+        expect(rent).to_not be_valid
+      end
+    end
+    context 'changing from on_pick_up to delivered' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_pick_up
+
+        rent.status = :delivered
+        expect(rent).to_not be_valid
+      end
+    end
+    context 'changing from pending to delivered' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :pending
+
+        rent.status = :delivered
+        expect(rent).to_not be_valid
+      end
+    end
+    context 'changing from finalized to on_pick_up' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :finalized
+
+        rent.status = :on_pick_up
+        expect(rent).to_not be_valid
+      end
+    end
+  end
+
   describe '.search' do
     it 'returns all rents that match the query' do
       rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
