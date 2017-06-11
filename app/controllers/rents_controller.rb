@@ -87,6 +87,22 @@ class RentsController < ApplicationController
     end
   end
 
+  def destroy
+    @rent = Rent.find_by id: params[:id]
+
+    if @rent
+      authorize! :delete, @rent
+
+      if @rent.destroy
+        head :ok
+      else
+        head :internal_server_error
+      end
+    else
+      head :not_found
+    end
+  end
+
   private
 
   def get_rents
