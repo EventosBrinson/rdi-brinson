@@ -248,6 +248,17 @@ RSpec.describe DocumentsController, type: :controller do
         end
       end
     end
+    context 'the id is not form an actual document' do
+      it 'returns not found' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        patch :update, params: { id: 969 }
+
+        expect(response).to be_not_found
+      end
+    end
   end
   describe 'DELETE #destroy' do
     context 'when current user has admin rights' do
@@ -289,6 +300,17 @@ RSpec.describe DocumentsController, type: :controller do
 
           expect(response).to be_forbidden
         end
+      end
+    end
+    context 'the id is not form an actual document' do
+      it 'returns not found' do
+        user = FactoryGirl.create :user, :confirmed
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        delete :destroy, params: { id: 969 }
+
+        expect(response).to be_not_found
       end
     end
   end

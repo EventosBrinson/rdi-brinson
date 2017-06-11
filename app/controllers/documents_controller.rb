@@ -26,24 +26,35 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    @document = Document.find_by_id params[:id]
-    authorize! :update, @document
+    @document = Document.find_by id: params[:id]
 
-    if @document and @document.update document_updateable_params
-      render template: 'documents/show.json'
+    if @document
+      @document.assign_attributes document_updateable_params
+      authorize! :update, @document
+
+      if @document.save
+        render template: 'documents/show.json'
+      else
+        render json: @document.errors
+      end
     else
-      render json: @document.errors
+      head :not_found
     end
   end
 
   def destroy
-    @document = Document.find_by_id params[:id]
-    authorize! :delete, @document
+    @document = Document.find_by id: params[:id]
 
-    if @document and @document.destroy
-      head :ok
+    if @document
+      authorize! :delete, @document
+
+      if @document.destroy
+        head :ok
+      else
+        head :internal_server_error
+      end
     else
-      render json: @document.errors
+      head :not_found
     end
   end
 
