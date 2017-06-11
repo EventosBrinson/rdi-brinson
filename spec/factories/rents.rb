@@ -7,10 +7,10 @@ FactoryGirl.define do
     discount { Faker::Number.positive }
     rent_type { Client::RENT_TYPES.sample }
     status { Rent::STATUSES.sample }
-    client
-    place
 
     after :build do |rent|
+      rent.client = FactoryGirl.create :client, creator: (rent.creator || FactoryGirl.create(:user)) unless rent.client
+      rent.place = FactoryGirl.create :place, client: rent.client unless rent.place
       rent.creator = rent.client.creator unless rent.creator
     end
 
