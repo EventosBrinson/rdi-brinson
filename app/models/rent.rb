@@ -1,4 +1,8 @@
 class Rent < ApplicationRecord
+  include Filterable
+  include Orderable
+  include Paginatable
+
   STATUSES = [:reserved, :on_route, :delivered, :on_pick_up, :pending, :finalized]
 
   belongs_to :client
@@ -22,6 +26,8 @@ class Rent < ApplicationRecord
   enum status: STATUSES
 
   before_validation :set_rent_type_from_client
+
+  scope :search, -> (query) { where('LOWER("rents"."product") like :query OR LOWER("rents"."additional_charges_notes") like :query', query: "%#{ query.to_s.downcase }%") }
 
   private
 

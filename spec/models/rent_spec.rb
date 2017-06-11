@@ -14,7 +14,6 @@ RSpec.describe Rent, type: :model do
   it { should have_db_column(:status).of_type(:integer) }
 
   it { should belong_to(:client) }
-  it { should belong_to(:place) }
   it { should belong_to(:creator).class_name('User') }
 
   it { should validate_presence_of :delivery_time }
@@ -26,7 +25,6 @@ RSpec.describe Rent, type: :model do
   it { should validate_numericality_of(:additional_charges).is_greater_than_or_equal_to(0).allow_nil }
   it { should validate_presence_of :status }
   it { should validate_presence_of :client }
-  it { should validate_presence_of :place }
   it { should validate_presence_of :creator }
 
   it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
@@ -44,6 +42,60 @@ RSpec.describe Rent, type: :model do
       rent = FactoryGirl.build :rent, rent_type: nil
 
       expect{ rent.save }.to change(rent, :rent_type).from(nil).to(rent.client.rent_type)
+    end
+  end
+
+  describe '.search' do
+    it 'returns all rents that match the query' do
+      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
+      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
+
+      expect(Rent.search('david').size).to eq(2)
+    end
+  end
+
+  describe '.paginated' do
+    it 'returns all the rents between the offset and limit range' do
+      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
+      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+      rent_match3 = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
+      rent_match4 = FactoryGirl.create :rent, product: 'Enrique', additional_charges_notes: 'Segoviano'
+
+      expect(Rent.paginated(offset: 1, limit: 2).size).to eq(2)
+    end
+  end
+
+  describe '.filter' do
+    it 'returns all the rents filtered by params as messages and param value as message param' do
+      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
+      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+      rent_match3 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'segoviano'
+      rent_match4 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'zan'
+      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
+
+      rents_filtered = Rent.filter({ search: 'david', order: { additional_charges_notes: :desc }, paginated: { offset: 0, limit: 2 } })
+
+      expect(rents_filtered.size).to eq(2)
+      expect(rents_filtered.first).to eq(rent_match4)
+      expect(rents_filtered.last).to eq(rent_match3)
+    end
+  end
+
+  describe '.ordered' do
+    context 'order hash contains actual columns to order' do
+      it 'returns the rents ordered by the specified columns and orders' do
+        rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'De anda'
+        rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+        rent_match3 = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'de anda'
+
+        rents_ordered = Rent.ordered({ additional_charges_notes: :desc, product: :asc })
+
+        expect(rents_ordered.size).to eq(3)
+        expect(rents_ordered.first).to eq(rent_match2)
+        expect(rents_ordered.second).to eq(rent_match1)
+        expect(rents_ordered.last).to eq(rent_match3)
+      end
     end
   end
 end
