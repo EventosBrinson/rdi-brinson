@@ -1455,5 +1455,158 @@ RSpec.describe RentsController, type: :controller do
     end
   end
 
+  describe 'PATCH #Update' do
+    context 'when the current user has admin rights' do
+      context 'and the right rent information is present' do
+        it 'updates the rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
 
+          rent_to_update = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          rent_to_update.reload
+
+          expect(rent_to_update.product).to eq('Bombar')
+          expect(rent_to_update.additional_charges_notes).to eq('De Anda') 
+          expect(response).to be_success
+        end
+
+        it 'returns the updated rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+
+      context 'and the rent information is erratic' do
+        it 'does not updates the rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: '', additional_charges_notes: '' } }
+
+          previous_product = rent_to_update.product
+          rent_to_update.reload
+
+          expect(rent_to_update.product).to eq(previous_product)
+          expect(response).to be_success
+        end
+
+        it 'returns the rents errors json object' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: '', additional_charges_notes: '' } }
+
+          expect(response.body).to_not be_empty
+          expect(assigns(:rent).errors).to_not be_empty
+        end
+      end
+
+      context 'and is changing a rent created by other user' do
+        it 'updates the rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          rent_to_update.reload
+
+          expect(rent_to_update.product).to eq('Bombar')
+          expect(rent_to_update.additional_charges_notes).to eq('De Anda') 
+          expect(response).to be_success
+        end
+
+        it 'returns the updated rent' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+    end
+    context 'when the current user is an average user' do
+      context 'and is changing a rent created by the current user (self)' do
+        it 'updates the rent' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          rent_to_update.reload
+
+          expect(rent_to_update.product).to eq('Bombar')
+          expect(rent_to_update.additional_charges_notes).to eq('De Anda') 
+          expect(response).to be_success
+        end
+
+        it 'returns the updated rent' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          expect(response).to render_template('rents/show.json')
+        end
+      end
+
+      context 'and is changing a rent created by other user' do
+        it 'returns forbiden and nothing else happens' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          previous_product = rent_to_update.product
+          rent_to_update.reload
+
+          expect(rent_to_update.product).to eq(previous_product)
+          expect(response).to be_forbidden
+        end
+      end
+    end
+    context 'the id is not from an actual rent' do
+      it 'returns 404' do
+        user = FactoryGirl.create :user, :confirmed, :admin
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        patch :update, params: { id: 969 }
+
+        expect(response).to be_not_found
+      end
+    end
+  end
 end

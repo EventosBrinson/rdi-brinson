@@ -70,6 +70,23 @@ class RentsController < ApplicationController
     end
   end
 
+  def update
+    @rent = Rent.find_by id: params[:id]
+
+    if @rent
+      @rent.assign_attributes rent_updateable_params
+      authorize! :update, @rent
+
+      if @rent.save
+        render template: 'rents/show.json'
+      else
+        render json: @rent.errors
+      end
+    else
+      head :not_found
+    end
+  end
+
   private
 
   def get_rents
