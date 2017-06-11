@@ -36,7 +36,7 @@ class ClientsController < ApplicationController
     @client = Client.find_by id: params[:id]
 
     if @client
-      @client.assign_attributes client_updatabe_params
+      @client.assign_attributes client_updateable_params
       authorize! :update, @client
 
       if @client.save
@@ -71,7 +71,7 @@ class ClientsController < ApplicationController
     params.require(:client).permit(:firstname, :lastname, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :telephone_1, :telephone_2, :email, :id_name, :trust_level, :rent_type)
   end
 
-  def client_updatabe_params
+  def client_updateable_params
     params.require(:client).permit(:firstname, :lastname, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :telephone_1, :telephone_2, :email, :id_name, :trust_level, :rent_type, :active)
   end
 

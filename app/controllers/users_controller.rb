@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     @user = User.find_by id: params[:id]
 
     if @user
-      @user.assign_attributes user_updatabe_params
+      @user.assign_attributes user_updateable_params
       authorize! :update, @user
 
       email_canged = @user.email_changed?
@@ -72,7 +72,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(:email, :username, :firstname, :lastname, :role)
   end
 
-  def user_updatabe_params
+  def user_updateable_params
     params.require(:user).permit(:email, :username, :firstname, :lastname, :role, :password)
   end
 end

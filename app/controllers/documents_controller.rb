@@ -29,7 +29,7 @@ class DocumentsController < ApplicationController
     @document = Document.find_by_id params[:id]
     authorize! :update, @document
 
-    if @document and @document.update document_updatable_params
+    if @document and @document.update document_updateable_params
       render template: 'documents/show.json'
     else
       render json: @document.errors
@@ -53,7 +53,7 @@ class DocumentsController < ApplicationController
     params.require(:document).permit(:title, :client_id)
   end
 
-  def document_updatable_params
+  def document_updateable_params
     params.require(:document).permit(:title)
   end
 

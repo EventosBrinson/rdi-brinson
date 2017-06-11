@@ -51,7 +51,7 @@ class PlacesController < ApplicationController
     @place = Place.find_by id: params[:id]
 
     if @place
-      @place.assign_attributes place_updatabe_params
+      @place.assign_attributes place_updateable_params
       authorize! :update, @place
 
       if @place.save
@@ -90,7 +90,7 @@ class PlacesController < ApplicationController
     params.require(:place).permit(:name, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :client_id)
   end
 
-  def place_updatabe_params
+  def place_updateable_params
     params.require(:place).permit(:name, :street, :inner_number, :outer_number, :neighborhood, :postal_code, :active)
   end
 end
