@@ -82,8 +82,16 @@ class Ability
 
   def user_on_rents(user)
     can :index, Rent
-    can [:show, :create, :update], Rent do |subject|
-      subject.creator_id == user.id and subject.client.creator_id == user.id and subject.place.client.creator_id == user.id
+    can [:show, :create], Rent do |subject|
+      user_owns_rent(user, subject)
     end
+    can :update, Rent do |subject|
+      fileds_changed = subject.changed_attributes.keys
+      user_owns_rent(user, subject) and (fileds_changed.size == 0 or (fileds_changed.size == 1 and fileds_changed.first == 'status') or subject.status == 'reserved')
+    end
+  end
+
+  def user_owns_rent(user, rent)
+    rent.creator_id == user.id and rent.client.creator_id == user.id and rent.place.client.creator_id == user.id
   end
 end

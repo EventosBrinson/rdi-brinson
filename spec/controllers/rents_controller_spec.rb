@@ -1596,6 +1596,24 @@ RSpec.describe RentsController, type: :controller do
           expect(response).to be_forbidden
         end
       end
+
+      context 'and is changing a rent with status diferent than reserved' do
+        it 'returns forbiden and nothing else happens' do
+          user = FactoryGirl.create :user, :confirmed
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          rent_to_update = FactoryGirl.create :rent, :on_route, creator: user
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: rent_to_update.id, rent: { product: 'Bombar', additional_charges_notes: 'De Anda' } }
+
+          previous_product = rent_to_update.product
+          rent_to_update.reload
+
+          expect(rent_to_update.product).to eq(previous_product)
+          expect(response).to be_forbidden
+        end
+      end
     end
     context 'the id is not from an actual rent' do
       it 'returns 404' do

@@ -39,7 +39,7 @@ class Rent < ApplicationRecord
   end
 
   def init_status
-    self.status = :reserved
+    self.status = :reserved unless status
   end
 
   def status_transition
