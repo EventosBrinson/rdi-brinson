@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :clients, foreign_key: 'creator_id'
   has_many :places, through: :clients
+  has_many :rents, foreign_key: 'creator_id'
 
   validates :username, presence: true
   validates :username, uniqueness: true

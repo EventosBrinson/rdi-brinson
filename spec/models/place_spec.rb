@@ -14,6 +14,7 @@ RSpec.describe Place, type: :model do
   it { should have_db_column(:active).of_type(:boolean).with_options(null: false, default: true) }
 
   it { should belong_to(:client) }
+  it { should have_many(:rents) }
 
   it { should validate_presence_of :name }
   it { should validate_presence_of :street }

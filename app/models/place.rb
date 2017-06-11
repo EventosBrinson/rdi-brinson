@@ -5,6 +5,7 @@ class Place < ApplicationRecord
   include Paginatable
 
   belongs_to :client
+  has_many :rents
 
   validates :name, presence: true
   validates :street, presence: true

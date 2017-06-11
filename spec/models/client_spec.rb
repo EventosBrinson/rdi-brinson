@@ -21,6 +21,7 @@ RSpec.describe Client, type: :model do
   it { should belong_to(:creator).class_name('User') }
   it { should have_many(:documents) }
   it { should have_many(:places) }
+  it { should have_many(:rents) }
 
   it { should validate_presence_of :firstname }
   it { should validate_presence_of :lastname }
