@@ -11,7 +11,7 @@ FactoryGirl.define do
     place
 
     after :build do |rent|
-      rent.creator = rent.client.creator
+      rent.creator = rent.client.creator unless rent.creator
     end
 
     trait :with_additional_charges do

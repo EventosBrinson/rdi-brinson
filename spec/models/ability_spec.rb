@@ -67,6 +67,25 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, place) }
     it{ should be_able_to(:update, other_user_place) }
     it{ should be_able_to(:update, place_with_active_changed) }
+
+    let(:rent) { FactoryGirl.create :rent, client: client, place: place, creator: user }
+    let(:other_user_rent) { FactoryGirl.create :rent, client: client, place: place, creator: other_user }
+    let(:other_user_client_rent) { FactoryGirl.create :rent, client: other_user_client, place: place, creator: user }
+    let(:other_user_place_rent) { FactoryGirl.create :rent, client: client, place: other_user_place, creator: user }
+
+    it{ should be_able_to(:manage, Rent) }
+    it{ should be_able_to(:index, Rent) }
+    it{ should be_able_to(:show, rent) }
+    it{ should be_able_to(:create, rent) }
+    it{ should be_able_to(:update, rent) }
+    it{ should be_able_to(:show, other_user_rent) }
+    it{ should be_able_to(:create, other_user_rent) }
+    it{ should be_able_to(:create, other_user_client_rent) }
+    it{ should be_able_to(:create, other_user_place_rent) }
+    it{ should be_able_to(:update, other_user_rent) }
+    it{ should be_able_to(:create, other_user_client_rent) }
+    it{ should be_able_to(:create, other_user_place_rent) }
+    it{ should be_able_to(:delete, Rent) }
   end
 
   context 'when the user is an admin or staff' do
@@ -125,6 +144,25 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, place) }
     it{ should be_able_to(:update, other_user_place) }
     it{ should be_able_to(:update, place_with_active_changed) }
+
+    let(:rent) { FactoryGirl.create :rent, client: client, place: place, creator: user }
+    let(:other_user_rent) { FactoryGirl.create :rent, client: client, place: place, creator: other_user }
+    let(:other_user_client_rent) { FactoryGirl.create :rent, client: other_user_client, place: place, creator: user }
+    let(:other_user_place_rent) { FactoryGirl.create :rent, client: client, place: other_user_place, creator: user }
+
+    it{ should be_able_to(:manage, Rent) }
+    it{ should be_able_to(:index, Rent) }
+    it{ should be_able_to(:show, rent) }
+    it{ should be_able_to(:create, rent) }
+    it{ should be_able_to(:update, rent) }
+    it{ should be_able_to(:show, other_user_rent) }
+    it{ should be_able_to(:create, other_user_rent) }
+    it{ should be_able_to(:create, other_user_client_rent) }
+    it{ should be_able_to(:create, other_user_place_rent) }
+    it{ should be_able_to(:update, other_user_rent) }
+    it{ should be_able_to(:create, other_user_client_rent) }
+    it{ should be_able_to(:create, other_user_place_rent) }
+    it{ should be_able_to(:delete, Rent) }
   end
 
   context 'when the user is just an user' do
@@ -175,5 +213,23 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:create, other_user_place) }
     it{ should_not be_able_to(:update, other_user_place) }
     it{ should_not be_able_to(:update, place_with_active_changed) }
+
+    let(:rent) { FactoryGirl.create :rent, client: client, place: place, creator: user }
+    let(:other_user_rent) { FactoryGirl.create :rent, client: client, place: place, creator: other_user }
+    let(:other_user_client_rent) { FactoryGirl.create :rent, client: other_user_client, place: place, creator: user }
+    let(:other_user_place_rent) { FactoryGirl.create :rent, client: client, place: other_user_place, creator: user }
+
+    it{ should be_able_to(:index, Rent) }
+    it{ should be_able_to(:show, rent) }
+    it{ should be_able_to(:create, rent) }
+    it{ should be_able_to(:update, rent) }
+    it{ should_not be_able_to(:show, other_user_rent) }
+    it{ should_not be_able_to(:create, other_user_rent) }
+    it{ should_not be_able_to(:create, other_user_client_rent) }
+    it{ should_not be_able_to(:create, other_user_place_rent) }
+    it{ should_not be_able_to(:update, other_user_rent) }
+    it{ should_not be_able_to(:create, other_user_client_rent) }
+    it{ should_not be_able_to(:create, other_user_place_rent) }
+    it{ should_not be_able_to(:delete, Rent) }
   end
 end

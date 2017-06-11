@@ -15,6 +15,7 @@ class Ability
       can :manage, Client
       can :manage, Document
       can :manage, Place
+      can :manage, Rent
     end
 
     if user.user?
@@ -45,6 +46,11 @@ class Ability
       end
       can :update, Place do |subject|
         subject.client.creator_id == user.id and !subject.active_changed?
+      end
+
+      can :index, Rent
+      can [:show, :create, :update], Rent do |subject|
+        subject.creator_id == user.id and subject.client.creator_id == user.id and subject.place.client.creator_id == user.id
       end
     end
   end
