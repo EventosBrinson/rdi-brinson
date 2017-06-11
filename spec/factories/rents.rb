@@ -5,16 +5,13 @@ FactoryGirl.define do
     product { Faker::Beer.name }
     price { Faker::Number.positive }
     discount { Faker::Number.positive }
+    rent_type { Client::RENT_TYPES.sample }
     status { Rent::STATUSES.sample }
+    client
+    place
 
-    callback(:before_validation) do |rent|
-      unless rent.client
-        client = FactoryGirl.create :client
-        place = FactoryGirl.create :place, client: client
-
-        rent.client = client
-        rent.place = place
-      end
+    after :build do |rent|
+      rent.creator = rent.client.creator
     end
 
     trait :with_additional_charges do

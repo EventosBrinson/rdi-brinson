@@ -22,9 +22,8 @@ RSpec.describe Rent, type: :model do
   it { should validate_presence_of :product }
   it { should validate_presence_of :price }
   it { should validate_numericality_of(:price).is_greater_than_or_equal_to(0) }
-  it { should validate_numericality_of(:discount).is_greater_than_or_equal_to(0) }
-  it { should validate_numericality_of(:additional_charges).is_greater_than_or_equal_to(0) }
-  it { should validate_presence_of :rent_type }
+  it { should validate_numericality_of(:discount).is_greater_than_or_equal_to(0).allow_nil }
+  it { should validate_numericality_of(:additional_charges).is_greater_than_or_equal_to(0).allow_nil }
   it { should validate_presence_of :status }
   it { should validate_presence_of :client }
   it { should validate_presence_of :place }
@@ -32,4 +31,19 @@ RSpec.describe Rent, type: :model do
 
   it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
   it { should define_enum_for(:status).with(Rent::STATUSES) }
+
+  describe '#set_rent_type_from_client' do
+    it 'is send before validation' do
+      rent = FactoryGirl.build :rent
+
+      expect(rent).to receive(:set_rent_type_from_client)
+      rent.save
+    end
+
+    it 'sets the rent_type attribute from the client before screate' do
+      rent = FactoryGirl.build :rent, rent_type: nil
+
+      expect{ rent.save }.to change(rent, :rent_type).from(nil).to(rent.client.rent_type)
+    end
+  end
 end
