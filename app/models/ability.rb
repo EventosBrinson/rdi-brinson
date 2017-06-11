@@ -19,16 +19,13 @@ class Ability
     end
 
     if user.user?
-      can :read, User do |subject|
+      cannot :index, User
+      can :show, User do |subject|
         subject.id == user.id
       end
-
       can :update, User do |subject|
         subject.id == user.id and !subject.role_changed?
       end
-
-      cannot :index, User
-      cannot :show, User
 
       can :index, Client
       can :create, Client
