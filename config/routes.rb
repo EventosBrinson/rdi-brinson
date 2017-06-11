@@ -24,4 +24,10 @@ Rails.application.routes.draw do
   post   '/places',         to: 'places#create'
   patch  '/places/:id',     to: 'places#update'
   get    '/places/:id',     to: 'places#show'
+
+  get    '/rents',          to: 'rents#index'
+  post   '/rents',          to: 'rents#create'
+  patch  '/rents/:id',      to: 'rents#update'
+  get    '/rents/:id',      to: 'rents#show'
+  delete '/rents/:id',      to: 'rents#destroy'
 end
