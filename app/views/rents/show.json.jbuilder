@@ -1,1 +1,1 @@
-json.partial! 'rent', place: @rent
+json.partial! 'rent', rent: @rent
