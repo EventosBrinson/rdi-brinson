@@ -237,6 +237,7 @@ RSpec.describe Ability do
     let(:rent) { FactoryGirl.create :rent, client: client, place: place, creator: user }
     let(:delivered_rent) { FactoryGirl.create :rent, :delivered, client: client, place: place, creator: user }
     let(:on_pick_up_rent) { FactoryGirl.create :rent, :on_pick_up, client: client, place: place, creator: user }
+    let(:finalized_rent) { FactoryGirl.create :rent, :finalized, client: client, place: place, creator: user }
     let(:other_user_rent) { FactoryGirl.create :rent, client: client, place: place, creator: other_user }
     let(:other_user_client_rent) { FactoryGirl.create :rent, client: other_user_client, place: place, creator: user }
     let(:other_user_place_rent) { FactoryGirl.create :rent, client: client, place: other_user_place, creator: user }
@@ -244,6 +245,7 @@ RSpec.describe Ability do
     let(:delivered_rent_with_changes) { delivered_rent.product = 'changed_product'; delivered_rent }
     let(:on_pick_up_rent_with_changes) { on_pick_up_rent.additional_charges = 15; on_pick_up_rent }
     let(:on_pick_up_rent_with_invalid_changes) { on_pick_up_rent.additional_charges = 15; on_pick_up_rent.product = 'changed_product'; on_pick_up_rent }
+    let(:finalized_rent_with_changes) { finalized_rent.product = 'changed_product'; finalized_rent }
 
     it{ should be_able_to(:index, Rent) }
     it{ should be_able_to(:show, rent) }
@@ -258,6 +260,7 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:update, other_user_rent) }
     it{ should_not be_able_to(:update, delivered_rent_with_changes) }
     it{ should_not be_able_to(:update, on_pick_up_rent_with_invalid_changes) }
+    it{ should_not be_able_to(:update, finalized_rent_with_changes) }
     it{ should_not be_able_to(:create, other_user_client_rent) }
     it{ should_not be_able_to(:create, other_user_place_rent) }
     it{ should_not be_able_to(:delete, Rent) }
