@@ -86,12 +86,22 @@ class Ability
       user_owns_rent(user, subject)
     end
     can :update, Rent do |subject|
-      fileds_changed = subject.changed_attributes.keys
-      user_owns_rent(user, subject) and (fileds_changed.size == 0 or (fileds_changed.size == 1 and fileds_changed.first == 'status') or subject.status == 'reserved')
+      user_owns_rent(user, subject) and (rent_only_status_changed(subject) or rent_on_pick_up_changed_additional_charges(subject) or subject.status == 'reserved')
     end
   end
 
   def user_owns_rent(user, rent)
     rent.creator_id == user.id and rent.client.creator_id == user.id and rent.place.client.creator_id == user.id
+  end
+
+  def rent_only_status_changed(rent)
+    fields_changed = rent.changed_attributes.keys
+    fields_changed.size == 0 or (fields_changed.size == 1 and fields_changed.first == 'status')
+  end
+
+  def rent_on_pick_up_changed_additional_charges(rent)
+    fields_changed = rent.changed_attributes.keys
+    unpermited_fileds = fields_changed.select { |attribute| attribute != 'additional_charges' and attribute != 'additional_charges_notes' }
+    unpermited_fileds.empty? and rent.status == 'on_pick_up'
   end
 end
