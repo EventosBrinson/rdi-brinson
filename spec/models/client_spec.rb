@@ -26,7 +26,6 @@ RSpec.describe Client, type: :model do
   it { should validate_presence_of :firstname }
   it { should validate_presence_of :lastname }
   it { should validate_presence_of :street }
-  it { should validate_presence_of :inner_number }
   it { should validate_presence_of :outer_number }
   it { should validate_presence_of :neighborhood }
   it { should validate_presence_of :postal_code }

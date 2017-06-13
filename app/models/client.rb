@@ -15,7 +15,6 @@ class Client < ApplicationRecord
   validates :firstname, presence: true
   validates :lastname, presence: true
   validates :street, presence: true
-  validates :inner_number, presence: true
   validates :outer_number, presence: true
   validates :neighborhood, presence: true
   validates :postal_code, presence: true

@@ -9,7 +9,6 @@ class Place < ApplicationRecord
 
   validates :name, presence: true
   validates :street, presence: true
-  validates :inner_number, presence: true
   validates :outer_number, presence: true
   validates :neighborhood, presence: true
   validates :postal_code, presence: true
