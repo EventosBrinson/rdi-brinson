@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: rdi-brison_development
+
+test:
+  <<: *default
+  database: rdi-brison_test
+
+production:
+  <<: *default
+  database: rdi-brison_production
+  username: rdi-brison
+  password: <%= ENV['RDI-BRISON_DATABASE_PASSWORD'] %>
