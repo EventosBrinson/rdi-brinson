@@ -48,11 +48,9 @@ class DocumentsController < ApplicationController
     if @document
       authorize! :delete, @document
 
-      if @document.destroy
-        head :ok
-      else
-        head :internal_server_error
-      end
+      @document.destroy
+
+      head :ok
     else
       head :not_found
     end

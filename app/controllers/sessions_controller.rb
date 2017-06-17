@@ -52,11 +52,7 @@ class SessionsController < ApplicationController
   end
 
   def sign_out
-    if @current_user
-      head :ok
-    else
-      head :bad_request
-    end
+    head :ok
   end
 
   private
@@ -72,9 +68,5 @@ class SessionsController < ApplicationController
 
   def session_token
     @session_token ||= request.headers[:HTTP_AUTH_TOKEN]
-  end
-
-  def user_params
-    params.require(:user).permit(:email, :username, :firstname, :lastname, :role)
   end
 end

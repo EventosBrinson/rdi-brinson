@@ -93,11 +93,9 @@ class RentsController < ApplicationController
     if @rent
       authorize! :delete, @rent
 
-      if @rent.destroy
-        head :ok
-      else
-        head :internal_server_error
-      end
+      @rent.destroy
+
+      head :ok
     else
       head :not_found
     end
