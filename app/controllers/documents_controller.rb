@@ -6,7 +6,11 @@ class DocumentsController < ApplicationController
     @document = Document.find_by_id params[:id]
 
     if @document
-      send_file @document.file.path, disposition: 'inline'
+      if params[:thumb]
+        send_file @document.file.path(:thumb), disposition: 'inline'
+      else
+        send_file @document.file.path, disposition: 'inline'
+      end
     else
       head :not_found
     end
