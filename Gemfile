@@ -34,4 +34,6 @@ end
 group :test do
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
+  gem "simplecov"
+  gem "codeclimate-test-reporter", "~> 1.0.0"
 end
