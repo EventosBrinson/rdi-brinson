@@ -60,9 +60,9 @@ class ClientsController < ApplicationController
       end
     else
       if current_user.admin? || current_user.staff? and params[:all]
-        Client.order(:lastname)
+        Client.ordered(lastname: :asc)
       else
-        current_user.clients.order(:lastname)
+        current_user.clients.ordered(lastname: :asc)
       end
     end
   end
