@@ -79,9 +79,9 @@ class PlacesController < ApplicationController
       if params[:client_id]
         @client.places
       elsif current_user.admin? || current_user.staff? and params[:all]
-        Place.all
+        Place.all.order(:name)
       else
-        current_user.places
+        current_user.places.order(:name)
       end
     end
   end
