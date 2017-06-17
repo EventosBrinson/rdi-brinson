@@ -20,5 +20,7 @@
 .DS_Store*
 
 /storage
+/coverage
+
 config/database.yml\nconfig/secrets.yml
 config/database.yml\nconfig/secrets.yml
