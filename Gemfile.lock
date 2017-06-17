@@ -210,7 +210,7 @@ DEPENDENCIES
   capistrano-passenger (~> 0.2.0)
   capistrano-rails (~> 1.2)
   capistrano-rbenv (~> 2.1)
-  codeclimate-test-reporter
+  codeclimate-test-reporter (~> 1.0.0)
   factory_girl_rails
   faker
   jbuilder
