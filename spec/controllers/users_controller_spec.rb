@@ -805,6 +805,119 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
+
+  context 'the active param is present' do
+      context 'and the current user is changing its own active attribute' do
+        it 'returns forbiden and nothing else happens' do
+          user = FactoryGirl.create :user, :confirmed, :admin
+          token = Sessions::Create.for credential: user.username, password: user.password
+
+          request.headers[:HTTP_AUTH_TOKEN] = token
+          patch :update, params: { id: user.id, user: { active: :false } }
+
+          previous_active = user.active
+          user.reload
+
+          expect(user.active).to eq(previous_active)
+          expect(response).to be_forbidden
+        end
+      end
+      context 'and the current user is changing an average user active' do
+        context 'and the current user is admin/staff user' do
+          it 'changes the other user active attribute' do
+            user = FactoryGirl.create :user, :confirmed, :admin
+            token = Sessions::Create.for credential: user.username, password: user.password
+
+            other_user = FactoryGirl.create :user
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            patch :update, params: { id: other_user.id, user: { active: :false } }
+
+            other_user.reload
+
+            expect(response).to be_success
+            expect(other_user).to_not be_active
+          end
+
+          it 'returns the updated user json object' do
+            user = FactoryGirl.create :user, :confirmed, :admin
+            token = Sessions::Create.for credential: user.username, password: user.password
+
+            other_user = FactoryGirl.create :user
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            patch :update, params: { id: other_user.id, user: { active: :false } }
+
+            expect(response).to render_template('users/show.json')
+          end
+        end
+        context 'and the current user is an average user' do
+          it 'returns forbiden and nothing else happens' do
+            user = FactoryGirl.create :user, :confirmed
+            token = Sessions::Create.for credential: user.username, password: user.password
+
+            other_user = FactoryGirl.create :user
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            patch :update, params: { id: other_user.id, user: { active: :false } }
+
+            previous_active = other_user.active
+            other_user.reload
+
+            expect(other_user.active).to eq(previous_active)
+            expect(response).to be_forbidden
+          end
+        end
+      end
+      context 'and the current user is changing an admin/staff user active' do
+        context 'and the current user is a main user' do
+          it 'changes the other user active attribute' do
+            user = FactoryGirl.create :user, :confirmed, :admin, :main
+            token = Sessions::Create.for credential: user.username, password: user.password
+
+            other_user = FactoryGirl.create :user, :admin
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            patch :update, params: { id: other_user.id, user: { active: :false } }
+
+            other_user.reload
+
+            expect(response).to be_success
+            expect(other_user).to_not be_active
+          end
+
+          it 'returns the updated user json object' do
+            user = FactoryGirl.create :user, :confirmed, :admin, :main
+            token = Sessions::Create.for credential: user.username, password: user.password
+
+            other_user = FactoryGirl.create :user, :admin
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            patch :update, params: { id: other_user.id, user: { active: :false } }
+
+            expect(response).to render_template('users/show.json')
+          end
+        end
+        context 'and the current user is not a main user' do
+          it 'returns forbiden and nothing else happens' do
+            user = FactoryGirl.create :user, :confirmed, :admin
+            token = Sessions::Create.for credential: user.username, password: user.password
+
+            other_user = FactoryGirl.create :user, :admin
+
+            request.headers[:HTTP_AUTH_TOKEN] = token
+            patch :update, params: { id: other_user.id, user: { active: :false } }
+
+            previous_active = other_user.active
+            other_user.reload
+
+            expect(other_user.active).to eq(previous_active)
+            expect(response).to be_forbidden
+          end
+        end
+      end
+    end
+
     context 'when the id is not from an actual user' do
       it 'returns 404' do
         user = FactoryGirl.create :user, :confirmed, :admin
