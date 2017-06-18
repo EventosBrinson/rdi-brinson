@@ -10,6 +10,7 @@ RSpec.describe Rent, type: :model do
   it { should have_db_column(:discount).of_type(:decimal) }
   it { should have_db_column(:additional_charges).of_type(:decimal) }
   it { should have_db_column(:additional_charges_notes).of_type(:text) }
+  it { should have_db_column(:cancel_notes).of_type(:text) }
   it { should have_db_column(:rent_type).of_type(:integer) }
   it { should have_db_column(:status).of_type(:integer) }
 
@@ -114,6 +115,51 @@ RSpec.describe Rent, type: :model do
       end
     end
 
+    context 'changing from reserved to canceled' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+
+        rent.status = :canceled
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from on_route to canceled' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_route
+
+        rent.status = :canceled
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from delivered to canceled' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :delivered
+
+        rent.status = :canceled
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from on_pick_up to canceled' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :on_pick_up
+
+        rent.status = :canceled
+        expect(rent).to be_valid
+      end
+    end
+    context 'changing from pending to canceled' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :pending
+
+        rent.status = :canceled
+        expect(rent).to be_valid
+      end
+    end
+
     context 'changing from on_route to reserved' do
       it 'should be valid' do
         rent = FactoryGirl.create :rent
@@ -154,6 +200,16 @@ RSpec.describe Rent, type: :model do
       it 'should be valid' do
         rent = FactoryGirl.create :rent
         rent.update status: :finalized
+
+        rent.status = :on_pick_up
+        expect(rent).to_not be_valid
+      end
+    end
+
+    context 'changing from canceled to on_pick_up' do
+      it 'should be valid' do
+        rent = FactoryGirl.create :rent
+        rent.update status: :canceled
 
         rent.status = :on_pick_up
         expect(rent).to_not be_valid

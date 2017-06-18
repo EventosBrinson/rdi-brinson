@@ -3,8 +3,8 @@ class Rent < ApplicationRecord
   include Orderable
   include Paginatable
 
-  STATUSES = [:reserved, :on_route, :delivered, :on_pick_up, :pending, :finalized]
-  STATUSES_VALUES = { reserved: 0, on_route: 1, delivered: 2, on_pick_up: 3, pending: 4, finalized: 5 }
+  STATUSES = [:reserved, :on_route, :delivered, :on_pick_up, :pending, :finalized, :canceled]
+  STATUSES_VALUES = { reserved: 0, on_route: 1, delivered: 2, on_pick_up: 3, pending: 4, finalized: 5, canceled: 6 }
 
   belongs_to :client
   belongs_to :place
@@ -44,7 +44,7 @@ class Rent < ApplicationRecord
 
   def status_transition
     if status_changed?
-      if status_was == 'finalized'
+      if status_was == 'finalized' || status_was == 'canceled'
         errors.add(:status, "can't return to any status")
       elsif STATUSES_VALUES[status.to_sym] < STATUSES_VALUES[status_was.to_sym] and status != 'on_pick_up'
         errors.add(:status, "can't return to that status")

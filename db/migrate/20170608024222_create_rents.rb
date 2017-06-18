@@ -8,6 +8,7 @@ class CreateRents < ActiveRecord::Migration[5.1]
       t.decimal   :discount
       t.decimal   :additional_charges
       t.text      :additional_charges_notes
+      t.text      :cancel_notes
       t.integer   :rent_type,                 null: false
       t.integer   :status,                    null: false
 

@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20170608024222) do
     t.decimal "discount"
     t.decimal "additional_charges"
     t.text "additional_charges_notes"
+    t.text "cancel_notes"
     t.integer "rent_type", null: false
     t.integer "status", null: false
     t.bigint "client_id"
