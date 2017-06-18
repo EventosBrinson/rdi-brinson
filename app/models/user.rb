@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include Activable
   include Filterable
   include Orderable
   include Paginatable

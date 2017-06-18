@@ -21,6 +21,7 @@ RSpec.describe User, type: :model do
   it { should have_db_index(:email).unique }
   it { should have_db_index(:reset_password_token).unique }
   it { should have_db_index(:confirmation_token).unique }
+  it { should have_db_column(:active).of_type(:boolean).with_options(null: false, default: true) }
 
   it { should have_many(:clients).with_foreign_key('creator_id') }
   it { should have_many(:places).through(:clients) }
@@ -42,6 +43,50 @@ RSpec.describe User, type: :model do
   it { should allow_value(nil).for(:password) }
 
   it { should define_enum_for(:role).with(User::ROLES) }
+
+  describe '.active' do
+    it 'returns all the active users' do
+      5.times { FactoryGirl.create :user }
+      10.times { FactoryGirl.create :user, :inactive }
+      
+      expect(User.active.count).to eq(5)
+    end
+  end
+
+  describe '.inacive' do
+    it 'returns all the inactive users' do
+      10.times { FactoryGirl.create :user }
+      5.times { FactoryGirl.create :user, :inactive }
+      
+      expect(User.inactive.count).to eq(5)
+    end
+  end
+
+  describe '#active?' do
+    it 'returns true if the user active attribute is true' do
+      user = FactoryGirl.create :user, :active
+      user2 = FactoryGirl.create :user, :inactive
+
+      expect(user).to be_active
+      expect(user2).to_not be_active
+    end
+  end
+
+  describe '#activate!' do
+    it 'updates the user active attribute to ture' do
+      user = FactoryGirl.create :user, :inactive
+
+      expect{ user.activate! }.to change(user, :active).from(false).to(true)
+    end
+  end
+
+  describe '#deactivate!' do
+    it 'updates the user active attribute to false' do
+      user = FactoryGirl.create :user, :active
+
+      expect{ user.deactivate! }.to change(user, :active).from(true).to(false)
+    end
+  end
 
   describe '.search' do
     it 'returns all user that match the query' do

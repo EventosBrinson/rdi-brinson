@@ -37,5 +37,13 @@ FactoryGirl.define do
     trait :main do
       main true
     end
+
+    trait :active do
+      active true
+    end
+
+    trait :inactive do
+      active false
+    end
   end
 end
