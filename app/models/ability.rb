@@ -4,7 +4,7 @@ class Ability
   def initialize(user)
     user ||= User.new
 
-    if user.admin? || user.staff?
+    if high_level_user?(user)
       admin_on_users(user)
       can :manage, Client
       can :manage, Document
@@ -38,12 +38,13 @@ class Ability
   end
 
   def admin_on_users(user)
-    can :manage, User
-    cannot :update, User do |subject|
-      ((subject.id == user.id and subject.role_changed?) or (high_level_user?(subject) and subject.id != user.id) or to_high_level_user?(subject)) and !user.main
+    can :show, User
+    can :index, User
+    can :update, User do |subject|
+      user.main or (!high_level_user?(subject) and !to_high_level_user?(subject)) or (user == subject and !subject.role_changed? and !subject.active_changed?)
     end
-    cannot :create, User do |subject|
-      high_level_user?(subject) and !user.main
+    can :create, User do |subject|
+      user.main or !high_level_user?(subject)
     end
   end
 
@@ -52,7 +53,7 @@ class Ability
       subject.id == user.id
     end
     can :update, User do |subject|
-      subject.id == user.id and !subject.role_changed?
+      subject.id == user.id and !subject.role_changed? and !subject.active_changed?
     end
   end
 
