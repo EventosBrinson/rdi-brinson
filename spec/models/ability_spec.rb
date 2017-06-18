@@ -100,7 +100,6 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, on_pick_up_rent_with_invalid_changes) }
     it{ should be_able_to(:create, other_user_client_rent) }
     it{ should be_able_to(:create, other_user_place_rent) }
-    it{ should be_able_to(:delete, Rent) }
   end
 
   context 'when the user is an admin or staff' do
@@ -201,7 +200,6 @@ RSpec.describe Ability do
     it{ should be_able_to(:update, on_pick_up_rent_with_invalid_changes) }
     it{ should be_able_to(:create, other_user_client_rent) }
     it{ should be_able_to(:create, other_user_place_rent) }
-    it{ should be_able_to(:delete, Rent) }
   end
 
   context 'when the user is just an user' do
@@ -302,6 +300,5 @@ RSpec.describe Ability do
     it{ should_not be_able_to(:update, finalized_rent_with_changes) }
     it{ should_not be_able_to(:create, other_user_client_rent) }
     it{ should_not be_able_to(:create, other_user_place_rent) }
-    it{ should_not be_able_to(:delete, Rent) }
   end
 end
