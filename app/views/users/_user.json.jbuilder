@@ -5,6 +5,6 @@ json.firstname user.firstname
 json.lastname user.lastname
 json.role user.role
 json.main user.main
-json.active user.confirmed?
-json.active_since user.confirmed_at
-
+json.active user.active
+json.is_confirmed user.confirmed?
+json.confirmed_at user.confirmed_at
