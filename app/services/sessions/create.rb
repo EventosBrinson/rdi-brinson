@@ -11,7 +11,7 @@ module Sessions
     def process
       user = User.find_by_credential credential
 
-      if user and user.confirmed? and user.authenticate(password)
+      if user and user.confirmed? and user.active? and user.authenticate(password)
         Utils::GenerateToken.for data: { user_id: user.id, created_at: Time.now.to_i }
       end
     end

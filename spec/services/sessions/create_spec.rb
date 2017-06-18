@@ -28,6 +28,15 @@ describe Sessions::Create do
           expect(service.process).to be_nil
         end
       end
+
+      context 'when the user is inactive' do
+        it 'returns nil' do
+          user = FactoryGirl.create :user, :confirmed, :inactive
+          service = Sessions::Create.new credential: user.email, password: user.password
+
+          expect(service.process).to be_nil
+        end
+      end
     end
 
     context 'when the wrong credentials are present' do

@@ -54,6 +54,17 @@ RSpec.describe SessionsController, type: :controller do
             expect(response.body).to eq 'false'
           end
         end
+
+        context 'but the user is inactive' do
+          it 'returns empty and false' do
+            user = FactoryGirl.create :user, :confirmed, :inactive
+
+            post :sign_in, params: { credential: user.email, password: user.password }
+
+            expect(response).to be_success
+            expect(response.body).to eq 'false'
+          end
+        end
       end
 
       context 'and are the wrong ones' do
