@@ -11,7 +11,7 @@ class User < ApplicationRecord
 
   validates :username, presence: true
   validates :username, uniqueness: true
-  validates :username, format: { with: /\A[^@]+\z/i }
+  validates :username, format: { with: /\A[a-zA-Z\.0-9\_\-\&]+\z/i }
   validates :email, presence: true
   validates :email, uniqueness: true
   validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
