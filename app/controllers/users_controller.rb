@@ -65,7 +65,7 @@ class UsersController < ApplicationController
   private
 
   def get_users
-    params[:search] || params[:ordered] || params[:paginated] ? User.filter(params.slice(:search, :ordered, :paginated)) : User.all
+    params[:search] || params[:ordered] || params[:paginated] ? User.filter(params.slice(:search, :ordered, :paginated)) : User.all.ordered(lastname: :asc)
   end
 
   def user_params
