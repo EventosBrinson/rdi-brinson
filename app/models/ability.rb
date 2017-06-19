@@ -53,7 +53,7 @@ class Ability
       subject.id == user.id
     end
     can :update, User do |subject|
-      subject.id == user.id and !subject.role_changed? and !subject.active_changed?
+      subject == user and !subject.role_changed? and !subject.active_changed?
     end
   end
 
