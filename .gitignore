@@ -22,5 +22,6 @@
 /storage
 /coverage
 
-config/database.yml\nconfig/secrets.yml
-config/database.yml\nconfig/secrets.yml
+config/database.yml
+config/secrets.yml
+config/mail.rb
