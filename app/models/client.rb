@@ -31,4 +31,9 @@ class Client < ApplicationRecord
   enum rent_type: RENT_TYPES
 
   scope :search, -> (query) { where('LOWER("clients"."firstname") like :query OR LOWER("clients"."lastname") like :query OR LOWER("clients"."street") like :query OR LOWER("clients"."neighborhood") like :query', query: "%#{ query.to_s.downcase }%") }
+
+ def folio
+  "AGS-#{id + 260786}"
+ end
+
 end

@@ -1,4 +1,5 @@
 json.id client.id
+json.folio client.folio
 json.firstname client.firstname
 json.lastname client.lastname
 json.street client.street

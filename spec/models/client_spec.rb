@@ -42,6 +42,14 @@ RSpec.describe Client, type: :model do
 
   it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
 
+  describe '#folio' do
+    it 'return the AGS-[record id + special number] folio' do
+      client = FactoryGirl.create :client
+
+      expect(client.folio).to eq("AGS-#{client.id + 260786}")
+    end
+  end
+
   describe '.active' do
     it 'returns all the active clients' do
       5.times { FactoryGirl.create :client }
