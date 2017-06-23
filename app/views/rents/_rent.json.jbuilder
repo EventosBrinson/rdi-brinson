@@ -1,4 +1,5 @@
 json.id rent.id
+json.order_number rent.order_number
 json.delivery_time rent.delivery_time
 json.pick_up_time rent.pick_up_time
 json.product rent.product

@@ -32,6 +32,11 @@ class Rent < ApplicationRecord
 
   scope :search, -> (query) { where('LOWER("rents"."product") like :query OR LOWER("rents"."additional_charges_notes") like :query', query: "%#{ query.to_s.downcase }%") }
 
+
+  def order_number
+    "#{id + 260786}"
+  end
+
   private
 
   def set_rent_type_from_client

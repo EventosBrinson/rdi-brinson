@@ -30,6 +30,14 @@ RSpec.describe Rent, type: :model do
   it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
   it { should define_enum_for(:status).with(Rent::STATUSES) }
 
+  describe '#order_number' do
+    it 'return the [record id + special number] order number' do
+      rent = FactoryGirl.create :rent
+
+      expect(rent.order_number).to eq("#{rent.id + 260786}")
+    end
+  end
+
   describe '#set_rent_type_from_client' do
     it 'is set before validation' do
       rent = FactoryGirl.build :rent
