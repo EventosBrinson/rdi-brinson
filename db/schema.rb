@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 20170608024222) do
   create_table "places", force: :cascade do |t|
     t.string "name", null: false
     t.string "street", null: false
-    t.string "inner_number", null: false
+    t.string "inner_number"
     t.string "outer_number", null: false
     t.string "neighborhood", null: false
     t.string "postal_code", null: false

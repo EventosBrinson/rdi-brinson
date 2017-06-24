@@ -5,7 +5,7 @@ RSpec.describe Place, type: :model do
 
   it { should have_db_column(:name).of_type(:string).with_options(null: false) }
   it { should have_db_column(:street).of_type(:string).with_options(null: false) }
-  it { should have_db_column(:inner_number).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:inner_number).of_type(:string) }
   it { should have_db_column(:outer_number).of_type(:string).with_options(null: false) }
   it { should have_db_column(:neighborhood).of_type(:string).with_options(null: false) }
   it { should have_db_column(:postal_code).of_type(:string).with_options(null: false) }
