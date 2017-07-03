@@ -26,6 +26,8 @@ class ClientsController < ApplicationController
     @client.creator = current_user
 
     if @client.save
+      @client.create_first_place
+
       render template: 'clients/show.json'
     else
       render json: @client.errors

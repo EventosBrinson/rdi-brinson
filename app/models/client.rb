@@ -36,4 +36,14 @@ class Client < ApplicationRecord
   "AGS-#{id + 260786}"
  end
 
+ def create_first_place
+  Place.create(name: 'Domicilio por defecto',
+               street: self.street,
+               outer_number: self.outer_number,
+               inner_number: self.inner_number,
+               neighborhood: self.neighborhood,
+               postal_code: self.postal_code,
+               client: self)
+ end
+
 end

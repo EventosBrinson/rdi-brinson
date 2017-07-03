@@ -42,6 +42,22 @@ RSpec.describe Client, type: :model do
 
   it { should define_enum_for(:rent_type).with(Client::RENT_TYPES) }
 
+
+  describe '#create_first_place' do
+    it 'it create a place for this client based on the client information' do
+      client = FactoryGirl.create :client
+
+      client.create_first_place
+
+      expect(client.places.size).to eq(1)
+      expect(client.places.first.street).to eq(client.street)
+      expect(client.places.first.inner_number).to eq(client.inner_number)
+      expect(client.places.first.outer_number).to eq(client.outer_number)
+      expect(client.places.first.neighborhood).to eq(client.neighborhood)
+      expect(client.places.first.postal_code).to eq(client.postal_code)
+    end
+  end
+
   describe '#folio' do
     it 'return the AGS-[record id + special number] folio' do
       client = FactoryGirl.create :client
