@@ -10,7 +10,14 @@ json.additional_charges_notes rent.additional_charges_notes
 json.rent_type rent.rent_type
 json.status rent.status
 json.created_at rent.created_at
-json.client_id rent.client_id
-json.place_id rent.place_id
 json.creator_id rent.creator_id
+json.client do
+  json.id rent.client.id
+  json.firstname rent.client.firstname
+  json.lastname rent.client.lastname
+end
+json.place do
+  json.partial! 'places/place', place: rent.place
+end
+
 
