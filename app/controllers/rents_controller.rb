@@ -104,15 +104,15 @@ class RentsController < ApplicationController
       end
     else
       if params[:user_id]
-        @user.rents
+        @user.rents.order(id: :desc)
       elsif params[:client_id]
-        @client.rents
+        @client.rents.order(id: :desc)
       elsif params[:place_id]
-        @place.rents
+        @place.rents.order(id: :desc)
       elsif current_user.admin? || current_user.staff? and params[:all]
-        Rent.all
+        Rent.all.order(id: :desc)
       else
-        current_user.rents
+        current_user.rents.order(id: :desc)
       end
     end
   end
