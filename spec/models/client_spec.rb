@@ -30,7 +30,8 @@ RSpec.describe Client, type: :model do
   it { should validate_presence_of :neighborhood }
   it { should validate_presence_of :telephone_1 }
   it { should allow_value('omarandstuff@gmail.com').for(:email) }
-  it { should allow_value(nil).for(:email) }
+  it { should allow_values(nil).for(:email) }
+  it { should allow_values('').for(:email) }
   it { should_not allow_value('sometext').for(:email) }
   it { should validate_presence_of :id_name }
   it { should validate_inclusion_of(:id_name).in_array(Client::ID_NAMES) }
