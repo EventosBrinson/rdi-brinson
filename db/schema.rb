@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170608024222) do
+ActiveRecord::Schema.define(version: 20170709002630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,10 +22,10 @@ ActiveRecord::Schema.define(version: 20170608024222) do
     t.string "inner_number"
     t.string "outer_number", null: false
     t.string "neighborhood", null: false
-    t.string "postal_code", null: false
+    t.string "postal_code"
     t.string "telephone_1", null: false
     t.string "telephone_2"
-    t.string "email", null: false
+    t.string "email"
     t.string "id_name", null: false
     t.integer "trust_level", default: 10, null: false
     t.integer "rent_type", null: false
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20170608024222) do
     t.string "inner_number"
     t.string "outer_number", null: false
     t.string "neighborhood", null: false
-    t.string "postal_code", null: false
+    t.string "postal_code"
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
     t.boolean "active", default: true, null: false

@@ -9,10 +9,10 @@ RSpec.describe Client, type: :model do
   it { should have_db_column(:inner_number).of_type(:string) }
   it { should have_db_column(:outer_number).of_type(:string).with_options(null: false) }
   it { should have_db_column(:neighborhood).of_type(:string).with_options(null: false) }
-  it { should have_db_column(:postal_code).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:postal_code).of_type(:string) }
   it { should have_db_column(:telephone_1).of_type(:string).with_options(null: false) }
   it { should have_db_column(:telephone_2).of_type(:string) }
-  it { should have_db_column(:email).of_type(:string).with_options(null: false) }
+  it { should have_db_column(:email).of_type(:string) }
   it { should have_db_column(:id_name).of_type(:string).with_options(null: false) }
   it { should have_db_column(:trust_level).of_type(:integer).with_options(null: false, default: 10) }
   it { should have_db_column(:rent_type).of_type(:integer).with_options(null: false) }
