@@ -11,7 +11,6 @@ class Place < ApplicationRecord
   validates :street, presence: true
   validates :outer_number, presence: true
   validates :neighborhood, presence: true
-  validates :postal_code, presence: true
   validates :client, presence: true
 
   scope :search, -> (query) { where('LOWER("places"."name") like :query OR LOWER("places"."street") like :query OR LOWER("places"."neighborhood") like :query', query: "%#{ query.to_s.downcase }%") }
