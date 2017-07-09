@@ -17,10 +17,8 @@ class Client < ApplicationRecord
   validates :street, presence: true
   validates :outer_number, presence: true
   validates :neighborhood, presence: true
-  validates :postal_code, presence: true
   validates :telephone_1, presence: true
-  validates :email, presence: true
-  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
+  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }, allow_nil: true
   validates :id_name, presence: true
   validates :id_name, inclusion: { in: ID_NAMES }
   validates :trust_level, presence: true
