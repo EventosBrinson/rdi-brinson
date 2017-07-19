@@ -12,6 +12,8 @@ gem 'jbuilder'
 gem 'bcrypt'
 gem 'jwt'
 
+gem 'wicked_pdf'
+
 gem 'cancancan', '~> 1.10'
 
 group :development, :test do

@@ -198,6 +198,7 @@ GEM
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    wicked_pdf (1.1.0)
 
 PLATFORMS
   ruby
@@ -228,6 +229,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen
+  wicked_pdf
 
 RUBY VERSION
    ruby 2.3.4p301
