@@ -1,5 +1,6 @@
 class RentsController < ApplicationController
   before_action :authenticate_request
+  helper FormattedTimeHelper
 
   def index
     authorize! :index, Place
