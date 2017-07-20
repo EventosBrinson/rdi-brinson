@@ -1,3 +1,45 @@
 <p>
-  Find me at <b>/views/rents/show.pdf.erb</b>
+  <%= @rent.client.fullname %>
+</p>
+<p>
+  #<%= @rent.order_number %>
+</p>
+<p>
+  <%= @rent.formated_rent_type %>
+</p>
+<p>
+  <%= @rent.product %> -> $ <%= @rent.price %>
+</p>
+<p>
+  Descuento -> $<%= @rent.discount %>
+</p>
+<p>
+  <%= @rent.additional_charges_notes %> -> $<%= @rent.additional_charges %>
+</p>
+<p>
+  Total> -> $<%= @rent.price.to_f - @rent.discount.to_f + @rent.additional_charges.to_f %>
+</p>
+<p>
+  Entrega: <%= week_day_name(@rent.delivery_time) %>
+</p>
+<p>
+  <%= short_formated_date(@rent.delivery_time) %>
+</p>
+<p>
+  <%= long_formated_time(@rent.delivery_time) %>
+</p>
+<p>
+  Recolección: <%= week_day_name(@rent.pick_up_time) %>
+</p>
+<p>
+  <%= short_formated_date(@rent.pick_up_time) %>
+</p>
+<p>
+  <%= long_formated_time(@rent.pick_up_time) %>
+</p>
+<p>
+  <%= @rent.place.name %>
+</p>
+<p>
+  <%= @rent.place.address %>
 </p>
