@@ -163,4 +163,22 @@ RSpec.describe Client, type: :model do
       end
     end
   end
+
+  describe '#fullname' do
+    it 'returns the client fullname (firstname lastname)' do
+      client = FactoryGirl.create :client
+
+      expect(client.fullname).to eq [client.firstname, client.lastname].join(' ')
+    end
+  end
+
+  describe '#formated_rent_type' do
+    it 'returns the client rent type in its formated version' do
+      Client::RENT_TYPES.each do |rent_type|
+        client = FactoryGirl.create :client, rent_type: rent_type
+
+        expect(client.formated_rent_type).to eq(Client::FORMATED_RENT_TYPES[rent_type])
+      end
+    end
+  end
 end

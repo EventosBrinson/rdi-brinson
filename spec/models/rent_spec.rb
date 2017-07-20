@@ -278,4 +278,14 @@ RSpec.describe Rent, type: :model do
       end
     end
   end
+
+  describe '#formated_rent_type' do
+    it 'returns the rent type in its formated version' do
+      Client::RENT_TYPES.each do |rent_type|
+        rent = FactoryGirl.create :rent, client: FactoryGirl.create(:client, rent_type: rent_type)
+
+        expect(rent.formated_rent_type).to eq(Client::FORMATED_RENT_TYPES[rent_type])
+      end
+    end
+  end
 end

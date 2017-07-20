@@ -37,6 +37,10 @@ class Rent < ApplicationRecord
     "#{id + 260786}"
   end
 
+  def formated_rent_type
+   Client::FORMATED_RENT_TYPES[rent_type.to_sym]
+  end
+
   private
 
   def set_rent_type_from_client
@@ -56,4 +60,5 @@ class Rent < ApplicationRecord
       end
     end
   end
+
 end

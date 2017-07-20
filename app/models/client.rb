@@ -6,6 +6,7 @@ class Client < ApplicationRecord
 
   ID_NAMES = ['ine', 'licencia', 'cartilla', 'pasaporte', 'otra']
   RENT_TYPES = [:first_rent, :frecuent, :business]
+  FORMATED_RENT_TYPES =  { first_rent: 'Primera renta', frecuent: 'Frecuente', business: 'Empresa' }
 
   belongs_to :creator, class_name: 'User'
   has_many :documents
@@ -30,18 +31,26 @@ class Client < ApplicationRecord
 
   scope :search, -> (query) { where('LOWER("clients"."firstname") like :query OR LOWER("clients"."lastname") like :query OR LOWER("clients"."street") like :query OR LOWER("clients"."neighborhood") like :query', query: "%#{ query.to_s.downcase }%") }
 
- def folio
-  "AGS-#{id + 260786}"
- end
+  def folio
+    "AGS-#{id + 260786}"
+  end
 
- def create_first_place
-  Place.create(name: 'Domicilio por defecto',
-               street: self.street,
-               outer_number: self.outer_number,
-               inner_number: self.inner_number,
-               neighborhood: self.neighborhood,
-               postal_code: self.postal_code,
-               client: self)
- end
+  def fullname
+    [firstname, lastname].join(' ')
+  end
+
+  def create_first_place
+    Place.create(name: 'Domicilio por defecto',
+                 street: self.street,
+                 outer_number: self.outer_number,
+                 inner_number: self.inner_number,
+                 neighborhood: self.neighborhood,
+                 postal_code: self.postal_code,
+                 client: self)
+  end
+
+  def formated_rent_type
+    FORMATED_RENT_TYPES[rent_type.to_sym]
+  end
 
 end
