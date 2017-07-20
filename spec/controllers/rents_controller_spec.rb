@@ -1341,6 +1341,22 @@ RSpec.describe RentsController, type: :controller do
         end
       end
     end
+    context 'when the pdf extesion is present' do
+      it 'sends a pdf file' do
+        user = FactoryGirl.create :user, :confirmed, :admin
+        token = Sessions::Create.for credential: user.username, password: user.password
+
+        rent_to_retrieve = FactoryGirl.create :rent
+
+        request.headers[:HTTP_AUTH_TOKEN] = token
+        get :show, params: { id: rent_to_retrieve.id, format: 'pdf' }
+
+        expect(response).to be_success
+        expect(assigns(:rent)).to eq(rent_to_retrieve)
+        expect(response.headers['Content-Type']).to eq('application/pdf')
+        expect(response.headers['Content-Disposition']).to eq("inline; filename=\"renta_##{rent_to_retrieve.order_number}_#{rent_to_retrieve.client.firstname.parameterize.underscore}.pdf\"")
+      end
+    end
   end
 
   describe 'POST #create' do
