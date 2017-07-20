@@ -53,4 +53,8 @@ class Client < ApplicationRecord
     FORMATED_RENT_TYPES[rent_type.to_sym]
   end
 
+  def address
+    "#{ street } ##{ outer_number }#{ inner_number ? ' Int. ' + inner_number : '' }, #{ neighborhood } #{ postal_code ? 'CP. ' + postal_code : '' }"
+  end
+
 end

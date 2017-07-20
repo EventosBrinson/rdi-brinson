@@ -181,4 +181,12 @@ RSpec.describe Client, type: :model do
       end
     end
   end
+
+  describe '#address' do
+    it 'returns the client formated address fields' do
+      client = FactoryGirl.create :client, street: 'False street', outer_number: '666', inner_number: 'A', neighborhood: 'The Downhill', postal_code: '20206'
+
+      expect(client.address).to eq('False street #666 Int. A, The Downhill CP. 20206')
+    end
+  end
 end
