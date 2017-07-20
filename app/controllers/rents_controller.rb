@@ -49,7 +49,13 @@ class RentsController < ApplicationController
     if @rent
       authorize! :show, @rent
 
-      render template: 'rents/show.json'
+      if params[:format] == 'pdf'
+        pdf = WickedPdf.new.pdf_from_string(render_to_string('rents/show.pdf', layout: 'layouts/pdf.html', page_size: 'Letter'))
+
+        send_data(pdf, filename: "renta_##{@rent.order_number}_#{@rent.client.firstname.parameterize.underscore}.pdf", type: 'application/pdf', disposition: 'inline')
+      else
+        render template: 'rents/show.json'
+      end
     else
       head :not_found
     end
