@@ -254,7 +254,7 @@ RSpec.describe Rent, type: :model do
       rent_match4 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'zan'
       rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
 
-      rents_filtered = Rent.filter({ search: 'david', order: { additional_charges_notes: :desc }, paginated: { offset: 0, limit: 2 } })
+      rents_filtered = Rent.filter({ search: 'david', ordered: { additional_charges_notes: :desc }, paginated: { offset: 0, limit: 2 } })
 
       expect(rents_filtered.size).to eq(2)
       expect(rents_filtered.first).to eq(rent_match4)
