@@ -95,7 +95,7 @@ RSpec.describe Place, type: :model do
       place_match4 = FactoryGirl.create :place, name: 'david', street: 'zan'
       place_not_match = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
 
-      places_filtered = Place.filter({ search: 'david', order: { street: :desc }, paginated: { offset: 0, limit: 2 } })
+      places_filtered = Place.filter({ search: 'david', ordered: { street: :desc }, paginated: { offset: 0, limit: 2 } })
 
       expect(places_filtered.size).to eq(2)
       expect(places_filtered.first).to eq(place_match4)

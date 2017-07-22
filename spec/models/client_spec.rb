@@ -139,7 +139,7 @@ RSpec.describe Client, type: :model do
       client_match4 = FactoryGirl.create :client, firstname: 'david', lastname: 'zan'
       client_not_match = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
 
-      clients_filtered = Client.filter({ search: 'david', order: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
+      clients_filtered = Client.filter({ search: 'david', ordered: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
 
       expect(clients_filtered.size).to eq(2)
       expect(clients_filtered.first).to eq(client_match4)

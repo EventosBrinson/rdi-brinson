@@ -117,7 +117,7 @@ RSpec.describe User, type: :model do
       user_match4 = FactoryGirl.create :user, firstname: 'david', lastname: 'zan'
       user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
 
-      users_filtered = User.filter({ search: 'david', order: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
+      users_filtered = User.filter({ search: 'david', ordered: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
 
       expect(users_filtered.size).to eq(2)
       expect(users_filtered.first).to eq(user_match4)
