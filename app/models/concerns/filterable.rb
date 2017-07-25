@@ -1,7 +1,7 @@
 module Filterable
   extend ActiveSupport::Concern
 
-  PERMITED_MESSAGES = [:ordered, :paginated, :search]
+  PERMITED_MESSAGES = [:ordered, :paginated, :search, :filter_by_time]
 
   module ClassMethods
     def filter(filtering_params, permited = nil)

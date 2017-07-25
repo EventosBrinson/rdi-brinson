@@ -2,6 +2,7 @@ class Rent < ApplicationRecord
   include Filterable
   include Orderable
   include Paginatable
+  include TimeFilterable
 
   STATUSES = [:reserved, :on_route, :delivered, :on_pick_up, :pending, :finalized, :canceled]
   STATUSES_VALUES = { reserved: 0, on_route: 1, delivered: 2, on_pick_up: 3, pending: 4, finalized: 5, canceled: 6 }
