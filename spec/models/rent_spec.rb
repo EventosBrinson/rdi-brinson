@@ -295,7 +295,7 @@ RSpec.describe Rent, type: :model do
       rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez', delivery_time: 1.day.ago
       rent_match3 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'segoviano', delivery_time: Time.now
       rent_match4 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'zan', delivery_time: Time.now
-      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños', delivery_time: 2.days.from_now
+      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños', delivery_time: 3.days.from_now
 
       rents_filtered_by_time = Rent.filter_by_time(1.day.ago.beginning_of_day, Time.now.end_of_day, :delivery_time, :pick_up_time)
 
