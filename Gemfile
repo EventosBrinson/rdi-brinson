@@ -13,7 +13,7 @@ gem 'bcrypt'
 gem 'jwt'
 
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary-edge', '~> 0.12.2.1'
 
 gem 'cancancan', '~> 1.10'
 
