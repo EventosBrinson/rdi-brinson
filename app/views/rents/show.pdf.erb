@@ -1,11 +1,55 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="brand">
+        Eventos Brinson
+      </td>
+      <td class="grouped-right">
+        <p>
+          Casimira Arteaga #307
+        </p>
+        <p>
+          Jose Lopez Portillo, CP 20206
+        </p>
+        <p>
+          449 406 27 13
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="note-title">
+  Nota de Renta
+</div>
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="info">
+        <h2><%= @rent.client.fullname %></h2>
+        <h3>#<%= @rent.order_number %></h3>
+        <h3><%= @rent.formated_rent_type %></h3>
+      </td>
+      <td class="grouped-right">
+        <div class="tag <%= @rent.status %>">
+          <%= @rent.formated_status %>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
 <p>
-  <%= @rent.client.fullname %>
+  
 </p>
 <p>
-  #<%= @rent.order_number %>
+  
 </p>
 <p>
-  <%= @rent.formated_rent_type %>
+  
 </p>
 <p>
   <%= @rent.product %> -> $ <%= @rent.price %>

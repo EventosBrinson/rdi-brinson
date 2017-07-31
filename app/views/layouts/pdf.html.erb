@@ -3,12 +3,59 @@
   <head>
     <meta charset='utf-8' />
   </head>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <style>
     html {
+      padding: 0;
+      margin: 0;
+      font-size: 64px;
+      font-family: 'Open Sans'
+    }
+    .pdf-body {
+      width: 100%;
+      height: 100%;
+      background-color: blue;
+    }
+    .table {
+      width: 100%;
+    }
+    .table .grouped-right {
+      text-align: right;
+      width: 1%;
+      white-space: nowrap;
+    }
+    .table .grouped-right p {
+      margin: 0;
+    }
+    .table .brand {
+      font-size: 128px;
+    }
+    .note-title {
+      width: 100%;
+      text-align: center;
+      font-size: 80px;
+    }
+
+    .table .grouped-right .tag {
+      color: white;
+    }
+    .table .grouped-right .reserved {
+      background-color: #2DB7F5;
+    }
+    .table .grouped-right .finalized {
+      background-color: #00DB5B;
+    }
+
+    .table .info h2 {
+      margin: 0;
+      font-size: 80px;
+    }
+    .table .info h3 {
+      margin: 0;
       font-size: 64px;
     }
   </style>
-  <body>
+  <body class="pdf-body">
     <%= yield %>
   </body>
 </html>
