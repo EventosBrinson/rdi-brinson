@@ -53,7 +53,7 @@ class RentsController < ApplicationController
       if params[:format] == 'pdf'
         pdf = WickedPdf.new.pdf_from_string(render_to_string('rents/show.pdf', layout: 'layouts/pdf.html'),
                                                               page_size: 'Letter',
-                                                              title: 'Documento de renta',
+                                                              title: 'Documento',
                                                               dpi: '96',
                                                               disable_smart_shrinking: true)
 
