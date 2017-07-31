@@ -51,7 +51,12 @@ class RentsController < ApplicationController
       authorize! :show, @rent
 
       if params[:format] == 'pdf'
-        pdf = WickedPdf.new.pdf_from_string(render_to_string('rents/show.pdf', layout: 'layouts/pdf.html', page_size: 'Letter'))
+        pdf = WickedPdf.new.pdf_from_string(render_to_string('rents/show.pdf',
+                                                              layout: 'layouts/pdf.html',
+                                                              page_size: 'Letter',
+                                                              title: 'Documento de renta',
+                                                              dpi: '300',
+                                                              disable_smart_shrinking: true))
 
         send_data(pdf, filename: "renta_##{@rent.order_number}_#{@rent.client.firstname.parameterize.underscore}.pdf", type: 'application/pdf', disposition: 'inline')
       else
