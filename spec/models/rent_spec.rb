@@ -297,7 +297,7 @@ RSpec.describe Rent, type: :model do
       rent_match4 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'zan', delivery_time: Date.today, pick_up_time: 1.day.ago
       rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños', delivery_time: 3.days.from_now, pick_up_time: 3.day.from_now
 
-      rents_filtered_by_time = Rent.filter_by_time(1.day.ago.beginning_of_day, Date.today.end_of_day, :delivery_time, :pick_up_time)
+      rents_filtered_by_time = Rent.filter_by_time({ beginning_time: 1.day.ago.beginning_of_day, end_time: Date.today.end_of_day, columns: [:delivery_time, :pick_up_time] })
 
       expect(rents_filtered_by_time.size).to eq(4)
       expect(rents_filtered_by_time.first).to eq(rent_match1)
