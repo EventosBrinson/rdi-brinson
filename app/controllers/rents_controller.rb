@@ -97,29 +97,29 @@ class RentsController < ApplicationController
   private
 
   def get_rents
-    if params[:search] || params[:ordered] || params[:paginated]
+    if params[:search] || params[:ordered] || params[:paginated] || params[:filter_by_time]
       if params[:user_id]
-        @user.rents.filter(params.slice(:search, :ordered, :paginated))
+        @user.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
       elsif params[:client_id]
-        @client.rents.filter(params.slice(:search, :ordered, :paginated))
+        @client.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
       elsif params[:place_id]
-        @place.rents.filter(params.slice(:search, :ordered, :paginated))
+        @place.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
       elsif current_user.admin? || current_user.staff? and params[:all]
-        Rent.filter(params.slice(:search, :ordered, :paginated))
+        Rent.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
       else
-        current_user.rents.filter(params.slice(:search, :ordered, :paginated))
+        current_user.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
       end
     else
       if params[:user_id]
-        @user.rents.order(id: :desc)
+        @user.rents.ordered(id: :desc)
       elsif params[:client_id]
-        @client.rents.order(id: :desc)
+        @client.rents.ordered(id: :desc)
       elsif params[:place_id]
-        @place.rents.order(id: :desc)
+        @place.rents.ordered(id: :desc)
       elsif current_user.admin? || current_user.staff? and params[:all]
-        Rent.all.order(id: :desc)
+        Rent.all.ordered(id: :desc)
       else
-        current_user.rents.order(id: :desc)
+        current_user.rents.ordered(id: :desc)
       end
     end
   end
