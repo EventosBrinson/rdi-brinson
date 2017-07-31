@@ -289,6 +289,17 @@ RSpec.describe Rent, type: :model do
     end
   end
 
+
+  describe '#formated_status' do
+    it 'returns the status in its formated version' do
+      Rent::STATUSES.each do |status|
+        rent = FactoryGirl.create :rent, status: status
+
+        expect(rent.formated_status).to eq(Rent::FORMATED_STATUSES[status])
+      end
+    end
+  end
+
   describe '.filter_by_time' do
     it 'returns all the rents that are between the times given' do
       rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda', delivery_time: 1.day.ago, pick_up_time: 1.day.ago

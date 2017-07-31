@@ -6,6 +6,7 @@ class Rent < ApplicationRecord
 
   STATUSES = [:reserved, :on_route, :delivered, :on_pick_up, :pending, :finalized, :canceled]
   STATUSES_VALUES = { reserved: 0, on_route: 1, delivered: 2, on_pick_up: 3, pending: 4, finalized: 5, canceled: 6 }
+  FORMATED_STATUSES = { reserved: 'Reservada', on_route: 'En ruta', delivered: 'Entregada', on_pick_up: 'En recolección', pending: 'Pendiente', finalized: 'Finalizada', canceled: 'Cancelada' }
 
   belongs_to :client
   belongs_to :place
@@ -40,6 +41,10 @@ class Rent < ApplicationRecord
 
   def formated_rent_type
    Client::FORMATED_RENT_TYPES[rent_type.to_sym]
+  end
+
+  def formated_status
+   FORMATED_STATUSES[status.to_sym]
   end
 
   private
