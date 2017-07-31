@@ -1,89 +1,15 @@
-<table class="table">
+<table class="table half">
   <tbody>
     <tr>
-      <td class="brand">
-        Eventos Brinson
+      <td>
+        <%= render partial: 'rents/rent.html', locals: { copy: false } %>
       </td>
-      <td class="grouped-right">
-        <p>
-          Casimira Arteaga #307
-        </p>
-        <p>
-          Jose Lopez Portillo, CP 20206
-        </p>
-        <p>
-          449 406 27 13
-        </p>
+      <td class="divition">
       </td>
-    </tr>
-  </tbody>
-</table>
-<div class="note-title">
-  Nota de Renta
-</div>
-<table class="table">
-  <tbody>
-    <tr>
-      <td class="info">
-        <h2><%= @rent.client.fullname %></h2>
-        <h3>#<%= @rent.order_number %></h3>
-        <h3><%= @rent.formated_rent_type %></h3>
-      </td>
-      <td class="grouped-right">
-        <div class="tag <%= @rent.status %>">
-          <%= @rent.formated_status %>
-        </div>
+      <td>
+        <%= render partial: 'rents/rent.html', locals: { copy: true } %>
       </td>
     </tr>
   </tbody>
 </table>
 
-
-
-
-
-<p>
-  
-</p>
-<p>
-  
-</p>
-<p>
-  
-</p>
-<p>
-  <%= @rent.product %> -> $ <%= @rent.price %>
-</p>
-<p>
-  Descuento -> $<%= @rent.discount %>
-</p>
-<p>
-  <%= @rent.additional_charges_notes %> -> $<%= @rent.additional_charges %>
-</p>
-<p>
-  Total> -> $<%= @rent.price.to_f - @rent.discount.to_f + @rent.additional_charges.to_f %>
-</p>
-<p>
-  Entrega: <%= week_day_name(@rent.delivery_time) %>
-</p>
-<p>
-  <%= short_formated_date(@rent.delivery_time) %>
-</p>
-<p>
-  <%= long_formated_time(@rent.delivery_time) %>
-</p>
-<p>
-  Recolección: <%= week_day_name(@rent.pick_up_time) %>
-</p>
-<p>
-  <%= short_formated_date(@rent.pick_up_time) %>
-</p>
-<p>
-  <%= long_formated_time(@rent.pick_up_time) %>
-</p>
-<p>
-  <%= @rent.place.name %>
-</p>
-<p>
-  <%= @rent.place.address %>
-</p>

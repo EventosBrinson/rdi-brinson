@@ -6,14 +6,14 @@
   <style>
     html {
       padding: 0;
+      padding-right: 5px;
       margin: 0;
-      font-size: 12px;
-      font-family: 'Open Sans Regular', sans-serif;
+      font-size: 9px;
+      font-family: 'Open Sans Regular';
     }
     .pdf-body {
       width: 100%;
       height: 100%;
-      background-color: blue;
     }
     .table {
       width: 100%;
@@ -29,20 +29,47 @@
     .table .brand {
       font-size: 25px;
     }
+    .table .brand img{
+      height: 60px;
+    }
     .note-title {
       width: 100%;
       text-align: center;
-      font-size: 16px;
+      font-size: 12px;
     }
 
-    .table .grouped-right .tag {
+    .tag {
       color: white;
+      padding: 1px;
+      padding-right: 5px;
+      padding-left: 5px;
+      border-radius: 3px;
+      font-weight: bold;
     }
-    .table .grouped-right .reserved {
+    .reserved {
       background-color: #2DB7F5;
     }
-    .table .grouped-right .finalized {
+    .on_route {
+      color: #FF8C28;
+      background-color: white;
+      border: 2px solid #FF8C28;
+    }
+    .delivered {
+      background-color: #7148b2;
+    }
+    .on_pick_up {
+      color: #CCC71A;
+      background-color: white;
+      border: 2px solid #CCC71A;
+    }
+    .pending {
+      background-color: #CCC71A;
+    }
+    .finalized {
       background-color: #00DB5B;
+    }
+    .canceled {
+      background-color: #FF0037;
     }
 
     .table .info h2 {
@@ -52,6 +79,61 @@
     .table .info h3 {
       margin: 0;
       font-size: 12px;
+    }
+
+    .products p {
+      margin: 0;
+    }
+
+    .products {
+      padding: 0;
+      margin: 0;
+    }
+
+    .table .grouped-right-special {
+      text-align: right;
+      vertical-align: bottom;
+      padding-top: 1px;
+    }
+    .table .grouped-right-special h3{
+      margin: 0;
+    }
+
+    .total-line {
+      border-bottom: 1px solid #CCCCCC;
+      width: 100%;
+      height: 1px;
+    }
+
+    .table .total {
+      padding: 0;
+    }
+    .table .total h2 {
+      margin: 0;
+    }
+
+    .dates-top {
+      margin-top: 10px;
+      border-top: 1pt solid #CCCCCC;
+    }
+
+    .dates-top tr {
+      text-align: center;
+    }
+
+    .dates-top .capitalized {
+      text-transform: capitalize;
+      width: 50%;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    .divition {
+      height: 100%;
+      width: 1px;
+      border-right: 1px dashed #CCCCCC;
     }
   </style>
   <body class="pdf-body">

@@ -1,0 +1,139 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="brand">
+        <img src="http://rdi.eventosbrinson.com/brinson.png" />
+      </td>
+      <td class="grouped-right">
+        <p>
+          Jose Calvillo 301-B
+        </p>
+        <p>
+          Lic. José Lopez Portillo, CP 20206
+        </p>
+        <p>
+          Cel: 449 216 2993 y 449 413 0240
+        </p>
+        <p>
+          Local : 293 52 14 y 293 51 56
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="note-title">
+  Nota de Venta <small><%= copy ? "Copia cliente" : "Original" %></small>
+</div>
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="info">
+        <h3><%= @rent.client.fullname %></h3>
+        <h3>#<%= @rent.order_number %> <small><%= @rent.formated_rent_type %></small></h3>
+      </td>
+      <td class="grouped-right">
+        <div class="tag <%= @rent.status %>">
+          <%= @rent.formated_status %>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table">
+  <tbody>
+    <tr>
+      <td class="products">
+        <%- @rent.product.split(/[\n]+/).each do |product| %>
+          <p><%= product %></p>
+        <% end %>
+      </td>
+      <td class="grouped-right-special">
+        <h3>
+          <%= number_to_currency(@rent.price) %>
+        </h3>
+      </td>
+    </tr>
+    <%- if @rent.discount %>
+      <tr>
+        <td class="products">
+          <p>Descuento</p>
+        </td>
+        <td class="grouped-right-special">
+          <h3>
+            -<%= number_to_currency(@rent.discount) %>
+          </h3>
+        </td>
+      </tr>
+    <% end %>
+    <%- if @rent.additional_charges %>
+      <tr>
+        <td class="products">
+          <%- @rent.additional_charges_notes.split(/[\n]+/).each do |additional_charge| %>
+            <p><%= additional_charge %></p>
+          <% end %>
+        </td>
+        <td class="grouped-right-special">
+          <h3>
+            <%= number_to_currency(@rent.additional_charges) %>
+          </h3>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td colspan="2" class="total-line">
+      </td>
+    </tr>
+    <tr>
+      <td class="total">
+        <h2>Total</h2>
+      </td>
+      <td class="grouped-right total">
+        <h2>
+          <%= number_to_currency(@rent.price - @rent.discount.to_f + @rent.additional_charges.to_f) %>
+        </h2>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table dates-top">
+  <tbody>
+    <tr>
+      <td class="capitalized">
+        Entrega: <b><%= week_day_name(@rent.delivery_time) %></b>
+      </td>
+      <td class="capitalized">
+        Recolección: <b><%= week_day_name(@rent.pick_up_time) %></b>
+      </td>
+    </tr>
+    <tr>
+      <td class="capitalized">
+        <%= short_formated_date(@rent.delivery_time) %>
+      </td>
+      <td class="capitalized">
+        <%= short_formated_date(@rent.pick_up_time) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= long_formated_time(@rent.delivery_time) %>
+      </td>
+      <td>
+        <%= long_formated_time(@rent.pick_up_time) %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table centered">
+  <tbody>
+    <tr>
+      <td>
+        <b><%= @rent.place.name %></b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= @rent.place.address %>
+      </td>
+    </tr>
+  </tbody>
+</table>
