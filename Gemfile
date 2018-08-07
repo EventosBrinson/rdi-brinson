@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 ruby "2.3.4"
 
-gem 'rails', '~> 5.1.6'
+gem 'rails', '~> 5.2'
 gem 'rake', '~> 12.3.1'
 gem 'pg', '~> 0.21.0'
 gem 'puma', '~> 3.12.0'
 gem 'rack-cors', '~> 1.0.2'
-gem "paperclip", '~> 6.1.0'
+gem 'paperclip', '~> 6.1.0'
+gem 'bootsnap', '~> 1.3.0', require: false
 
 gem 'jbuilder', '~> 2.7.0'
 gem 'bcrypt', '~> 3.1.12'
