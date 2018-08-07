@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock "3.9.0"
+lock "3.11.0"
 
 set :application, "rdi-brinson"
 set :repo_url, "git@github.com:EventosBrinson/rdi-brinson.git"
