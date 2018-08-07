@@ -15,7 +15,7 @@ module Orderable
           end
         end
       end
-      orders.empty? ? self.where(nil) : self.reorder(orders)
+      orders.empty? ? self.where(nil) : self.reorder(Arel.sql(orders))
     end
   end
 end
