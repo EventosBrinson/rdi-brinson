@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Place, type: :model do
-  subject { FactoryGirl.build :place }
+  subject { FactoryBot.build :place }
 
   it { should have_db_column(:name).of_type(:string).with_options(null: false) }
   it { should have_db_column(:street).of_type(:string).with_options(null: false) }
@@ -24,8 +24,8 @@ RSpec.describe Place, type: :model do
 
   describe '.active' do
     it 'returns all the active places' do
-      5.times { FactoryGirl.create :place }
-      10.times { FactoryGirl.create :place, :inactive }
+      5.times { FactoryBot.create :place }
+      10.times { FactoryBot.create :place, :inactive }
       
       expect(Place.active.count).to eq(5)
     end
@@ -33,8 +33,8 @@ RSpec.describe Place, type: :model do
 
   describe '.inacive' do
     it 'returns all the inactive places' do
-      10.times { FactoryGirl.create :place }
-      5.times { FactoryGirl.create :place, :inactive }
+      10.times { FactoryBot.create :place }
+      5.times { FactoryBot.create :place, :inactive }
       
       expect(Place.inactive.count).to eq(5)
     end
@@ -42,8 +42,8 @@ RSpec.describe Place, type: :model do
 
   describe '#active?' do
     it 'returns true if the place active attribute is true' do
-      place = FactoryGirl.create :place, :active
-      place2 = FactoryGirl.create :place, :inactive
+      place = FactoryBot.create :place, :active
+      place2 = FactoryBot.create :place, :inactive
 
       expect(place).to be_active
       expect(place2).to_not be_active
@@ -52,7 +52,7 @@ RSpec.describe Place, type: :model do
 
   describe '#activate!' do
     it 'updates the place active attribute to ture' do
-      place = FactoryGirl.create :place, :inactive
+      place = FactoryBot.create :place, :inactive
 
       expect{ place.activate! }.to change(place, :active).from(false).to(true)
     end
@@ -60,7 +60,7 @@ RSpec.describe Place, type: :model do
 
   describe '#deactivate!' do
     it 'updates the place active attribute to false' do
-      place = FactoryGirl.create :place, :active
+      place = FactoryBot.create :place, :active
 
       expect{ place.deactivate! }.to change(place, :active).from(true).to(false)
     end
@@ -68,9 +68,9 @@ RSpec.describe Place, type: :model do
 
   describe '.search' do
     it 'returns all places that match the query' do
-      place_match1 = FactoryGirl.create :place, name: 'david', street: 'de anda'
-      place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
-      place_not_match = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
+      place_match1 = FactoryBot.create :place, name: 'david', street: 'de anda'
+      place_match2 = FactoryBot.create :place, name: 'DAVID', street: 'gomez'
+      place_not_match = FactoryBot.create :place, name: 'Roberto', street: 'Bolaños'
 
       expect(Place.search('david').size).to eq(2)
     end
@@ -78,10 +78,10 @@ RSpec.describe Place, type: :model do
 
   describe '.paginated' do
     it 'returns all the places between the offset and limit range' do
-      place_match1 = FactoryGirl.create :place, name: 'david', street: 'de anda'
-      place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
-      place_match3 = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
-      place_match4 = FactoryGirl.create :place, name: 'Enrique', street: 'Segoviano'
+      place_match1 = FactoryBot.create :place, name: 'david', street: 'de anda'
+      place_match2 = FactoryBot.create :place, name: 'DAVID', street: 'gomez'
+      place_match3 = FactoryBot.create :place, name: 'Roberto', street: 'Bolaños'
+      place_match4 = FactoryBot.create :place, name: 'Enrique', street: 'Segoviano'
 
       expect(Place.paginated(offset: 1, limit: 2).size).to eq(2)
     end
@@ -89,11 +89,11 @@ RSpec.describe Place, type: :model do
 
   describe '.filter' do
     it 'returns all the places filtered by params as messages and param value as message param' do
-      place_match1 = FactoryGirl.create :place, name: 'david', street: 'de anda'
-      place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
-      place_match3 = FactoryGirl.create :place, name: 'david', street: 'segoviano'
-      place_match4 = FactoryGirl.create :place, name: 'david', street: 'zan'
-      place_not_match = FactoryGirl.create :place, name: 'Roberto', street: 'Bolaños'
+      place_match1 = FactoryBot.create :place, name: 'david', street: 'de anda'
+      place_match2 = FactoryBot.create :place, name: 'DAVID', street: 'gomez'
+      place_match3 = FactoryBot.create :place, name: 'david', street: 'segoviano'
+      place_match4 = FactoryBot.create :place, name: 'david', street: 'zan'
+      place_not_match = FactoryBot.create :place, name: 'Roberto', street: 'Bolaños'
 
       places_filtered = Place.filter({ search: 'david', ordered: { street: :desc }, paginated: { offset: 0, limit: 2 } })
 
@@ -106,9 +106,9 @@ RSpec.describe Place, type: :model do
   describe '.ordered' do
     context 'order hash contains actual columns to order' do
       it 'returns the places ordered by the specified columns and orders' do
-        place_match1 = FactoryGirl.create :place, name: 'david', street: 'De anda'
-        place_match2 = FactoryGirl.create :place, name: 'DAVID', street: 'gomez'
-        place_match3 = FactoryGirl.create :place, name: 'Roberto', street: 'de anda'
+        place_match1 = FactoryBot.create :place, name: 'david', street: 'De anda'
+        place_match2 = FactoryBot.create :place, name: 'DAVID', street: 'gomez'
+        place_match3 = FactoryBot.create :place, name: 'Roberto', street: 'de anda'
 
         places_ordered = Place.ordered({ street: :desc, name: :asc })
 
@@ -122,7 +122,7 @@ RSpec.describe Place, type: :model do
 
   describe '#address' do
     it 'returns the client formated address fields' do
-      place = FactoryGirl.create :place, street: 'False street', outer_number: '666', inner_number: 'A', neighborhood: 'The Downhill', postal_code: '20206'
+      place = FactoryBot.create :place, street: 'False street', outer_number: '666', inner_number: 'A', neighborhood: 'The Downhill', postal_code: '20206'
 
       expect(place.address).to eq('False street #666 Int. A, The Downhill CP. 20206')
     end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Client, type: :model do
-  subject { FactoryGirl.build :client }
+  subject { FactoryBot.build :client }
 
   it { should have_db_column(:firstname).of_type(:string).with_options(null: false) }
   it { should have_db_column(:lastname).of_type(:string).with_options(null: false) }
@@ -45,7 +45,7 @@ RSpec.describe Client, type: :model do
 
   describe '#create_first_place' do
     it 'it create a place for this client based on the client information' do
-      client = FactoryGirl.create :client
+      client = FactoryBot.create :client
 
       client.create_first_place
 
@@ -60,7 +60,7 @@ RSpec.describe Client, type: :model do
 
   describe '#folio' do
     it 'return the AGS-[record id + special number] folio' do
-      client = FactoryGirl.create :client
+      client = FactoryBot.create :client
 
       expect(client.folio).to eq("AGS-#{client.id + 260786}")
     end
@@ -68,8 +68,8 @@ RSpec.describe Client, type: :model do
 
   describe '.active' do
     it 'returns all the active clients' do
-      5.times { FactoryGirl.create :client }
-      10.times { FactoryGirl.create :client, :inactive }
+      5.times { FactoryBot.create :client }
+      10.times { FactoryBot.create :client, :inactive }
       
       expect(Client.active.count).to eq(5)
     end
@@ -77,8 +77,8 @@ RSpec.describe Client, type: :model do
 
   describe '.inacive' do
     it 'returns all the inactive clients' do
-      10.times { FactoryGirl.create :client }
-      5.times { FactoryGirl.create :client, :inactive }
+      10.times { FactoryBot.create :client }
+      5.times { FactoryBot.create :client, :inactive }
       
       expect(Client.inactive.count).to eq(5)
     end
@@ -86,8 +86,8 @@ RSpec.describe Client, type: :model do
 
   describe '#active?' do
     it 'returns true if the client active attribute is true' do
-      client = FactoryGirl.create :client, :active
-      client2 = FactoryGirl.create :client, :inactive
+      client = FactoryBot.create :client, :active
+      client2 = FactoryBot.create :client, :inactive
 
       expect(client).to be_active
       expect(client2).to_not be_active
@@ -96,7 +96,7 @@ RSpec.describe Client, type: :model do
 
   describe '#activate!' do
     it 'updates the client active attribute to ture' do
-      client = FactoryGirl.create :client, :inactive
+      client = FactoryBot.create :client, :inactive
 
       expect{ client.activate! }.to change(client, :active).from(false).to(true)
     end
@@ -104,7 +104,7 @@ RSpec.describe Client, type: :model do
 
   describe '#deactivate!' do
     it 'updates the client active attribute to false' do
-      client = FactoryGirl.create :client, :active
+      client = FactoryBot.create :client, :active
 
       expect{ client.deactivate! }.to change(client, :active).from(true).to(false)
     end
@@ -112,9 +112,9 @@ RSpec.describe Client, type: :model do
 
   describe '.search' do
     it 'returns all clients that match the query' do
-      client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
-      client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
-      client_not_match = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
+      client_match1 = FactoryBot.create :client, firstname: 'david', lastname: 'de anda'
+      client_match2 = FactoryBot.create :client, firstname: 'DAVID', lastname: 'gomez'
+      client_not_match = FactoryBot.create :client, firstname: 'Roberto', lastname: 'Bolaños'
 
       expect(Client.search('david').size).to eq(2)
     end
@@ -122,10 +122,10 @@ RSpec.describe Client, type: :model do
 
   describe '.paginated' do
     it 'returns all the clients between the offset and limit range' do
-      client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
-      client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
-      client_match3 = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
-      client_match4 = FactoryGirl.create :client, firstname: 'Enrique', lastname: 'Segoviano'
+      client_match1 = FactoryBot.create :client, firstname: 'david', lastname: 'de anda'
+      client_match2 = FactoryBot.create :client, firstname: 'DAVID', lastname: 'gomez'
+      client_match3 = FactoryBot.create :client, firstname: 'Roberto', lastname: 'Bolaños'
+      client_match4 = FactoryBot.create :client, firstname: 'Enrique', lastname: 'Segoviano'
 
       expect(Client.paginated(offset: 1, limit: 2).size).to eq(2)
     end
@@ -133,11 +133,11 @@ RSpec.describe Client, type: :model do
 
   describe '.filter' do
     it 'returns all the clients filtered by params as messages and param value as message param' do
-      client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'de anda'
-      client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
-      client_match3 = FactoryGirl.create :client, firstname: 'david', lastname: 'segoviano'
-      client_match4 = FactoryGirl.create :client, firstname: 'david', lastname: 'zan'
-      client_not_match = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'Bolaños'
+      client_match1 = FactoryBot.create :client, firstname: 'david', lastname: 'de anda'
+      client_match2 = FactoryBot.create :client, firstname: 'DAVID', lastname: 'gomez'
+      client_match3 = FactoryBot.create :client, firstname: 'david', lastname: 'segoviano'
+      client_match4 = FactoryBot.create :client, firstname: 'david', lastname: 'zan'
+      client_not_match = FactoryBot.create :client, firstname: 'Roberto', lastname: 'Bolaños'
 
       clients_filtered = Client.filter({ search: 'david', ordered: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
 
@@ -150,9 +150,9 @@ RSpec.describe Client, type: :model do
   describe '.ordered' do
     context 'order hash contains actual columns to order' do
       it 'returns the clients ordered by the specified columns and orders' do
-        client_match1 = FactoryGirl.create :client, firstname: 'david', lastname: 'De anda'
-        client_match2 = FactoryGirl.create :client, firstname: 'DAVID', lastname: 'gomez'
-        client_match3 = FactoryGirl.create :client, firstname: 'Roberto', lastname: 'de anda'
+        client_match1 = FactoryBot.create :client, firstname: 'david', lastname: 'De anda'
+        client_match2 = FactoryBot.create :client, firstname: 'DAVID', lastname: 'gomez'
+        client_match3 = FactoryBot.create :client, firstname: 'Roberto', lastname: 'de anda'
 
         clients_ordered = Client.ordered({ lastname: :desc, firstname: :asc })
 
@@ -166,7 +166,7 @@ RSpec.describe Client, type: :model do
 
   describe '#fullname' do
     it 'returns the client fullname (firstname lastname)' do
-      client = FactoryGirl.create :client
+      client = FactoryBot.create :client
 
       expect(client.fullname).to eq [client.firstname, client.lastname].join(' ')
     end
@@ -175,7 +175,7 @@ RSpec.describe Client, type: :model do
   describe '#formated_rent_type' do
     it 'returns the client rent type in its formated version' do
       Client::RENT_TYPES.each do |rent_type|
-        client = FactoryGirl.create :client, rent_type: rent_type
+        client = FactoryBot.create :client, rent_type: rent_type
 
         expect(client.formated_rent_type).to eq(Client::FORMATED_RENT_TYPES[rent_type])
       end
@@ -184,7 +184,7 @@ RSpec.describe Client, type: :model do
 
   describe '#address' do
     it 'returns the client formated address fields' do
-      client = FactoryGirl.create :client, street: 'False street', outer_number: '666', inner_number: 'A', neighborhood: 'The Downhill', postal_code: '20206'
+      client = FactoryBot.create :client, street: 'False street', outer_number: '666', inner_number: 'A', neighborhood: 'The Downhill', postal_code: '20206'
 
       expect(client.address).to eq('False street #666 Int. A, The Downhill CP. 20206')
     end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Document, type: :model do
-  subject { FactoryGirl.build :document }
+  subject { FactoryBot.build :document }
 
   it { should have_db_column(:title).of_type(:string).with_options(null: false) }
 

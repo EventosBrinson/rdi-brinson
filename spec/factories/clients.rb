@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :client do
     firstname { Faker::Name.first_name }
     lastname { Faker::Name.last_name }
@@ -13,7 +13,7 @@ FactoryGirl.define do
     id_name { Client::ID_NAMES.sample }
     trust_level { (1..10).to_a.sample }
     rent_type { Client::RENT_TYPES.sample }
-    creator { FactoryGirl.create :user }
+    creator { FactoryBot.create :user }
 
     trait :active do
       active true

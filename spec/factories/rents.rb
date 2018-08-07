@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :rent do
     delivery_time { 1.hour.from_now }
     pick_up_time { 10.hours.from_now }
@@ -7,8 +7,8 @@ FactoryGirl.define do
     discount { Faker::Number.positive }
 
     after :build do |rent|
-      rent.client = FactoryGirl.create :client, creator: (rent.creator || FactoryGirl.create(:user)) unless rent.client
-      rent.place = FactoryGirl.create :place, client: rent.client unless rent.place
+      rent.client = FactoryBot.create :client, creator: (rent.creator || FactoryBot.create(:user)) unless rent.client
+      rent.place = FactoryBot.create :place, client: rent.client unless rent.place
       rent.creator = rent.client.creator unless rent.creator
     end
 

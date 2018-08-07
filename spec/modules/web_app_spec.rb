@@ -21,7 +21,7 @@ describe WebApp do
 
   describe '.reset_password_path' do
     it 'returns the url to reset the password using the web app' do
-      user = FactoryGirl.create :user, :reset_password_requested
+      user = FactoryBot.create :user, :reset_password_requested
 
       expect(WebApp.reset_password_path(user)).to eq(WebApp.configuration.web_app_url + '/reset?token=' + user.reset_password_token )
     end
@@ -29,7 +29,7 @@ describe WebApp do
 
   describe '.confirmation_path' do
     it 'returns the url to confirm the web app' do
-      user = FactoryGirl.create :user, :confirmation_open
+      user = FactoryBot.create :user, :confirmation_open
 
       expect(WebApp.confirmation_path(user)).to eq(WebApp.configuration.web_app_url + '/confirmation?token=' + user.confirmation_token )
     end

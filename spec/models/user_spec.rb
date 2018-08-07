@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject { FactoryGirl.build :user }
+  subject { FactoryBot.build :user }
 
   it { should have_db_column(:username).of_type(:string).with_options(null: false) }
   it { should have_db_column(:email).of_type(:string).with_options(null: false) }
@@ -46,8 +46,8 @@ RSpec.describe User, type: :model do
 
   describe '.active' do
     it 'returns all the active users' do
-      5.times { FactoryGirl.create :user }
-      10.times { FactoryGirl.create :user, :inactive }
+      5.times { FactoryBot.create :user }
+      10.times { FactoryBot.create :user, :inactive }
       
       expect(User.active.count).to eq(5)
     end
@@ -55,8 +55,8 @@ RSpec.describe User, type: :model do
 
   describe '.inacive' do
     it 'returns all the inactive users' do
-      10.times { FactoryGirl.create :user }
-      5.times { FactoryGirl.create :user, :inactive }
+      10.times { FactoryBot.create :user }
+      5.times { FactoryBot.create :user, :inactive }
       
       expect(User.inactive.count).to eq(5)
     end
@@ -64,8 +64,8 @@ RSpec.describe User, type: :model do
 
   describe '#active?' do
     it 'returns true if the user active attribute is true' do
-      user = FactoryGirl.create :user, :active
-      user2 = FactoryGirl.create :user, :inactive
+      user = FactoryBot.create :user, :active
+      user2 = FactoryBot.create :user, :inactive
 
       expect(user).to be_active
       expect(user2).to_not be_active
@@ -74,7 +74,7 @@ RSpec.describe User, type: :model do
 
   describe '#activate!' do
     it 'updates the user active attribute to ture' do
-      user = FactoryGirl.create :user, :inactive
+      user = FactoryBot.create :user, :inactive
 
       expect{ user.activate! }.to change(user, :active).from(false).to(true)
     end
@@ -82,7 +82,7 @@ RSpec.describe User, type: :model do
 
   describe '#deactivate!' do
     it 'updates the user active attribute to false' do
-      user = FactoryGirl.create :user, :active
+      user = FactoryBot.create :user, :active
 
       expect{ user.deactivate! }.to change(user, :active).from(true).to(false)
     end
@@ -90,9 +90,9 @@ RSpec.describe User, type: :model do
 
   describe '.search' do
     it 'returns all user that match the query' do
-      user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
-      user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
-      user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
+      user_match1 = FactoryBot.create :user, firstname: 'david', lastname: 'de anda'
+      user_match2 = FactoryBot.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_not_match = FactoryBot.create :user, firstname: 'Roberto', lastname: 'Bolaños'
 
       expect(User.search('david').size).to eq(2)
     end
@@ -100,10 +100,10 @@ RSpec.describe User, type: :model do
 
   describe '.paginated' do
     it 'returns all the users between the offset and limit range' do
-      user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
-      user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
-      user_match3 = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
-      user_match4 = FactoryGirl.create :user, firstname: 'Enrique', lastname: 'Segoviano'
+      user_match1 = FactoryBot.create :user, firstname: 'david', lastname: 'de anda'
+      user_match2 = FactoryBot.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_match3 = FactoryBot.create :user, firstname: 'Roberto', lastname: 'Bolaños'
+      user_match4 = FactoryBot.create :user, firstname: 'Enrique', lastname: 'Segoviano'
 
       expect(User.paginated(offset: 1, limit: 2).size).to eq(2)
     end
@@ -111,11 +111,11 @@ RSpec.describe User, type: :model do
 
   describe '.filter' do
     it 'returns all the users filtered by params as messages and param value as message param' do
-      user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'de anda'
-      user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
-      user_match3 = FactoryGirl.create :user, firstname: 'david', lastname: 'segoviano'
-      user_match4 = FactoryGirl.create :user, firstname: 'david', lastname: 'zan'
-      user_not_match = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'Bolaños'
+      user_match1 = FactoryBot.create :user, firstname: 'david', lastname: 'de anda'
+      user_match2 = FactoryBot.create :user, firstname: 'DAVID', lastname: 'gomez'
+      user_match3 = FactoryBot.create :user, firstname: 'david', lastname: 'segoviano'
+      user_match4 = FactoryBot.create :user, firstname: 'david', lastname: 'zan'
+      user_not_match = FactoryBot.create :user, firstname: 'Roberto', lastname: 'Bolaños'
 
       users_filtered = User.filter({ search: 'david', ordered: { lastname: :desc }, paginated: { offset: 0, limit: 2 } })
 
@@ -128,9 +128,9 @@ RSpec.describe User, type: :model do
   describe '.ordered' do
     context 'order hash contains actual columns to order' do
       it 'returns the users ordered by the specified columns and orders' do
-        user_match1 = FactoryGirl.create :user, firstname: 'david', lastname: 'De anda'
-        user_match2 = FactoryGirl.create :user, firstname: 'DAVID', lastname: 'gomez'
-        user_match3 = FactoryGirl.create :user, firstname: 'Roberto', lastname: 'de anda'
+        user_match1 = FactoryBot.create :user, firstname: 'david', lastname: 'De anda'
+        user_match2 = FactoryBot.create :user, firstname: 'DAVID', lastname: 'gomez'
+        user_match3 = FactoryBot.create :user, firstname: 'Roberto', lastname: 'de anda'
 
         users_ordered = User.ordered({ lastname: :desc, firstname: :asc })
 
@@ -144,7 +144,7 @@ RSpec.describe User, type: :model do
 
   describe '.find_by_credential' do
     it 'returns the first record which username or password match the credential param' do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
 
       expect(User.find_by_credential(user.username)).to eq(user)
       expect(User.find_by_credential(user.email)).to eq(user)
@@ -153,7 +153,7 @@ RSpec.describe User, type: :model do
 
   describe '#confirmed?' do
     it 'returns true if the user confirmed_at attribute is set' do
-      user = FactoryGirl.create :user, confirmed_at: Time.now
+      user = FactoryBot.create :user, confirmed_at: Time.now
 
       expect(user.confirmed?).to eq true
     end
@@ -161,7 +161,7 @@ RSpec.describe User, type: :model do
 
   describe '#fullname' do
     it 'returns the user fullname (firstname lastname)' do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
 
       expect(user.fullname).to eq [user.firstname, user.lastname].join(' ')
     end
@@ -169,7 +169,7 @@ RSpec.describe User, type: :model do
 
   describe '#pending' do
     it 'returns true if the user confirmation_token and confirmation_sent_at attributes are set' do
-      user = FactoryGirl.create :user, :confirmation_open
+      user = FactoryBot.create :user, :confirmation_open
 
       expect(user).to be_pending
     end
@@ -177,7 +177,7 @@ RSpec.describe User, type: :model do
 
   describe '#reset_password_requested?' do
     it 'returns true if the user reset_password_token and reset_password_sent_at attributes are set' do
-      user = FactoryGirl.create :user, :reset_password_requested
+      user = FactoryBot.create :user, :reset_password_requested
 
       expect(user).to be_reset_password_requested
     end

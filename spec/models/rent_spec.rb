@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Rent, type: :model do
-  subject { FactoryGirl.build :rent }
+  subject { FactoryBot.build :rent }
 
   it { should have_db_column(:delivery_time).of_type(:datetime).with_options(null: false) }
   it { should have_db_column(:pick_up_time).of_type(:datetime).with_options(null: false) }
@@ -32,7 +32,7 @@ RSpec.describe Rent, type: :model do
 
   describe '#order_number' do
     it 'return the [record id + special number] order number' do
-      rent = FactoryGirl.create :rent
+      rent = FactoryBot.create :rent
 
       expect(rent.order_number).to eq("#{rent.id + 260786}")
     end
@@ -40,14 +40,14 @@ RSpec.describe Rent, type: :model do
 
   describe '#set_rent_type_from_client' do
     it 'is set before validation' do
-      rent = FactoryGirl.build :rent
+      rent = FactoryBot.build :rent
 
       expect(rent).to receive(:set_rent_type_from_client)
       rent.save
     end
 
     it 'sets the rent_type attribute from the client before validation' do
-      rent = FactoryGirl.build :rent
+      rent = FactoryBot.build :rent
 
       expect{ rent.save }.to change(rent, :rent_type).from(nil).to(rent.client.rent_type)
     end
@@ -55,14 +55,14 @@ RSpec.describe Rent, type: :model do
 
   describe '#init_status' do
     it 'is set before validation' do
-      rent = FactoryGirl.build :rent
+      rent = FactoryBot.build :rent
 
       expect(rent).to receive(:init_status)
       rent.save
     end
 
     it 'sets the status to reserved before validation on create' do
-      rent = FactoryGirl.build :rent
+      rent = FactoryBot.build :rent
 
       expect{ rent.save }.to change(rent, :status).from(nil).to('reserved')
     end
@@ -71,7 +71,7 @@ RSpec.describe Rent, type: :model do
   describe '#status_transition' do
     context 'changing from reserved to on_route' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
 
         rent.status = :on_route
         expect(rent).to be_valid
@@ -79,7 +79,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from on_route to delivered' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_route
 
         rent.status = :delivered
@@ -88,7 +88,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from delivered to on_pick_up' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :delivered
 
         rent.status = :on_pick_up
@@ -97,7 +97,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from on_pick_up to pending' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_pick_up
 
         rent.status = :on_pick_up
@@ -106,7 +106,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from pending to on_pick_up' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :pending
 
         rent.status = :on_pick_up
@@ -115,7 +115,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from on_pick_up to finalized' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_pick_up
 
         rent.status = :finalized
@@ -125,7 +125,7 @@ RSpec.describe Rent, type: :model do
 
     context 'changing from reserved to canceled' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
 
         rent.status = :canceled
         expect(rent).to be_valid
@@ -133,7 +133,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from on_route to canceled' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_route
 
         rent.status = :canceled
@@ -142,7 +142,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from delivered to canceled' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :delivered
 
         rent.status = :canceled
@@ -151,7 +151,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from on_pick_up to canceled' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_pick_up
 
         rent.status = :canceled
@@ -160,7 +160,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from pending to canceled' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :pending
 
         rent.status = :canceled
@@ -170,7 +170,7 @@ RSpec.describe Rent, type: :model do
 
     context 'changing from on_route to reserved' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_route
 
         rent.status = :reserved
@@ -179,7 +179,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from delivered to on_route' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :delivered
 
         rent.status = :on_route
@@ -188,7 +188,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from on_pick_up to delivered' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :on_pick_up
 
         rent.status = :delivered
@@ -197,7 +197,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from pending to delivered' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :pending
 
         rent.status = :delivered
@@ -206,7 +206,7 @@ RSpec.describe Rent, type: :model do
     end
     context 'changing from finalized to on_pick_up' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :finalized
 
         rent.status = :on_pick_up
@@ -216,7 +216,7 @@ RSpec.describe Rent, type: :model do
 
     context 'changing from canceled to on_pick_up' do
       it 'should be valid' do
-        rent = FactoryGirl.create :rent
+        rent = FactoryBot.create :rent
         rent.update status: :canceled
 
         rent.status = :on_pick_up
@@ -227,9 +227,9 @@ RSpec.describe Rent, type: :model do
 
   describe '.search' do
     it 'returns all rents that match the query' do
-      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
-      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
-      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
+      rent_match1 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'de anda'
+      rent_match2 = FactoryBot.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+      rent_not_match = FactoryBot.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
 
       expect(Rent.search('david').size).to eq(2)
     end
@@ -237,10 +237,10 @@ RSpec.describe Rent, type: :model do
 
   describe '.paginated' do
     it 'returns all the rents between the offset and limit range' do
-      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
-      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
-      rent_match3 = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
-      rent_match4 = FactoryGirl.create :rent, product: 'Enrique', additional_charges_notes: 'Segoviano'
+      rent_match1 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'de anda'
+      rent_match2 = FactoryBot.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+      rent_match3 = FactoryBot.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
+      rent_match4 = FactoryBot.create :rent, product: 'Enrique', additional_charges_notes: 'Segoviano'
 
       expect(Rent.paginated(offset: 1, limit: 2).size).to eq(2)
     end
@@ -248,11 +248,11 @@ RSpec.describe Rent, type: :model do
 
   describe '.filter' do
     it 'returns all the rents filtered by params as messages and param value as message param' do
-      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda'
-      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
-      rent_match3 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'segoviano'
-      rent_match4 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'zan'
-      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
+      rent_match1 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'de anda'
+      rent_match2 = FactoryBot.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+      rent_match3 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'segoviano'
+      rent_match4 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'zan'
+      rent_not_match = FactoryBot.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños'
 
       rents_filtered = Rent.filter({ search: 'david', ordered: { additional_charges_notes: :desc }, paginated: { offset: 0, limit: 2 } })
 
@@ -265,9 +265,9 @@ RSpec.describe Rent, type: :model do
   describe '.ordered' do
     context 'order hash contains actual columns to order' do
       it 'returns the rents ordered by the specified columns and orders' do
-        rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'De anda'
-        rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
-        rent_match3 = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'de anda'
+        rent_match1 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'De anda'
+        rent_match2 = FactoryBot.create :rent, product: 'DAVID', additional_charges_notes: 'gomez'
+        rent_match3 = FactoryBot.create :rent, product: 'Roberto', additional_charges_notes: 'de anda'
 
         rents_ordered = Rent.ordered({ additional_charges_notes: :desc, product: :asc })
 
@@ -282,7 +282,7 @@ RSpec.describe Rent, type: :model do
   describe '#formated_rent_type' do
     it 'returns the rent type in its formated version' do
       Client::RENT_TYPES.each do |rent_type|
-        rent = FactoryGirl.create :rent, client: FactoryGirl.create(:client, rent_type: rent_type)
+        rent = FactoryBot.create :rent, client: FactoryBot.create(:client, rent_type: rent_type)
 
         expect(rent.formated_rent_type).to eq(Client::FORMATED_RENT_TYPES[rent_type])
       end
@@ -293,7 +293,7 @@ RSpec.describe Rent, type: :model do
   describe '#formated_status' do
     it 'returns the status in its formated version' do
       Rent::STATUSES.each do |status|
-        rent = FactoryGirl.create :rent, status: status
+        rent = FactoryBot.create :rent, status: status
 
         expect(rent.formated_status).to eq(Rent::FORMATED_STATUSES[status])
       end
@@ -302,11 +302,11 @@ RSpec.describe Rent, type: :model do
 
   describe '.filter_by_time' do
     it 'returns all the rents that are between the times given' do
-      rent_match1 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'de anda', delivery_time: 1.day.ago, pick_up_time: 1.day.ago
-      rent_match2 = FactoryGirl.create :rent, product: 'DAVID', additional_charges_notes: 'gomez', delivery_time: 1.day.ago, pick_up_time: 1.day.ago
-      rent_match3 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'segoviano', delivery_time: Date.today, pick_up_time: 1.day.ago
-      rent_match4 = FactoryGirl.create :rent, product: 'david', additional_charges_notes: 'zan', delivery_time: Date.today, pick_up_time: 1.day.ago
-      rent_not_match = FactoryGirl.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños', delivery_time: 3.days.from_now, pick_up_time: 3.day.from_now
+      rent_match1 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'de anda', delivery_time: 1.day.ago, pick_up_time: 1.day.ago
+      rent_match2 = FactoryBot.create :rent, product: 'DAVID', additional_charges_notes: 'gomez', delivery_time: 1.day.ago, pick_up_time: 1.day.ago
+      rent_match3 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'segoviano', delivery_time: Date.today, pick_up_time: 1.day.ago
+      rent_match4 = FactoryBot.create :rent, product: 'david', additional_charges_notes: 'zan', delivery_time: Date.today, pick_up_time: 1.day.ago
+      rent_not_match = FactoryBot.create :rent, product: 'Roberto', additional_charges_notes: 'Bolaños', delivery_time: 3.days.from_now, pick_up_time: 3.day.from_now
 
       rents_filtered_by_time = Rent.filter_by_time({ beginning_time: 1.day.ago.beginning_of_day, end_time: Date.today.end_of_day, columns: [:delivery_time, :pick_up_time] })
 

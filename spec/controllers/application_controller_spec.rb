@@ -12,20 +12,20 @@ RSpec.describe ApplicationController do
   describe "#authenticate_request" do
     context 'when a vaild token is present' do
       it "allows controllers actions to continue and sets the current session" do
-        user = FactoryGirl.create :user, :confirmed
+        user = FactoryBot.create :user, :confirmed
         token = Sessions::Create.for credential: user.username, password: user.password
 
         request.headers[:HTTP_AUTH_TOKEN] = token
         get :index
 
         expect(assigns(:current_user)).to eq user
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
     context 'when an erratic token is present' do
       it "denies controllers actions to continue" do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         token = 'erraic token'
 
         request.headers[:HTTP_ACCESS_TOKEN] = 'erratic_token'

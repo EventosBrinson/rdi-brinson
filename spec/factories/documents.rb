@@ -1,6 +1,6 @@
 require_relative '../constants/images'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :document do
     title { Faker::Superhero.power }
     file Constants::Images::BASE64_2x2

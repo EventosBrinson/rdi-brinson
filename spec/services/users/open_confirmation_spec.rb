@@ -4,7 +4,7 @@ describe Users::OpenConfirmation do
   describe '#process' do
     context 'when a new user object is present' do
       it 'sets the user confirmetion params and returns the user' do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         service = Users::OpenConfirmation.new user: user
 
         result = service.process
@@ -18,7 +18,7 @@ describe Users::OpenConfirmation do
 
     context 'when a confirmed user object is present' do
       it 'sets the user confirmetion params, unconfirm and returns the user' do
-        user = FactoryGirl.create :user, confirmed_at: Time.now
+        user = FactoryBot.create :user, confirmed_at: Time.now
         service = Users::OpenConfirmation.new user: user
 
         result = service.process

@@ -4,7 +4,7 @@ describe Users::Confirmation do
   describe '#process' do
     context 'when a pending user and right password are present' do
       it 'confirm and return the user and set the user password' do
-        user = FactoryGirl.create :user, :confirmation_open
+        user = FactoryBot.create :user, :confirmation_open
         service = Users::Confirmation.new token: user.confirmation_token, password: 'supersecret'
 
         result = service.process
@@ -22,7 +22,7 @@ describe Users::Confirmation do
 
     context 'when a passed confirmation token is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :confirmation_open
+        user = FactoryBot.create :user, :confirmation_open
         passed_confirmation_token = user.confirmation_token
         user = Users::OpenConfirmation.for user: user
 
@@ -37,7 +37,7 @@ describe Users::Confirmation do
 
     context 'when an erratic token is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :confirmation_open
+        user = FactoryBot.create :user, :confirmation_open
 
         service = Users::Confirmation.new token: 'erratic token', password: 'irelevant_password'
 
@@ -50,7 +50,7 @@ describe Users::Confirmation do
 
     context 'when the password is nil' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :confirmation_open
+        user = FactoryBot.create :user, :confirmation_open
         service = Users::Confirmation.new token: user.confirmation_token, password: nil
 
         expect(service.process).to be_nil

@@ -4,7 +4,7 @@ describe Users::RequestResetPassword do
   describe '#process' do
     context 'when a confirmed user credential is present' do
       it 'set the reset password attributos to the user' do
-        user = FactoryGirl.create :user, :confirmed
+        user = FactoryBot.create :user, :confirmed
         service = Users::RequestResetPassword.new credential: user.username
 
         result = service.process
@@ -19,7 +19,7 @@ describe Users::RequestResetPassword do
 
     context 'when the credential of an unconfirmed user is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :confirmation_open
+        user = FactoryBot.create :user, :confirmation_open
 
         service = Users::RequestResetPassword.new credential: user.username
 
@@ -30,7 +30,7 @@ describe Users::RequestResetPassword do
 
     context 'when an erratic credential is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :confirmed
+        user = FactoryBot.create :user, :confirmed
 
         service = Users::RequestResetPassword.new credential: 'erratic credential'
 

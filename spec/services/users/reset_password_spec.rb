@@ -4,7 +4,7 @@ describe Users::ResetPassword do
   describe '#process' do
     context 'when a confirmed user and right password are present' do
       it 'change the password and reset the reset_password attributes' do
-        user = FactoryGirl.create :user, :reset_password_requested
+        user = FactoryBot.create :user, :reset_password_requested
         service = Users::ResetPassword.new token: user.reset_password_token, password: 'supersecret'
 
         result = service.process
@@ -18,7 +18,7 @@ describe Users::ResetPassword do
 
     context 'when a passed reset password token is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :reset_password_requested
+        user = FactoryBot.create :user, :reset_password_requested
         passed_reset_password_token = user.reset_password_token
         user = Users::RequestResetPassword.for credential: user.username
 
@@ -33,7 +33,7 @@ describe Users::ResetPassword do
 
     context 'when an erratic token is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :reset_password_requested
+        user = FactoryBot.create :user, :reset_password_requested
         service = Users::ResetPassword.new token: 'erratic token', password: 'irelevant_password'
 
         user.reload
@@ -45,7 +45,7 @@ describe Users::ResetPassword do
 
     context 'when an erratic password is present' do
       it 'returns nil' do
-        user = FactoryGirl.create :user, :reset_password_requested
+        user = FactoryBot.create :user, :reset_password_requested
         service = Users::ResetPassword.new token: user.reset_password_token, password: ''
 
         user.reload

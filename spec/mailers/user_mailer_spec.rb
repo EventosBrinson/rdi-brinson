@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe UserMailer, type: :mailer do
   describe "invitation mail" do
     it "should render the headers" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail = UserMailer.invitation_mail(user)
 
       expect(mail.subject).to eq("Invitación al sistema IRD Brinson")
@@ -12,7 +12,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "should render the body" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail =  UserMailer.invitation_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
@@ -21,7 +21,7 @@ RSpec.describe UserMailer, type: :mailer do
 
   describe "password changed mail" do
     it "should render the headers" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail = UserMailer.password_changed_mail(user)
 
       expect(mail.subject).to eq("Cambio de contraseña")
@@ -30,7 +30,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "should render the body" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail =  UserMailer.password_changed_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
@@ -39,7 +39,7 @@ RSpec.describe UserMailer, type: :mailer do
 
   describe "reset password mail" do
     it "should render the headers" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail = UserMailer.reset_password_mail(user)
 
       expect(mail.subject).to eq("Petición de cambio de contraseña")
@@ -48,7 +48,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "should render the body" do
-      user = FactoryGirl.create :user, :reset_password_requested
+      user = FactoryBot.create :user, :reset_password_requested
       mail =  UserMailer.reset_password_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
@@ -57,7 +57,7 @@ RSpec.describe UserMailer, type: :mailer do
 
   describe "confirmation mail" do
     it "should render the headers" do
-      user = FactoryGirl.create :user, :confirmation_open
+      user = FactoryBot.create :user, :confirmation_open
       mail = UserMailer.confirmation_mail(user)
 
       expect(mail.subject).to eq("Confirmación de correo")
@@ -66,7 +66,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "should render the body" do
-      user = FactoryGirl.create :user, :confirmation_open
+      user = FactoryBot.create :user, :confirmation_open
       mail =  UserMailer.confirmation_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
@@ -75,7 +75,7 @@ RSpec.describe UserMailer, type: :mailer do
 
   describe "welcome mail" do
     it "should render the headers" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail = UserMailer.welcome_mail(user)
 
       expect(mail.subject).to eq("Bienvenido a RDIBrinson")
@@ -84,7 +84,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "should render the body" do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
       mail =  UserMailer.welcome_mail(user)
 
       expect(mail.body.encoded).to match('Hola ' + user.fullname)
