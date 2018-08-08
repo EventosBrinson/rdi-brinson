@@ -10,7 +10,7 @@ class RentsController < ApplicationController
 
       if @user
         authorize! :show, @user
-        @rents = get_rents
+        set_rents
 
         render template: 'rents/index.json'
       else
@@ -21,7 +21,7 @@ class RentsController < ApplicationController
 
       if @client
         authorize! :show, @client
-        @rents = get_rents
+        set_rents
 
         render template: 'rents/index.json'
       else
@@ -32,14 +32,14 @@ class RentsController < ApplicationController
 
       if @place
         authorize! :show, @place
-        @rents = get_rents
+        set_rents
 
         render template: 'rents/index.json'
       else
         head :not_found
       end
     else
-      @rents = get_rents
+      set_rents
       render template: 'rents/index.json'
     end
   end
@@ -100,30 +100,40 @@ class RentsController < ApplicationController
 
   private
 
-  def get_rents
+  def set_rents
     if params[:search] || params[:ordered] || params[:paginated] || params[:filter_by_time]
       if params[:user_id]
-        @user.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @rents = @user.rents.ordered(id: :desc).filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @total = @user.rents.filter(params.slice(:search, :filter_by_time)).count
       elsif params[:client_id]
-        @client.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @rents = @client.rents.ordered(id: :desc).filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @total = @client.rents.filter(params.slice(:search, :filter_by_time)).count
       elsif params[:place_id]
-        @place.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @rents = @place.rents.ordered(id: :desc).filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @total = @place.rents.filter(params.slice(:search, :filter_by_time)).count
       elsif current_user.admin? || current_user.staff? and params[:all]
-        Rent.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @rents = Rent.ordered(id: :desc).filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @total = Rent.filter(params.slice(:search, :filter_by_time)).count
       else
-        current_user.rents.filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @rents = current_user.rents.ordered(id: :desc).filter(params.slice(:search, :ordered, :paginated, :filter_by_time))
+        @total = current_user.rents.filter(params.slice(:search, :filter_by_time)).count
       end
     else
       if params[:user_id]
-        @user.rents.ordered(id: :desc)
+        @rents = @user.rents.ordered(id: :desc)
+        @total = @user.rents.count
       elsif params[:client_id]
-        @client.rents.ordered(id: :desc)
+        @rents = @client.rents.ordered(id: :desc)
+        @total = @client.rents.count
       elsif params[:place_id]
-        @place.rents.ordered(id: :desc)
+        @rents = @place.rents.ordered(id: :desc)
+        @total = @place.rents.count
       elsif current_user.admin? || current_user.staff? and params[:all]
-        Rent.all.ordered(id: :desc)
+        @rents = Rent.all.ordered(id: :desc)
+        @total = Rent.count
       else
-        current_user.rents.ordered(id: :desc)
+        @rents = current_user.rents.ordered(id: :desc)
+        @total = current_user.rents.count
       end
     end
   end
