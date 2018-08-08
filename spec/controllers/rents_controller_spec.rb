@@ -84,7 +84,7 @@ RSpec.describe RentsController, type: :controller do
           expect(response).to be_successful
           expect(assigns(:rents)).to_not be_nil
           expect(assigns(:rents).size).to eq(3)
-          expect(assigns(:rents).first).to eq(match_rent1)
+          expect(assigns(:rents).first).to eq(match_rent3)
           expect(response).to render_template('rents/index.json')
         end
       end
@@ -109,7 +109,7 @@ RSpec.describe RentsController, type: :controller do
         expect(response).to be_successful
         expect(assigns(:rents)).to_not be_nil
         expect(assigns(:rents).size).to eq(2)
-        expect(assigns(:rents).first).to eq(match_rent1)
+        expect(assigns(:rents).first).to eq(match_rent4)
         expect(response).to render_template('rents/index.json')
       end
 
@@ -132,7 +132,7 @@ RSpec.describe RentsController, type: :controller do
           expect(response).to be_successful
           expect(assigns(:rents)).to_not be_nil
           expect(assigns(:rents).size).to eq(1)
-          expect(assigns(:rents).first).to eq(match_rent3)
+          expect(assigns(:rents).first).to eq(match_rent1)
           expect(response).to render_template('rents/index.json')
         end
       end
@@ -210,7 +210,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(3)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent3)
               expect(response).to render_template('rents/index.json')
             end
           end
@@ -231,7 +231,7 @@ RSpec.describe RentsController, type: :controller do
             expect(response).to be_successful
             expect(assigns(:rents)).to_not be_nil
             expect(assigns(:rents).size).to eq(2)
-            expect(assigns(:rents).first).to eq(match_rent1)
+            expect(assigns(:rents).first).to eq(match_rent4)
             expect(response).to render_template('rents/index.json')
           end
 
@@ -250,7 +250,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(1)
-              expect(assigns(:rents).first).to eq(match_rent3)
+              expect(assigns(:rents).first).to eq(match_rent1)
               expect(response).to render_template('rents/index.json')
             end
           end
@@ -351,7 +351,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(3)
-                expect(assigns(:rents).first).to eq(match_rent1)
+                expect(assigns(:rents).first).to eq(match_rent3)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -378,7 +378,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(2)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent4)
               expect(response).to render_template('rents/index.json')
             end
 
@@ -403,7 +403,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(1)
-                expect(assigns(:rents).first).to eq(match_rent3)
+                expect(assigns(:rents).first).to eq(match_rent1)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -520,7 +520,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(3)
-                expect(assigns(:rents).first).to eq(match_rent1)
+                expect(assigns(:rents).first).to eq(match_rent3)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -547,7 +547,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(2)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent4)
               expect(response).to render_template('rents/index.json')
             end
 
@@ -572,7 +572,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(1)
-                expect(assigns(:rents).first).to eq(match_rent3)
+                expect(assigns(:rents).first).to eq(match_rent1)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -690,7 +690,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(3)
-                expect(assigns(:rents).first).to eq(match_rent1)
+                expect(assigns(:rents).first).to eq(match_rent3)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -717,7 +717,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(2)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent4)
               expect(response).to render_template('rents/index.json')
             end
 
@@ -742,7 +742,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(1)
-                expect(assigns(:rents).first).to eq(match_rent3)
+                expect(assigns(:rents).first).to eq(match_rent1)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -859,7 +859,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(3)
-                expect(assigns(:rents).first).to eq(match_rent1)
+                expect(assigns(:rents).first).to eq(match_rent3)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -886,7 +886,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(2)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent4)
               expect(response).to render_template('rents/index.json')
             end
 
@@ -911,7 +911,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(1)
-                expect(assigns(:rents).first).to eq(match_rent3)
+                expect(assigns(:rents).first).to eq(match_rent1)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -1029,7 +1029,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(3)
-                expect(assigns(:rents).first).to eq(match_rent1)
+                expect(assigns(:rents).first).to eq(match_rent3)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -1056,7 +1056,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(2)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent4)
               expect(response).to render_template('rents/index.json')
             end
 
@@ -1081,7 +1081,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(1)
-                expect(assigns(:rents).first).to eq(match_rent3)
+                expect(assigns(:rents).first).to eq(match_rent1)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -1202,7 +1202,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(3)
-                expect(assigns(:rents).first).to eq(match_rent1)
+                expect(assigns(:rents).first).to eq(match_rent3)
                 expect(response).to render_template('rents/index.json')
               end
             end
@@ -1230,7 +1230,7 @@ RSpec.describe RentsController, type: :controller do
               expect(response).to be_successful
               expect(assigns(:rents)).to_not be_nil
               expect(assigns(:rents).size).to eq(2)
-              expect(assigns(:rents).first).to eq(match_rent1)
+              expect(assigns(:rents).first).to eq(match_rent4)
               expect(response).to render_template('rents/index.json')
             end
 
@@ -1256,7 +1256,7 @@ RSpec.describe RentsController, type: :controller do
                 expect(response).to be_successful
                 expect(assigns(:rents)).to_not be_nil
                 expect(assigns(:rents).size).to eq(1)
-                expect(assigns(:rents).first).to eq(match_rent3)
+                expect(assigns(:rents).first).to eq(match_rent1)
                 expect(response).to render_template('rents/index.json')
               end
             end
